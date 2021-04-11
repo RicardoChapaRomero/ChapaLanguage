@@ -468,7 +468,7 @@ parser = yacc.yacc() # creamos el parser para analisis de gramatica
 
 try:
   print('PRUEBA DE MULTIPLICACION DE MATRICES')
-  f = open('./multiplicacionDeMatrices.txt', 'r')
+  f = open('./test_files/multiplicacionDeMatrices.txt', 'r')
   testFile = f.read()
   parser.parse(testFile)
 except EOFError:
@@ -477,7 +477,7 @@ except EOFError:
 
 try:
   print('PRUEBA DE OPERACIONES ANIDADAS')
-  f = open('./operaciones.txt', 'r')
+  f = open('./test_files/operaciones.txt', 'r')
   testFile = f.read()
   parser.parse(testFile)
 except EOFError:
@@ -486,7 +486,7 @@ except EOFError:
 
 try:
   print('PRUEBA DE CODIGO CON ERROR')
-  f = open('./error.txt', 'r')
+  f = open('./test_files/error.txt', 'r')
   testFile = f.read()
   parser.parse(testFile)
 except EOFError:

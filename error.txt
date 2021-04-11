@@ -1,0 +1,19 @@
+PROGRAM
+	DIM variable_1, variable_2, variable_3 AS INT
+
+	GOSUB operaciones
+
+	SUBPROCEDURE operaciones:
+		LET variable_1 = 5
+		LET variable_2 = 6
+
+		LET variable_3 = ((variable_1 * variable_2) + variable_2) / variable_1
+
+		IF ((variable_2 + variable_3) > variable_1) OR (variable_2 == variable_3) THEN
+			PRINT "Logica 1"
+		ELSE
+			PRINT "Logica 2"
+		#EIF
+
+		RETURN
+END

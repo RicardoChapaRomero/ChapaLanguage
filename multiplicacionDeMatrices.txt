@@ -1,0 +1,52 @@
+PROGRAM
+	DIM renglones_m1, renglones_m2, filas_m1, filas_m2 AS INT
+
+	GOSUB sumaDeMatrices
+
+	SUBPROCEDURE sumaDeMatrices:
+		LET renglones_m1, renglones_m2, filas_m1, filas_m2 = 0
+		GOSUB obtenerTamanos
+
+		WHILE ((renglones_m1not == renglones_m2) OR (filas_m1not == filas_m2))
+		PRINT "tamaños no corresponden"
+		GOSUB obtenerTamanos
+		WEND
+
+		DIM m_1 AS INT[renglones_m1][filas_m1]
+		DIM m_1 AS INT[renglones_m2][filas_m2]
+
+		GOSUB obtenerValores
+		PRINT "Matriz resultante"
+
+		FOR i = 0 TO renglones_m1
+			FOR j = 0 TO filas_m1
+				LET suma = m_1[i, j] + m_2[i, j]
+				PRINT suma
+			NEXT j
+		NEXT i
+	RETURN
+
+	#programa para obtener los tamaños de las matrices
+	SUBPROCEDURE obtenerTamanos:
+		INPUT "rm1", renglones_m1
+		INPUT "rm2", renglones_m2
+		INPUT "fm1", filas_m1
+		INPUT "fm2", filas_m2
+	RETURN
+
+	#programa para obtener los valores de las matrices
+	SUBPROCEDURE obtenerValores:
+		FOR i = 0 TO renglones_m1
+			FOR j=0 TO filas_m1
+				INPUT "", m1[i, j]
+			NEXT j
+		NEXT i
+
+		FOR i=0 TO renglones_m2
+			FOR j=0 TO filas_m2
+				INPUT "", m2[i, j]
+			NEXT j
+		NEXT i
+	RETURN
+
+END

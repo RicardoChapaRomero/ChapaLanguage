@@ -4,6 +4,14 @@ de lexico y sintaxis
 
 conda activate proyecto_lenguajes
 
+--------------ARCHIVOS DE PRUEBA---------------
+
+./test_files/multiplicacionDeMatrices.txt
+./test_files/operaciones.txt
+./test_files/error.txt
+
+-----------------------------------------------
+
 Ricardo Abraham Chapa Romero
 A00824335
 10/04/2021
@@ -12,6 +20,12 @@ A00824335
 import sys 
 import ply.lex as lex
 import ply.yacc as yacc
+
+variables = []
+variable_type = None
+symbol_table = {}
+
+token_state = True
 
 # Lista de tokens a utilizar
 tokens = [
@@ -308,15 +322,13 @@ def p_PROGRAMA(p):
 
 def p_V(p):
   '''
-    V : DIM Idv AS T Arr V
+    V : DIM setType Idv AS T Arr V
       | empty
   '''
-
-def p_Idv(p):
-  '''
-  Idv : ID COMA Idv
-      | ID
-  '''
+  global variable_type
+  if (len(p) > 2):
+    variable_type = p[5].upper()
+    add_variables_to_symbol_table(variable_type)
 
 def p_Arr(p):
   '''
@@ -331,6 +343,7 @@ def p_T(p):
     | FLOAT
     | WORD
   '''
+  p[0] = p[1]
 
 def p_S(p):
   '''
@@ -352,8 +365,8 @@ def p_F(p):
 
 def p_E(p):
   '''
-  E : LET Idv EQUALS Ex
-    | DIM Idv AS T Arr 
+  E : LET setType Idv EQUALS Ex
+    | DIM setType Idv AS T Arr
     | IF EL THEN F Esf EIF
     | FOR ID EQUALS EA TO Ex F NEXT ID
     | WHILE OPENPAR EL CLOSINGPAR F WEND
@@ -361,6 +374,26 @@ def p_E(p):
     | INPUT ES COMA IDEx
     | PRINT Ex
   '''
+  global variable_type
+  if (p[1].upper() == 'DIM'):
+    variable_type = p[5].upper()
+    add_variables_to_symbol_table(variable_type)
+
+def p_Idv(p):
+  '''
+  Idv : ID COMA Idv
+      | ID
+  '''
+  global variables
+  if (token_state == 'DIM'):
+      variables.append(p[1])
+
+def p_setType(p):
+  '''
+  setType :
+  '''
+  global token_state
+  token_state = p[-1].upper()
 
 def p_Esf(p):
   '''
@@ -371,7 +404,7 @@ def p_Esf(p):
 def p_IDEx(p):
   '''
   IDEx : ID
-       | ID OPENBRACKET Idv CLOSINGBRACKET
+       | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
 
 def p_Ex(p):
@@ -407,7 +440,7 @@ def p_N(p):
     | ID
     | OPENPAR EA CLOSINGPAR
     | ID OPENBRACKET INTVAL CLOSINGBRACKET
-    | ID OPENBRACKET Idv CLOSINGBRACKET
+    | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
 
 def p_cte(p):
@@ -459,36 +492,53 @@ def p_empty(p):
   '''
   empty :
   '''
+  p[0] = None
   pass
 
 def p_error(p):
   print('\tSintaxis Incorrecto\n')
 
+def add_variables_to_symbol_table(variable_type):
+  '''
+  Function to add variables id and type to the 
+  symbol table.
+
+  @variable_type (string): variable type to be inserted
+                           in the symbol table
+
+
+  variable types to int:
+    INT = 0
+    FLOAT = 1
+    WORD = 2
+  '''
+  variable_type_to_int = {'INT': 0, 'FLOAT': 1, 'WORD': 2}
+  
+  global variables, symbol_table
+
+  for variable in variables:
+    if (symbol_table.get(variable, -1) == -1):
+      symbol_table[variable] = variable_type_to_int[variable_type]
+    else:
+      print('The variable ' + variable + ' already exists, it can\'t be declared again.')
+
+  variables = []
+
 parser = yacc.yacc() # creamos el parser para analisis de gramatica
 
-try:
-  print('PRUEBA DE MULTIPLICACION DE MATRICES')
-  f = open('./test_files/multiplicacionDeMatrices.txt', 'r')
-  testFile = f.read()
-  parser.parse(testFile)
-except EOFError:
-  print('Error at reading the file')
-  pass
+def print_symbol_table(symbol_table):
+  i = 0
+  for key in symbol_table:
+    print('| ', i, ' | ', key, ' | ', symbol_table[key], '|\n')
+    i+=1
 
 try:
-  print('PRUEBA DE OPERACIONES ANIDADAS')
-  f = open('./test_files/operaciones.txt', 'r')
+  fileDirectory = input('Directorio a archivo de prueba ')
+  f = open(fileDirectory, 'r')
   testFile = f.read()
   parser.parse(testFile)
-except EOFError:
-  print('Error at reading the file')
-  pass
 
-try:
-  print('PRUEBA DE CODIGO CON ERROR')
-  f = open('./test_files/error.txt', 'r')
-  testFile = f.read()
-  parser.parse(testFile)
+  print_symbol_table(symbol_table)
 except EOFError:
   print('Error at reading the file')
   pass

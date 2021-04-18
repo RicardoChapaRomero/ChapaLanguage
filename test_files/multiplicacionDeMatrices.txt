@@ -12,8 +12,8 @@ PROGRAM
 		GOSUB obtenerTamanos
 		WEND
 
+		DIM m_2 AS INT[renglones_m2][filas_m2]
 		DIM m_1 AS INT[renglones_m1][filas_m1]
-		DIM m_1 AS INT[renglones_m2][filas_m2]
 
 		GOSUB obtenerValores
 		PRINT "Matriz resultante"

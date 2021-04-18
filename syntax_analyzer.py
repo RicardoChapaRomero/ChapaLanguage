@@ -22,11 +22,12 @@ import sys
 import ply.lex as lex
 import ply.yacc as yacc
 
-variables = []
-variable_type = None
+# Variables globales
+variables = [] # arreglo dinamico de variables generadas
+variable_type = None # tipo de variables a guardar
 symbol_table = {}
 
-token_state = True
+token_state = ''
 
 # Lista de tokens a utilizar
 tokens = [
@@ -508,7 +509,7 @@ def add_variables_to_symbol_table(variable_type):
                            in the symbol table
 
 
-  variable types to int:
+  Variable types to int:
     INT = 0
     FLOAT = 1
     WORD = 2

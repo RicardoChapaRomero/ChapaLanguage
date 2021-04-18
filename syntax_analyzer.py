@@ -9,6 +9,7 @@ conda activate proyecto_lenguajes
 ./test_files/multiplicacionDeMatrices.txt
 ./test_files/operaciones.txt
 ./test_files/error.txt
+./test_files/error_with_variables.txt
 
 -----------------------------------------------
 
@@ -520,7 +521,7 @@ def add_variables_to_symbol_table(variable_type):
     if (symbol_table.get(variable, -1) == -1):
       symbol_table[variable] = variable_type_to_int[variable_type]
     else:
-      print('The variable ' + variable + ' already exists, it can\'t be declared again.')
+      print('The variable \'' + variable + '\' already exists, it can\'t be declared again.')
 
   variables = []
 

@@ -15,7 +15,7 @@ conda activate proyecto_lenguajes
 
 Ricardo Abraham Chapa Romero
 A00824335
-10/04/2021
+18/04/2021
 '''
 
 import sys 
@@ -25,9 +25,8 @@ import ply.yacc as yacc
 # Variables globales
 variables = [] # arreglo dinamico de variables generadas
 variable_type = None # tipo de variables a guardar
+token_state = '' # variable to symbolize the token state (Dim, let, ...)
 symbol_table = {}
-
-token_state = ''
 
 # Lista de tokens a utilizar
 tokens = [
@@ -510,9 +509,9 @@ def add_variables_to_symbol_table(variable_type):
 
 
   Variable types to int:
-    INT = 0
+    INT   = 0
     FLOAT = 1
-    WORD = 2
+    WORD  = 2
   '''
   variable_type_to_int = {'INT': 0, 'FLOAT': 1, 'WORD': 2}
   

@@ -8,7 +8,7 @@ Grammar
 
 Rule 0     S' -> PROGRAMA
 Rule 1     PROGRAMA -> PROGRAM V M S END
-Rule 2     V -> DIM setType Idv AS T Arr V
+Rule 2     V -> DIM setType Idv AS T Arr
 Rule 3     V -> empty
 Rule 4     Arr -> OPENBRACKET EA CLOSINGBRACKET Arr
 Rule 5     Arr -> OPENBRACKET ID CLOSINGBRACKET Arr
@@ -151,7 +151,7 @@ P                    : 36 37 38 39 40
 PROGRAMA             : 0
 S                    : 1 10
 T                    : 2 17
-V                    : 1 2
+V                    : 1
 cte                  : 42
 empty                : 3 6 11 13 15 28 53
 setType              : 2 16 17 30 46
@@ -176,7 +176,7 @@ state 1
 state 2
 
     (1) PROGRAMA -> PROGRAM . V M S END
-    (2) V -> . DIM setType Idv AS T Arr V
+    (2) V -> . DIM setType Idv AS T Arr
     (3) V -> . empty
     (68) empty -> .
 
@@ -249,7 +249,7 @@ state 3
 
 state 4
 
-    (2) V -> DIM . setType Idv AS T Arr V
+    (2) V -> DIM . setType Idv AS T Arr
     (26) setType -> .
 
     ID              reduce using rule 26 (setType -> .)
@@ -517,7 +517,7 @@ state 17
 
 state 18
 
-    (2) V -> DIM setType . Idv AS T Arr V
+    (2) V -> DIM setType . Idv AS T Arr
     (24) Idv -> . ID COMA Idv
     (25) Idv -> . ID
 
@@ -1127,7 +1127,7 @@ state 46
 
 state 47
 
-    (2) V -> DIM setType Idv . AS T Arr V
+    (2) V -> DIM setType Idv . AS T Arr
 
     AS              shift and go to state 68
 
@@ -1483,7 +1483,7 @@ state 67
 
 state 68
 
-    (2) V -> DIM setType Idv AS . T Arr V
+    (2) V -> DIM setType Idv AS . T Arr
     (7) T -> . INT
     (8) T -> . FLOAT
     (9) T -> . WORD
@@ -2079,15 +2079,15 @@ state 96
 
 state 97
 
-    (2) V -> DIM setType Idv AS T . Arr V
+    (2) V -> DIM setType Idv AS T . Arr
     (4) Arr -> . OPENBRACKET EA CLOSINGBRACKET Arr
     (5) Arr -> . OPENBRACKET ID CLOSINGBRACKET Arr
     (6) Arr -> . empty
     (68) empty -> .
 
     OPENBRACKET     shift and go to state 125
-    DIM             reduce using rule 68 (empty -> .)
     LET             reduce using rule 68 (empty -> .)
+    DIM             reduce using rule 68 (empty -> .)
     IF              reduce using rule 68 (empty -> .)
     FOR             reduce using rule 68 (empty -> .)
     WHILE           reduce using rule 68 (empty -> .)
@@ -2105,8 +2105,8 @@ state 98
     (7) T -> INT .
 
     OPENBRACKET     reduce using rule 7 (T -> INT .)
-    DIM             reduce using rule 7 (T -> INT .)
     LET             reduce using rule 7 (T -> INT .)
+    DIM             reduce using rule 7 (T -> INT .)
     IF              reduce using rule 7 (T -> INT .)
     FOR             reduce using rule 7 (T -> INT .)
     WHILE           reduce using rule 7 (T -> INT .)
@@ -2127,8 +2127,8 @@ state 99
     (8) T -> FLOAT .
 
     OPENBRACKET     reduce using rule 8 (T -> FLOAT .)
-    DIM             reduce using rule 8 (T -> FLOAT .)
     LET             reduce using rule 8 (T -> FLOAT .)
+    DIM             reduce using rule 8 (T -> FLOAT .)
     IF              reduce using rule 8 (T -> FLOAT .)
     FOR             reduce using rule 8 (T -> FLOAT .)
     WHILE           reduce using rule 8 (T -> FLOAT .)
@@ -2149,8 +2149,8 @@ state 100
     (9) T -> WORD .
 
     OPENBRACKET     reduce using rule 9 (T -> WORD .)
-    DIM             reduce using rule 9 (T -> WORD .)
     LET             reduce using rule 9 (T -> WORD .)
+    DIM             reduce using rule 9 (T -> WORD .)
     IF              reduce using rule 9 (T -> WORD .)
     FOR             reduce using rule 9 (T -> WORD .)
     WHILE           reduce using rule 9 (T -> WORD .)
@@ -2505,27 +2505,19 @@ state 123
 
 state 124
 
-    (2) V -> DIM setType Idv AS T Arr . V
-    (2) V -> . DIM setType Idv AS T Arr V
-    (3) V -> . empty
-    (68) empty -> .
+    (2) V -> DIM setType Idv AS T Arr .
 
-  ! shift/reduce conflict for DIM resolved as shift
-    DIM             shift and go to state 4
-    LET             reduce using rule 68 (empty -> .)
-    IF              reduce using rule 68 (empty -> .)
-    FOR             reduce using rule 68 (empty -> .)
-    WHILE           reduce using rule 68 (empty -> .)
-    GOSUB           reduce using rule 68 (empty -> .)
-    INPUT           reduce using rule 68 (empty -> .)
-    PRINT           reduce using rule 68 (empty -> .)
-    SUBPROCEDURE    reduce using rule 68 (empty -> .)
-    END             reduce using rule 68 (empty -> .)
+    LET             reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    DIM             reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    IF              reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    FOR             reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    WHILE           reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    GOSUB           reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    INPUT           reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    PRINT           reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    SUBPROCEDURE    reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
+    END             reduce using rule 2 (V -> DIM setType Idv AS T Arr .)
 
-  ! DIM             [ reduce using rule 68 (empty -> .) ]
-
-    V                              shift and go to state 136
-    empty                          shift and go to state 5
 
 state 125
 
@@ -2545,12 +2537,12 @@ state 125
     (47) cte -> . INTVAL
     (48) cte -> . FLOATVAL
 
-    ID              shift and go to state 138
+    ID              shift and go to state 137
     OPENPAR         shift and go to state 54
     INTVAL          shift and go to state 45
     FLOATVAL        shift and go to state 46
 
-    EA                             shift and go to state 137
+    EA                             shift and go to state 136
     P                              shift and go to state 41
     N                              shift and go to state 43
     cte                            shift and go to state 44
@@ -2559,8 +2551,8 @@ state 126
 
     (6) Arr -> empty .
 
-    DIM             reduce using rule 6 (Arr -> empty .)
     LET             reduce using rule 6 (Arr -> empty .)
+    DIM             reduce using rule 6 (Arr -> empty .)
     IF              reduce using rule 6 (Arr -> empty .)
     FOR             reduce using rule 6 (Arr -> empty .)
     WHILE           reduce using rule 6 (Arr -> empty .)
@@ -2586,7 +2578,7 @@ state 127
     SUBPROCEDURE    shift and go to state 20
     END             reduce using rule 68 (empty -> .)
 
-    S                              shift and go to state 139
+    S                              shift and go to state 138
     empty                          shift and go to state 21
 
 state 128
@@ -2666,7 +2658,7 @@ state 131
     INTVAL          shift and go to state 45
     FLOATVAL        shift and go to state 46
 
-    O                              shift and go to state 140
+    O                              shift and go to state 139
     EA                             shift and go to state 57
     P                              shift and go to state 41
     N                              shift and go to state 43
@@ -2697,7 +2689,7 @@ state 132
     PRINT           shift and go to state 17
     NEXT            reduce using rule 68 (empty -> .)
 
-    F                              shift and go to state 141
+    F                              shift and go to state 140
     E                              shift and go to state 9
     empty                          shift and go to state 24
 
@@ -2730,7 +2722,7 @@ state 134
 
     ID              shift and go to state 48
 
-    Idv                            shift and go to state 142
+    Idv                            shift and go to state 141
 
 state 135
 
@@ -2768,28 +2760,12 @@ state 135
 
 state 136
 
-    (2) V -> DIM setType Idv AS T Arr V .
+    (4) Arr -> OPENBRACKET EA . CLOSINGBRACKET Arr
 
-    LET             reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    DIM             reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    IF              reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    FOR             reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    WHILE           reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    GOSUB           reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    INPUT           reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    PRINT           reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    SUBPROCEDURE    reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
-    END             reduce using rule 2 (V -> DIM setType Idv AS T Arr V .)
+    CLOSINGBRACKET  shift and go to state 142
 
 
 state 137
-
-    (4) Arr -> OPENBRACKET EA . CLOSINGBRACKET Arr
-
-    CLOSINGBRACKET  shift and go to state 143
-
-
-state 138
 
     (5) Arr -> OPENBRACKET ID . CLOSINGBRACKET Arr
     (43) N -> ID .
@@ -2797,7 +2773,7 @@ state 138
     (46) N -> ID . OPENBRACKET setType Idv CLOSINGBRACKET
 
   ! shift/reduce conflict for CLOSINGBRACKET resolved as shift
-    CLOSINGBRACKET  shift and go to state 144
+    CLOSINGBRACKET  shift and go to state 143
     MULTIPLY        reduce using rule 43 (N -> ID .)
     DIVIDE          reduce using rule 43 (N -> ID .)
     PLUS            reduce using rule 43 (N -> ID .)
@@ -2807,35 +2783,35 @@ state 138
   ! CLOSINGBRACKET  [ reduce using rule 43 (N -> ID .) ]
 
 
-state 139
+state 138
 
     (10) S -> SUBPROCEDURE ID TWOPOINTS M RETURN S .
 
     END             reduce using rule 10 (S -> SUBPROCEDURE ID TWOPOINTS M RETURN S .)
 
 
-state 140
+state 139
 
     (52) Olt -> OL OPENPAR O . CLOSINGPAR Olt
 
-    CLOSINGPAR      shift and go to state 145
+    CLOSINGPAR      shift and go to state 144
+
+
+state 140
+
+    (19) E -> FOR ID EQUALS EA TO Ex F . NEXT ID
+
+    NEXT            shift and go to state 145
 
 
 state 141
 
-    (19) E -> FOR ID EQUALS EA TO Ex F . NEXT ID
+    (30) IDEx -> ID OPENBRACKET setType Idv . CLOSINGBRACKET
 
-    NEXT            shift and go to state 146
+    CLOSINGBRACKET  shift and go to state 146
 
 
 state 142
-
-    (30) IDEx -> ID OPENBRACKET setType Idv . CLOSINGBRACKET
-
-    CLOSINGBRACKET  shift and go to state 147
-
-
-state 143
 
     (4) Arr -> OPENBRACKET EA CLOSINGBRACKET . Arr
     (4) Arr -> . OPENBRACKET EA CLOSINGBRACKET Arr
@@ -2844,8 +2820,36 @@ state 143
     (68) empty -> .
 
     OPENBRACKET     shift and go to state 125
-    DIM             reduce using rule 68 (empty -> .)
     LET             reduce using rule 68 (empty -> .)
+    DIM             reduce using rule 68 (empty -> .)
+    IF              reduce using rule 68 (empty -> .)
+    FOR             reduce using rule 68 (empty -> .)
+    WHILE           reduce using rule 68 (empty -> .)
+    GOSUB           reduce using rule 68 (empty -> .)
+    INPUT           reduce using rule 68 (empty -> .)
+    PRINT           reduce using rule 68 (empty -> .)
+    SUBPROCEDURE    reduce using rule 68 (empty -> .)
+    END             reduce using rule 68 (empty -> .)
+    RETURN          reduce using rule 68 (empty -> .)
+    ELSE            reduce using rule 68 (empty -> .)
+    EIF             reduce using rule 68 (empty -> .)
+    WEND            reduce using rule 68 (empty -> .)
+    NEXT            reduce using rule 68 (empty -> .)
+
+    Arr                            shift and go to state 147
+    empty                          shift and go to state 126
+
+state 143
+
+    (5) Arr -> OPENBRACKET ID CLOSINGBRACKET . Arr
+    (4) Arr -> . OPENBRACKET EA CLOSINGBRACKET Arr
+    (5) Arr -> . OPENBRACKET ID CLOSINGBRACKET Arr
+    (6) Arr -> . empty
+    (68) empty -> .
+
+    OPENBRACKET     shift and go to state 125
+    LET             reduce using rule 68 (empty -> .)
+    DIM             reduce using rule 68 (empty -> .)
     IF              reduce using rule 68 (empty -> .)
     FOR             reduce using rule 68 (empty -> .)
     WHILE           reduce using rule 68 (empty -> .)
@@ -2864,34 +2868,6 @@ state 143
     empty                          shift and go to state 126
 
 state 144
-
-    (5) Arr -> OPENBRACKET ID CLOSINGBRACKET . Arr
-    (4) Arr -> . OPENBRACKET EA CLOSINGBRACKET Arr
-    (5) Arr -> . OPENBRACKET ID CLOSINGBRACKET Arr
-    (6) Arr -> . empty
-    (68) empty -> .
-
-    OPENBRACKET     shift and go to state 125
-    DIM             reduce using rule 68 (empty -> .)
-    LET             reduce using rule 68 (empty -> .)
-    IF              reduce using rule 68 (empty -> .)
-    FOR             reduce using rule 68 (empty -> .)
-    WHILE           reduce using rule 68 (empty -> .)
-    GOSUB           reduce using rule 68 (empty -> .)
-    INPUT           reduce using rule 68 (empty -> .)
-    PRINT           reduce using rule 68 (empty -> .)
-    SUBPROCEDURE    reduce using rule 68 (empty -> .)
-    END             reduce using rule 68 (empty -> .)
-    RETURN          reduce using rule 68 (empty -> .)
-    ELSE            reduce using rule 68 (empty -> .)
-    EIF             reduce using rule 68 (empty -> .)
-    WEND            reduce using rule 68 (empty -> .)
-    NEXT            reduce using rule 68 (empty -> .)
-
-    Arr                            shift and go to state 149
-    empty                          shift and go to state 126
-
-state 145
 
     (52) Olt -> OL OPENPAR O CLOSINGPAR . Olt
     (52) Olt -> . OL OPENPAR O CLOSINGPAR Olt
@@ -2923,17 +2899,17 @@ state 145
     CLOSINGPAR      reduce using rule 68 (empty -> .)
 
     OL                             shift and go to state 109
-    Olt                            shift and go to state 150
+    Olt                            shift and go to state 149
     empty                          shift and go to state 110
 
-state 146
+state 145
 
     (19) E -> FOR ID EQUALS EA TO Ex F NEXT . ID
 
-    ID              shift and go to state 151
+    ID              shift and go to state 150
 
 
-state 147
+state 146
 
     (30) IDEx -> ID OPENBRACKET setType Idv CLOSINGBRACKET .
 
@@ -2954,12 +2930,12 @@ state 147
     NEXT            reduce using rule 30 (IDEx -> ID OPENBRACKET setType Idv CLOSINGBRACKET .)
 
 
-state 148
+state 147
 
     (4) Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .
 
-    DIM             reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
     LET             reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
+    DIM             reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
     IF              reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
     FOR             reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
     WHILE           reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
@@ -2975,12 +2951,12 @@ state 148
     NEXT            reduce using rule 4 (Arr -> OPENBRACKET EA CLOSINGBRACKET Arr .)
 
 
-state 149
+state 148
 
     (5) Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .
 
-    DIM             reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
     LET             reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
+    DIM             reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
     IF              reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
     FOR             reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
     WHILE           reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
@@ -2996,7 +2972,7 @@ state 149
     NEXT            reduce using rule 5 (Arr -> OPENBRACKET ID CLOSINGBRACKET Arr .)
 
 
-state 150
+state 149
 
     (52) Olt -> OL OPENPAR O CLOSINGPAR Olt .
 
@@ -3019,7 +2995,7 @@ state 150
     CLOSINGPAR      reduce using rule 52 (Olt -> OL OPENPAR O CLOSINGPAR Olt .)
 
 
-state 151
+state 150
 
     (19) E -> FOR ID EQUALS EA TO Ex F NEXT ID .
 
@@ -3081,8 +3057,7 @@ WARNING: shift/reduce conflict for WHILE in state 70 resolved as shift
 WARNING: shift/reduce conflict for GOSUB in state 70 resolved as shift
 WARNING: shift/reduce conflict for INPUT in state 70 resolved as shift
 WARNING: shift/reduce conflict for PRINT in state 70 resolved as shift
-WARNING: shift/reduce conflict for DIM in state 124 resolved as shift
-WARNING: shift/reduce conflict for CLOSINGBRACKET in state 138 resolved as shift
+WARNING: shift/reduce conflict for CLOSINGBRACKET in state 137 resolved as shift
 WARNING: reduce/reduce conflict in state 8 resolved using rule (M -> empty)
 WARNING: rejected rule (F -> empty) in state 8
 WARNING: reduce/reduce conflict in state 40 resolved using rule (Ex -> ID)

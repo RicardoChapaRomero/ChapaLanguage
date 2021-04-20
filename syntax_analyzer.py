@@ -307,6 +307,10 @@ def t_CLOSINGBRACKET(t):
   t.type = 'CLOSINGBRACKET'
   return t
 
+def t_newline(t):
+  r'\n+'
+  t.lexer.lineno += len(t.value)
+
 def t_error(t):
   t.lexer.skip(1)
 
@@ -319,17 +323,16 @@ def p_PROGRAMA(p):
   '''
   PROGRAMA : PROGRAM V M S END
   '''
-  print("\tSintaxis correcto\n")
 
 def p_V(p):
   '''
-    V : DIM setType Idv AS T Arr V
+    V : DIM setType Idv AS T Arr
       | empty
   '''
   global variable_type
   if (len(p) > 2):
     variable_type = p[5].upper()
-    add_variables_to_symbol_table(variable_type)
+    add_variables_to_symbol_table(p, variable_type)
 
 def p_Arr(p):
   '''
@@ -378,7 +381,7 @@ def p_E(p):
   global variable_type
   if (p[1].upper() == 'DIM'):
     variable_type = p[5].upper()
-    add_variables_to_symbol_table(variable_type)
+    add_variables_to_symbol_table(p, variable_type)
 
 def p_Idv(p):
   '''
@@ -387,6 +390,7 @@ def p_Idv(p):
   '''
   global variables
   if (token_state == 'DIM'):
+      p.set_lineno(0,p.lineno(1))
       variables.append(p[1])
 
 def p_setType(p):
@@ -499,7 +503,7 @@ def p_empty(p):
 def p_error(p):
   print('\tSintaxis Incorrecto\n')
 
-def add_variables_to_symbol_table(variable_type):
+def add_variables_to_symbol_table(p, variable_type):
   '''
   Function to add variables id and type to the 
   symbol table.
@@ -519,25 +523,29 @@ def add_variables_to_symbol_table(variable_type):
 
   for variable in variables:
     if (symbol_table.get(variable, -1) == -1):
-      symbol_table[variable] = variable_type_to_int[variable_type]
+      symbol_table[variable] = (variable_type_to_int[variable_type], p.lineno(1))
     else:
-      print('The variable \'' + variable + '\' already exists, it can\'t be declared again.')
+      print('ERROR: The variable \'' + variable + '\' is already defined in line: ' + str(symbol_table[variable][1]))
+      print('Variable redefined at line: ' + str(p.lineno(1)) + '\n')
 
   variables = []
 
 parser = yacc.yacc() # creamos el parser para analisis de gramatica
 
 def print_symbol_table(symbol_table):
+  variable_int_to_type = ['INT','FLOAT','WORD']
   i = 0
+  print('| Index | Variable | Variable Type | Line |\n')
   for key in symbol_table:
-    print('| ', i, ' | ', key, ' | ', symbol_table[key], '|\n')
+    print('| ', i, ' | ', key, ' | ', variable_int_to_type[symbol_table[key][0]],' | ', symbol_table[key][1], '|\n')
     i+=1
 
 try:
   fileDirectory = input('Directorio a archivo de prueba ')
+  print('\n')
   f = open(fileDirectory, 'r')
   testFile = f.read()
-  parser.parse(testFile)
+  parser.parse(testFile, tracking=True)
 
   print_symbol_table(symbol_table)
 except EOFError:

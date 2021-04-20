@@ -1,5 +1,6 @@
 PROGRAM
-	DIM variable_1, variable_2, variable_2 AS INT
+	DIM variable_1, variable_2 AS INT
+	DIM variable_2 AS FLOAT
 
 	GOSUB operaciones
 

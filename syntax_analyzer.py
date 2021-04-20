@@ -541,8 +541,8 @@ def print_symbol_table(symbol_table):
     i+=1
 
 try:
-  fileDirectory = input('Directorio a archivo de prueba ')
-  print('\n')
+  fileDirectory = input('Directorio al archivo de prueba: ')
+  print('')
   f = open(fileDirectory, 'r')
   testFile = f.read()
   parser.parse(testFile, tracking=True)

@@ -29,12 +29,11 @@ variable_type = None # tipo de variables a guardar
 token_state = '' # variable to symbolize the token state (Dim, let, ...)
 symbol_table = {}
 
-avails = {}
-avail_counter = 0
+avails_int = {} # dictionary for available temporary variables
+avails_bool = {} # dictionary for available temporary variables
 cuadruplos = []
-operands = []
-operators = LifoQueue()
-queue_operators = Queue()
+operands = [] # list of operands to perform an operation
+operands_bool = [] # list of operands to perform an operation
 
 # Lista de tokens a utilizar
 tokens = [
@@ -386,13 +385,15 @@ def p_E(p):
     | INPUT ES COMA IDEx
     | PRINT Ex
   '''
-  global variable_type, avails
+  global variable_type, avails_int, operands
   if (p[1].upper() == 'DIM'):
     variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
 
   if (p[1].upper() == 'LET'):
     print(str(p[3]) + ' = ' + str(p[5]))
+
+  operands = []
 
 def p_Idv(p):
   '''
@@ -446,25 +447,25 @@ def p_EA(p):
      | P MINUS EA
      | P
   '''
-  global operands, avails
+  global operands, avails_int
   operation = False
   if (len(p) > 3):
     operation = True
-    availIndex = str(len(avails))
+    availIndex = str(len(avails_int))
     operand_1 = operands.pop()
     operand_2 = operands.pop()
 
     if (p[2] == '+'):
-      avails['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      avails_int['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
       operands.append(str('T' + availIndex))
-      print(avails['T' + availIndex])
+      print(avails_int['T' + availIndex])
 
     elif (p[2] == '-'):
-      avails['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      avails_int['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
       operands.append(str('T' + availIndex))
-      print(avails['T' + availIndex])
+      print(avails_int['T' + availIndex])
 
-    p[0] = avails['T' + availIndex]
+    p[0] = avails_int['T' + availIndex]
 
   if (not operation):
     p[0] = p[1]
@@ -476,23 +477,23 @@ def p_P(p):
     | N DIVIDE P
     | N
   '''
-  global operands, avails
+  global operands, avails_int
   # skip if value is an assignation
   if (len(p) > 3):
     operand_1 = operands.pop()
     operand_2 = operands.pop()
     
     if (p[2] == '*'):
-      availIndex = str(len(avails))
-      avails['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      availIndex = str(len(avails_int))
+      avails_int['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
       operands.append(str('T' + availIndex))
-      print(avails['T' + availIndex])
+      print(avails_int['T' + availIndex])
 
     elif (p[2] == '/'):
-      availIndex = str(len(avails))
-      avails['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      availIndex = str(len(avails_int))
+      avails_int['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
       operands.append(str('T' + availIndex))
-      print(avails['T' + availIndex])
+      print(avails_int['T' + availIndex])
 
   p[0] = p[1]
   
@@ -505,16 +506,7 @@ def p_N(p):
     | ID OPENBRACKET INTVAL CLOSINGBRACKET
     | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
-  #while not len(operands) == 0:
-   # print(operands.pop())
   p[0] = p[1]
-
-def p_saveOperator(p):
-  '''
-  saveOperator :
-  '''
-  global queue_operators
-  queue_operators.put(str(p[-1]))
 
 def p_saveID(p):
   '''
@@ -523,21 +515,6 @@ def p_saveID(p):
   # append id to operands list
   global operands
   operands.append(str(p[-1]))
-
-def p_solveOperation(p):
-  '''
-  solveOperation :
-  '''
-  global operators, operands, cuadruplos, avails, avail_counter
-  while not operators.empty():
-    if not len(avails) == 0:
-      cuadruplos.append(str(operators.get() + ' T' + str(avail_counter - 1) + ' ' + str(operands.pop()) + ' T' + str(avail_counter)))
-    else:
-      cuadruplos.append(str(operators.get() + ' ' + str(operands.pop()) + ' ' + str(operands.pop()) + ' T' + str(avail_counter)))
-    
-    avails['T' + str(avail_counter)] = cuadruplos[len(cuadruplos) - 1]
-    print(cuadruplos[len(cuadruplos) - 1])
-    avail_counter += 1
 
 def p_cte(p):
   '''
@@ -552,6 +529,8 @@ def p_EL(p):
      | FALSE 
      | OPENPAR O CLOSINGPAR Olt
   '''
+  if (p[1] == 'TRUE' or p[1] == 'FALSE'):
+    p[0] = p[1]
 
 def p_Olt(p):
   '''
@@ -565,15 +544,32 @@ def p_OL(p):
      | OR
      | NOT
   '''
-
+  global operands
+  operands = []
+  
 def p_O(p):
   '''
   O : WORD EQUALTO WORD
-    | EA OPR EA
     | ID OPR ID
+    | EA OPR EA
     | ID OPR EA
     | EA OPR ID
   '''
+  global operands, avails_int
+  
+  operand_1 = p[3]
+  operand_2 = p[1]
+
+  if (len(operands) == 2):
+    operand_2 = operands.pop()
+    operand_1 = operands.pop()
+  elif (len(operands) == 1):
+    operand_1 = operands.pop()
+
+  availIndex = str(len(avails_int))
+  avails_int['T' + availIndex] = str(str(p[2]) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' T' + availIndex)
+  operands.append(str('T' + availIndex))
+  print(avails_int['T' + availIndex])
 
 def p_OPR(p):
   '''
@@ -584,6 +580,7 @@ def p_OPR(p):
       | SMALLEREQUAL
       | NOTEQUAL
   '''
+  p[0] = p[1]
 
 def p_empty(p):
   '''

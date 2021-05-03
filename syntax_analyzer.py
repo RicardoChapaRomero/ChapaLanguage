@@ -21,12 +21,20 @@ A00824335
 import sys 
 import ply.lex as lex
 import ply.yacc as yacc
+from queue import Queue, LifoQueue
 
 # Variables globales
 variables = [] # arreglo dinamico de variables generadas
 variable_type = None # tipo de variables a guardar
 token_state = '' # variable to symbolize the token state (Dim, let, ...)
 symbol_table = {}
+
+avails = {}
+avail_counter = 0
+cuadruplos = []
+operands = []
+operators = LifoQueue()
+queue_operators = Queue()
 
 # Lista de tokens a utilizar
 tokens = [
@@ -378,10 +386,13 @@ def p_E(p):
     | INPUT ES COMA IDEx
     | PRINT Ex
   '''
-  global variable_type
+  global variable_type, avails
   if (p[1].upper() == 'DIM'):
     variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
+
+  if (p[1].upper() == 'LET'):
+    print(str(p[3]) + ' = ' + str(p[5]))
 
 def p_Idv(p):
   '''
@@ -390,8 +401,11 @@ def p_Idv(p):
   '''
   global variables
   if (token_state == 'DIM'):
-      p.set_lineno(0,p.lineno(1))
-      variables.append(p[1])
+    p.set_lineno(0,p.lineno(1))
+    variables.append(p[1])
+  
+  elif (token_state == 'LET'):
+    p[0] = p[1]
 
 def p_setType(p):
   '''
@@ -419,6 +433,7 @@ def p_Ex(p):
      | EL
      | ID
   '''
+  p[0] = p[1]
 
 def p_ES(p):
   '''
@@ -429,8 +444,31 @@ def p_EA(p):
   '''
   EA : P PLUS EA
      | P MINUS EA
-     | P 
+     | P
   '''
+  global operands, avails
+  operation = False
+  if (len(p) > 3):
+    operation = True
+    availIndex = str(len(avails))
+    operand_1 = operands.pop()
+    operand_2 = operands.pop()
+
+    if (p[2] == '+'):
+      avails['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      operands.append(str('T' + availIndex))
+      print(avails['T' + availIndex])
+
+    elif (p[2] == '-'):
+      avails['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      operands.append(str('T' + availIndex))
+      print(avails['T' + availIndex])
+
+    p[0] = avails['T' + availIndex]
+
+  if (not operation):
+    p[0] = p[1]
+  
 
 def p_P(p):
   '''
@@ -438,21 +476,75 @@ def p_P(p):
     | N DIVIDE P
     | N
   '''
+  global operands, avails
+  # skip if value is an assignation
+  if (len(p) > 3):
+    operand_1 = operands.pop()
+    operand_2 = operands.pop()
+    
+    if (p[2] == '*'):
+      availIndex = str(len(avails))
+      avails['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      operands.append(str('T' + availIndex))
+      print(avails['T' + availIndex])
+
+    elif (p[2] == '/'):
+      availIndex = str(len(avails))
+      avails['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
+      operands.append(str('T' + availIndex))
+      print(avails['T' + availIndex])
+
+  p[0] = p[1]
+  
 
 def p_N(p):
   '''
-  N : cte
-    | ID
+  N : cte saveID
+    | ID saveID
     | OPENPAR EA CLOSINGPAR
     | ID OPENBRACKET INTVAL CLOSINGBRACKET
     | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
+  #while not len(operands) == 0:
+   # print(operands.pop())
+  p[0] = p[1]
+
+def p_saveOperator(p):
+  '''
+  saveOperator :
+  '''
+  global queue_operators
+  queue_operators.put(str(p[-1]))
+
+def p_saveID(p):
+  '''
+  saveID :
+  '''
+  # append id to operands list
+  global operands
+  operands.append(str(p[-1]))
+
+def p_solveOperation(p):
+  '''
+  solveOperation :
+  '''
+  global operators, operands, cuadruplos, avails, avail_counter
+  while not operators.empty():
+    if not len(avails) == 0:
+      cuadruplos.append(str(operators.get() + ' T' + str(avail_counter - 1) + ' ' + str(operands.pop()) + ' T' + str(avail_counter)))
+    else:
+      cuadruplos.append(str(operators.get() + ' ' + str(operands.pop()) + ' ' + str(operands.pop()) + ' T' + str(avail_counter)))
+    
+    avails['T' + str(avail_counter)] = cuadruplos[len(cuadruplos) - 1]
+    print(cuadruplos[len(cuadruplos) - 1])
+    avail_counter += 1
 
 def p_cte(p):
   '''
   cte : INTVAL
       | FLOATVAL
   '''
+  p[0] = p[1]
 
 def p_EL(p):
   '''
@@ -547,6 +639,7 @@ try:
   testFile = f.read()
   parser.parse(testFile, tracking=True)
 
+  print('\nSymbol table')
   print_symbol_table(symbol_table)
 except EOFError:
   print('Error at reading the file')

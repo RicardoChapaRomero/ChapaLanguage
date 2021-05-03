@@ -448,26 +448,22 @@ def p_EA(p):
      | P
   '''
   global operands, avails_int
-  operation = False
   if (len(p) > 3):
-    operation = True
     availIndex = str(len(avails_int))
     operand_1 = operands.pop()
     operand_2 = operands.pop()
 
     if (p[2] == '+'):
-      avails_int['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
-      operands.append(str('T' + availIndex))
-      print(avails_int['T' + availIndex])
+      avails_int['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1))
 
     elif (p[2] == '-'):
-      avails_int['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
-      operands.append(str('T' + availIndex))
-      print(avails_int['T' + availIndex])
+      avails_int['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1))
 
-    p[0] = avails_int['T' + availIndex]
+    operands.append(str('T' + availIndex))
+    print(avails_int['T' + availIndex] + ' T' + availIndex)
+    p[0] = str('T' + availIndex)
 
-  if (not operation):
+  else:
     p[0] = p[1]
   
 
@@ -482,20 +478,20 @@ def p_P(p):
   if (len(p) > 3):
     operand_1 = operands.pop()
     operand_2 = operands.pop()
-    
+    availIndex = str(len(avails_int))
+
     if (p[2] == '*'):
-      availIndex = str(len(avails_int))
-      avails_int['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
-      operands.append(str('T' + availIndex))
-      print(avails_int['T' + availIndex])
+      avails_int['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1))
 
     elif (p[2] == '/'):
-      availIndex = str(len(avails_int))
-      avails_int['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + availIndex)
-      operands.append(str('T' + availIndex))
-      print(avails_int['T' + availIndex])
+      avails_int['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1))
 
-  p[0] = p[1]
+    operands.append(str('T' + availIndex))
+    print(avails_int['T' + availIndex] + ' T' + availIndex)
+    p[0] = str('T' + availIndex)
+
+  else:
+    p[0] = p[1]
   
 
 def p_N(p):
@@ -506,7 +502,10 @@ def p_N(p):
     | ID OPENBRACKET INTVAL CLOSINGBRACKET
     | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
-  p[0] = p[1]
+  if (p[1] == '('):
+    p[0] = p[2]
+  else:
+    p[0] = p[1]
 
 def p_saveID(p):
   '''
@@ -527,16 +526,11 @@ def p_EL(p):
   '''
   EL : TRUE 
      | FALSE 
-     | OPENPAR O CLOSINGPAR Olt
+     | OPENPAR O CLOSINGPAR
+     | OPENPAR O CLOSINGPAR OL EL
   '''
   if (p[1] == 'TRUE' or p[1] == 'FALSE'):
     p[0] = p[1]
-
-def p_Olt(p):
-  '''
-  Olt : OL OPENPAR O CLOSINGPAR Olt
-      | empty
-  '''
 
 def p_OL(p):
   '''
@@ -549,16 +543,12 @@ def p_OL(p):
   
 def p_O(p):
   '''
-  O : WORD EQUALTO WORD
-    | ID OPR ID
-    | EA OPR EA
-    | ID OPR EA
-    | EA OPR ID
+  O : Ex OPR Ex
   '''
   global operands, avails_int
   
-  operand_1 = p[3]
-  operand_2 = p[1]
+  operand_1 = p[1]
+  operand_2 = p[3]
 
   if (len(operands) == 2):
     operand_2 = operands.pop()
@@ -573,12 +563,12 @@ def p_O(p):
 
 def p_OPR(p):
   '''
-  OPR : EQUALTO
-      | GREATHER
+  OPR : GREATHER
       | GREATHEREQUAL
       | SMALLER
       | SMALLEREQUAL
       | NOTEQUAL
+      | EQUALTO
   '''
   p[0] = p[1]
 
@@ -591,6 +581,7 @@ def p_empty(p):
 
 def p_error(p):
   print('\tSintaxis Incorrecto\n')
+  print('Error: ' + str(p))
 
 def add_variables_to_symbol_table(p, variable_type):
   '''

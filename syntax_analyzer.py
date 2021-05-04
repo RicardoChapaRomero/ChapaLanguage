@@ -10,6 +10,7 @@ conda activate proyecto_lenguajes
 ./test_files/operaciones.txt
 ./test_files/error.txt
 ./test_files/error_with_variables.txt
+./test_files/operaciones_codigo_intermedio.txt
 
 -----------------------------------------------
 
@@ -29,11 +30,13 @@ variable_type = None # tipo de variables a guardar
 token_state = '' # variable to symbolize the token state (Dim, let, ...)
 symbol_table = {}
 
-avails_int = {} # dictionary for available temporary variables
-avails_bool = {} # dictionary for available temporary variables
-cuadruplos = []
+avails = {} # dictionary for available temporary variables {temp var, cuadruplo}
 operands = [] # list of operands to perform an operation
-operands_bool = [] # list of operands to perform an operation
+'''
+TODO:
+  Fix the '<=' and '>=' symbol errors in token list
+'''
+equal_error = False # error handling variable for '<=' and '>=' errors
 
 # Lista de tokens a utilizar
 tokens = [
@@ -385,7 +388,7 @@ def p_E(p):
     | INPUT ES COMA IDEx
     | PRINT Ex
   '''
-  global variable_type, avails_int, operands
+  global variable_type, avails, operands
   if (p[1].upper() == 'DIM'):
     variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
@@ -447,20 +450,19 @@ def p_EA(p):
      | P MINUS EA
      | P
   '''
-  global operands, avails_int
+  global operands, avails
   if (len(p) > 3):
-    availIndex = str(len(avails_int))
+    availIndex = str(len(avails))
     operand_1 = operands.pop()
     operand_2 = operands.pop()
 
     if (p[2] == '+'):
-      avails_int['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1))
+      avails['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1))
 
     elif (p[2] == '-'):
-      avails_int['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1))
+      avails['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1))
 
     operands.append(str('T' + availIndex))
-    print(avails_int['T' + availIndex] + ' T' + availIndex)
     p[0] = str('T' + availIndex)
 
   else:
@@ -473,21 +475,20 @@ def p_P(p):
     | N DIVIDE P
     | N
   '''
-  global operands, avails_int
+  global operands, avails
   # skip if value is an assignation
   if (len(p) > 3):
     operand_1 = operands.pop()
     operand_2 = operands.pop()
-    availIndex = str(len(avails_int))
+    availIndex = str(len(avails))
 
     if (p[2] == '*'):
-      avails_int['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1))
+      avails['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1))
 
     elif (p[2] == '/'):
-      avails_int['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1))
+      avails['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1))
 
     operands.append(str('T' + availIndex))
-    print(avails_int['T' + availIndex] + ' T' + availIndex)
     p[0] = str('T' + availIndex)
 
   else:
@@ -529,8 +530,18 @@ def p_EL(p):
      | OPENPAR O CLOSINGPAR
      | OPENPAR O CLOSINGPAR OL EL
   '''
+  global operands, avails
   if (p[1] == 'TRUE' or p[1] == 'FALSE'):
     p[0] = p[1]
+  else:
+    availIndex = str(len(avails))
+
+    if (len(p) > 4):
+      avails['T' + availIndex] = str(str(p[4]) + ' ' + str(p[2]) + ' ' + str(p[5]))
+
+      p[0] = str('T' + availIndex)
+    else:
+      p[0] = p[2]
 
 def p_OL(p):
   '''
@@ -540,15 +551,27 @@ def p_OL(p):
   '''
   global operands
   operands = []
+  p[0] = p[1]
   
 def p_O(p):
   '''
-  O : Ex OPR Ex
+  O : Ex GREATHER Ex
+    | Ex GREATHEREQUAL Ex
+    | Ex SMALLER Ex
+    | Ex SMALLEREQUAL Ex
+    | Ex NOTEQUAL Ex
+    | Ex EQUALTO Ex
   '''
-  global operands, avails_int
+  global operands, avails, equal_error
   
   operand_1 = p[1]
   operand_2 = p[3]
+
+  operation = str(p[2])
+
+  if (equal_error):
+    operation += '='
+    equal_error = False
 
   if (len(operands) == 2):
     operand_2 = operands.pop()
@@ -556,21 +579,18 @@ def p_O(p):
   elif (len(operands) == 1):
     operand_1 = operands.pop()
 
-  availIndex = str(len(avails_int))
-  avails_int['T' + availIndex] = str(str(p[2]) + ' ' + str(operand_1) + ' ' + str(operand_2) + ' T' + availIndex)
+  availIndex = str(len(avails))
+  avails['T' + availIndex] = str(operation + ' ' + str(operand_1) + ' ' + str(operand_2))
   operands.append(str('T' + availIndex))
-  print(avails_int['T' + availIndex])
 
-def p_OPR(p):
+  p[0] = str('T' + availIndex)
+
+def p_O_error(p):
   '''
-  OPR : GREATHER
-      | GREATHEREQUAL
-      | SMALLER
-      | SMALLEREQUAL
-      | NOTEQUAL
-      | EQUALTO
+  O : Ex error Ex
   '''
-  p[0] = p[1]
+  print('Error in boolean operand')
+  #print(p)
 
 def p_empty(p):
   '''
@@ -580,8 +600,13 @@ def p_empty(p):
   pass
 
 def p_error(p):
-  print('\tSintaxis Incorrecto\n')
-  print('Error: ' + str(p))
+  if (p.type == 'EQUALS'):
+    global equal_error
+    equal_error = True
+    parser.errok()
+  else:
+    print('\tSintaxis Incorrecto\n')
+    print('Error: ' + str(p))
 
 def add_variables_to_symbol_table(p, variable_type):
   '''
@@ -620,6 +645,22 @@ def print_symbol_table(symbol_table):
     print('| ', i, ' | ', key, ' | ', variable_int_to_type[symbol_table[key][0]],' | ', symbol_table[key][1], '|\n')
     i+=1
 
+
+def print_avails_table(avails):
+  print('| Avail | Cuadruplo |\n')
+  for avail in avails:
+    print('| ', avail, ' | ', avails[avail], ' |\n')
+
+def print_syntax_info_tables():
+  global symbol_table, avails
+
+  print('\nSymbol table')
+  print_symbol_table(symbol_table)
+
+  print('\nAvail/Cuadruplos table')
+  print_avails_table(avails)
+
+
 try:
   fileDirectory = input('Directorio al archivo de prueba: ')
   print('')
@@ -627,8 +668,7 @@ try:
   testFile = f.read()
   parser.parse(testFile, tracking=True)
 
-  print('\nSymbol table')
-  print_symbol_table(symbol_table)
+  print_syntax_info_tables()
 except EOFError:
   print('Error at reading the file')
   pass

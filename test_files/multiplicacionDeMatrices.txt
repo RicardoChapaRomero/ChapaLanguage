@@ -7,7 +7,7 @@ PROGRAM
 		LET renglones_m1, renglones_m2, filas_m1, filas_m2 = 0
 		GOSUB obtenerTamanos
 
-		WHILE ((renglones_m1not == renglones_m2) OR (filas_m1not == filas_m2))
+		WHILE ((renglones_m1 != renglones_m2) OR (filas_m1 != filas_m2))
 		PRINT "tamaños no corresponden"
 		GOSUB obtenerTamanos
 		WEND

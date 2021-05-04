@@ -1,0 +1,16 @@
+PROGRAM
+	DIM v_1, v_2, v_3, v_4, v_5, v_6, v_7 AS INT
+
+	GOSUB operaciones
+
+	SUBPROCEDURE operaciones:
+		LET v_1 = v_1 + v_2 + v_3 * (v_4 + v_5 * (v_5 + v_6 + v_7) + v_2) + v_1 * v_2 * v_3
+
+		IF (v_1 > v_2) AND (v_2 < v_3) or (v_4 == v_5) and (v5 <= v6) THEN
+			PRINT "Logica 1"
+		ELSE
+			PRINT "Logica 2"
+		EIF
+
+		RETURN
+END

@@ -11,6 +11,7 @@ conda activate proyecto_lenguajes
 ./test_files/error.txt
 ./test_files/error_with_variables.txt
 ./test_files/operaciones_codigo_intermedio.txt
+./test_files/operaciones_CI_estatuos_y_ciclos.txt
 
 -----------------------------------------------
 
@@ -32,6 +33,8 @@ symbol_table = {}
 
 avails = {} # dictionary for available temporary variables {temp var, cuadruplo}
 operands = [] # list of operands to perform an operation
+statement_jump_list = []
+no_else = True
 '''
 TODO:
   Fix the '<=' and '>=' symbol errors in token list
@@ -62,6 +65,7 @@ tokens = [
   'ELSE',
   'EIF',
   'WHILE', # ciclos - while
+  'DO',
   'WEND',
   'FOR', # ciclos - for
   'TO',
@@ -160,6 +164,11 @@ def t_EIF(t):
 def t_WHILE(t):
   r'(?i)WHILE'
   t.type = 'WHILE'
+  return t
+
+def t_DO(t):
+  r'(?i)DO'
+  t.type = 'DO'
   return t
 
 def t_WEND(t):
@@ -381,9 +390,9 @@ def p_E(p):
   '''
   E : LET setType Idv EQUALS Ex
     | DIM setType Idv AS T Arr
-    | IF EL THEN F Esf EIF
+    | IF EL THEN first_conditional F Esf EIF final_conditional
     | FOR ID EQUALS EA TO Ex F NEXT ID
-    | WHILE OPENPAR EL CLOSINGPAR F WEND
+    | WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional
     | GOSUB ID
     | INPUT ES COMA IDEx
     | PRINT Ex
@@ -397,6 +406,78 @@ def p_E(p):
     print(str(p[3]) + ' = ' + str(p[5]))
 
   operands = []
+
+def p_while_first_conditional(p):
+  '''
+  while_first_conditional :
+  '''
+  global statement_jump_list, avails
+
+  availIndex = str(len(avails))
+  statement_jump_list.append(availIndex)
+
+def p_while_second_conditional(p):
+  '''
+  while_second_conditional :
+  '''
+
+  global statement_jump_list, avails
+
+  availIndex = str(len(avails))
+  conditional_status = 'T' + str(len(avails) - 1)
+  avails['T' + availIndex] = str('gotoF ' + conditional_status + ' ' + str('_'))
+  statement_jump_list.append(availIndex)
+
+def p_while_final_conditional(p):
+  '''
+  while_final_conditional :
+  '''
+  
+  global statement_jump_list, avails
+
+  last_dir = statement_jump_list.pop()
+  return_ = statement_jump_list.pop()
+
+  availIndex = str(len(avails))
+  avails['T' + availIndex] = str('goto T' + return_)
+  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + 'T' + str(len(avails))
+
+def p_first_conditional(p):
+  '''
+  first_conditional :
+  '''
+  global statement_jump_list, avails, operands
+
+  availIndex = str(len(avails))
+  boolean_statement = str('T' + str(len(avails) - 1))
+  avails['T' + availIndex] = str('gotoF ' + boolean_statement + ' ' + str('_'))
+  statement_jump_list.append(availIndex)
+
+def p_second_conditional(p):
+  '''
+  second_conditional :
+  '''
+  global no_else, avails, statement_jump_list
+  last_dir = statement_jump_list.pop()
+
+  availIndex = str(len(avails))
+  avails['T' + availIndex] = 'goto _'
+  statement_jump_list.append(availIndex)
+  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + str(len(avails))
+
+def p_final_conditional(p):
+  '''
+  final_conditional :
+  '''
+  global statement_jump_list, avails
+  last_dir = statement_jump_list.pop()
+  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + str(len(avails))
+
+def p_Esf(p):
+  '''
+  Esf : ELSE second_conditional F
+      | empty
+  '''
 
 def p_Idv(p):
   '''
@@ -417,12 +498,7 @@ def p_setType(p):
   '''
   global token_state
   token_state = p[-1].upper()
-
-def p_Esf(p):
-  '''
-  Esf : ELSE F
-      | empty
-  '''
+    
 
 def p_IDEx(p):
   '''
@@ -446,8 +522,8 @@ def p_ES(p):
 
 def p_EA(p):
   '''
-  EA : P PLUS EA
-     | P MINUS EA
+  EA : EA PLUS P
+     | EA MINUS P
      | P
   '''
   global operands, avails
@@ -471,8 +547,8 @@ def p_EA(p):
 
 def p_P(p):
   '''
-  P : N MULTIPLY P
-    | N DIVIDE P
+  P : P MULTIPLY N
+    | P DIVIDE N
     | N
   '''
   global operands, avails
@@ -538,9 +614,10 @@ def p_EL(p):
 
     if (len(p) > 4):
       avails['T' + availIndex] = str(str(p[4]) + ' ' + str(p[2]) + ' ' + str(p[5]))
-
+      operands.append(str('T' + availIndex))
       p[0] = str('T' + availIndex)
     else:
+      operands.pop()
       p[0] = p[2]
 
 def p_OL(p):

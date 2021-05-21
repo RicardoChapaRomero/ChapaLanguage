@@ -7,9 +7,9 @@ PROGRAM
 		LET v_1 = v_1 + v_2 + v_3 * (v_4 + v_5 * (v_5 + v_6 + v_7) + v_2) + v_1 * v_2 * v_3
 
 		IF (v_1 > v_2) AND (v_2 < v_3) or (v_4 == v_5) and (v5 <= v6) THEN
-			PRINT "Logica 1"
+			LET v_1 = 7 + 3
 		ELSE
-			PRINT "Logica 2"
+			LET v_2 = 4 + 8
 		EIF
 
 		RETURN

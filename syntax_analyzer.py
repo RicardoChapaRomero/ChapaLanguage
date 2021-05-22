@@ -12,6 +12,7 @@ conda activate proyecto_lenguajes
 ./test_files/error_with_variables.txt
 ./test_files/operaciones_codigo_intermedio.txt
 ./test_files/operaciones_CI_estatuos_y_ciclos.txt
+test_files/operaciones_CI_estatuos_y_ciclos_WHILE.txt
 
 -----------------------------------------------
 
@@ -65,7 +66,9 @@ tokens = [
   'ELSE',
   'EIF',
   'WHILE', # ciclos - while
+  'UNTIL',
   'DO',
+  'REPEAT',
   'WEND',
   'FOR', # ciclos - for
   'TO',
@@ -171,9 +174,19 @@ def t_DO(t):
   t.type = 'DO'
   return t
 
+def t_REPEAT(t):
+  r'(?i)REPEAT'
+  t.type = 'REPEAT'
+  return t
+
 def t_WEND(t):
   r'(?i)WEND'
   t.type = 'WEND'
+  return t
+
+def t_UNTIL(t):
+  r'(?i)UNTIL'
+  t.type = 'UNTIL'
   return t
 
 def t_FOR(t):
@@ -393,6 +406,7 @@ def p_E(p):
     | IF EL THEN first_conditional F Esf EIF final_conditional
     | FOR ID EQUALS EA TO Ex F NEXT ID
     | WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional
+    | REPEAT while_first_conditional F UNTIL EL repeat_conditional
     | GOSUB ID
     | INPUT ES COMA IDEx
     | PRINT Ex
@@ -403,9 +417,21 @@ def p_E(p):
     add_variables_to_symbol_table(p, variable_type)
 
   if (p[1].upper() == 'LET'):
-    print(str(p[3]) + ' = ' + str(p[5]))
+    availIndex = str(len(avails))
+    avails['T' + availIndex] = ' = ' + str(p[5]) + ' ' + str(p[3])
 
   operands = []
+
+def p_repeat_conditional(p):
+  '''
+  repeat_conditional :
+  '''
+  global statement_jump_list, avails
+
+  last_dir = statement_jump_list.pop()
+  availIndex = str(len(avails))
+  avails['T' + availIndex] = str('gotoF T' + str(len(avails) - 1) + ' T' + str(last_dir))
+  
 
 def p_while_first_conditional(p):
   '''
@@ -463,7 +489,7 @@ def p_second_conditional(p):
   availIndex = str(len(avails))
   avails['T' + availIndex] = 'goto _'
   statement_jump_list.append(availIndex)
-  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + str(len(avails))
+  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + 'T' + str(len(avails))
 
 def p_final_conditional(p):
   '''
@@ -471,7 +497,7 @@ def p_final_conditional(p):
   '''
   global statement_jump_list, avails
   last_dir = statement_jump_list.pop()
-  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + str(len(avails))
+  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + ' T' + str(len(avails))
 
 def p_Esf(p):
   '''
@@ -601,7 +627,7 @@ def p_cte(p):
 
 def p_EL(p):
   '''
-  EL : TRUE 
+  EL : TRUE
      | FALSE 
      | OPENPAR O CLOSINGPAR
      | OPENPAR O CLOSINGPAR OL EL

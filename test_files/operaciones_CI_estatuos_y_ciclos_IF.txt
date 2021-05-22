@@ -1,0 +1,19 @@
+PROGRAM
+	DIM a, b, c, d, e, f AS INT
+
+	GOSUB operaciones
+
+	SUBPROCEDURE operaciones:
+
+		IF (a > b) THEN 
+			IF (b < c) THEN LET a = b
+			ELSE LET b = c + d
+			EIF
+		ELSE
+			IF (d > e) THEN LET d = f
+			ELSE LET d = e
+			EIF
+		EIF
+
+		RETURN
+END

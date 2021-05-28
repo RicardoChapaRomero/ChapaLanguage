@@ -13,6 +13,7 @@ conda activate proyecto_lenguajes
 ./test_files/operaciones_codigo_intermedio.txt
 ./test_files/operaciones_CI_estatuos_y_ciclos.txt
 test_files/operaciones_CI_estatuos_y_ciclos_WHILE.txt
+test_files/operaciones_CI_estatuos_y_ciclos_FOR.txt
 
 -----------------------------------------------
 
@@ -21,6 +22,7 @@ A00824335
 18/04/2021
 '''
 
+from os import PRIO_PGRP
 import sys 
 import ply.lex as lex
 import ply.yacc as yacc
@@ -404,7 +406,7 @@ def p_E(p):
   E : LET setType Idv EQUALS Ex
     | DIM setType Idv AS T Arr
     | IF EL THEN first_conditional F Esf EIF final_conditional
-    | FOR ID EQUALS EA TO Ex F NEXT ID
+    | FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
     | WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional
     | REPEAT while_first_conditional F UNTIL EL repeat_conditional
     | GOSUB ID
@@ -421,6 +423,59 @@ def p_E(p):
     avails['T' + availIndex] = ' = ' + str(p[5]) + ' ' + str(p[3])
 
   operands = []
+
+def p_for_assignation(p):
+  '''
+  for_assignation :
+  '''
+  global avails
+  availIndex = str(len(avails))
+  avails['T' + availIndex] = '= ' + str(p[-1]) + ' ' + str(p[-3])
+  p[0] = str(p[-3])
+
+def p_for_conditional(p):
+  '''
+  for_conditional :
+  '''
+  global statement_jump_list, avails
+
+  availIndex = str(len(avails))
+  statement_jump_list.append(availIndex)
+
+  avails['T' + availIndex] = '<= ' + p[-3] + ' ' + str(p[-1])
+
+def p_for_save_conditional(p):
+  '''
+  for_save_conditional :
+  '''
+
+  global statement_jump_list, avails
+
+  availIndex = str(len(avails))
+  conditional_status = 'T' + str(len(avails) - 1)
+  avails['T' + availIndex] = str('gotoF ' + conditional_status + ' ' + str('_'))
+  statement_jump_list.append(availIndex)
+
+def p_for_conditional_end(p):
+  '''
+  for_conditional_end :
+  '''
+    
+  global statement_jump_list, avails
+
+  availIndex = str(len(avails))
+
+  avails['T' + availIndex] = '+ ' + p[-1] + ' 1'
+
+  last_dir = statement_jump_list.pop()
+  return_ = statement_jump_list.pop()
+
+  availIndex = str(len(avails))
+
+  avails['T' + availIndex] = str('goto T' + return_)
+  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + 'T' + str(len(avails))
+
+
 
 def p_repeat_conditional(p):
   '''

@@ -1,0 +1,15 @@
+PROGRAM
+	DIM i, b, suma AS INT
+
+	GOSUB operaciones
+
+	SUBPROCEDURE operaciones:
+
+		FOR i = 0 TO 5 DO
+				FOR j = 0 TO b DO
+					LET suma = 1 + 2
+				NEXT j
+			NEXT i
+
+	RETURN
+END

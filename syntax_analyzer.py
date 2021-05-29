@@ -25,7 +25,7 @@ A00824335
 import sys 
 import ply.lex as lex
 import ply.yacc as yacc
-from queue import Queue, LifoQueue
+import operator
 
 # Variables globales
 variables = [] # arreglo dinamico de variables generadas
@@ -820,15 +820,25 @@ def get_variable_value(symbol_table, cuadruplos, operation):
       return float(operation)
     else:
       return int(operation)
+
+def invalidOperator(operator):
+  if operator == None:
+    print('Error: Value of ' , operation[1], ' can\'t be None')
+    return True
+  return False
           
-
-
 def execute_code():
   global cuadruplos, symbol_table
   variable_int_to_type = ['INT','FLOAT','WORD']
   program_counter = 0
   cuadruplo = 0
   len_cuadruplos = len(cuadruplos)
+  ops = {
+    '+': operator.add, 
+    '-': operator.sub, 
+    '*': operator.mul,
+    '/': operator.truediv
+  }
 
   while cuadruplo < len_cuadruplos:
     operation = cuadruplos[cuadruplo].split(' ')
@@ -847,125 +857,62 @@ def execute_code():
           symbol_table[operation[2]][2] = float(operation[1])
         else:
           symbol_table[operation[2]][2] = str(operation[1])
-    
-    elif operation[0] == '+':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
-        return
-      cuadruplos[cuadruplo] = value_1 + value_2
-
-    elif operation[0] == '-':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
-        return
-      cuadruplos[cuadruplo] = value_1 - value_2
-
-    elif operation[0] == '*':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
-        return
-      cuadruplos[cuadruplo] = value_1 * value_2
-
-    elif operation[0] == '/':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
-        return
-      cuadruplos[cuadruplo] = value_1 / value_2
 
     elif operation[0] == '>':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
-        return
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
+        return 
+      
       cuadruplos[cuadruplo] = (value_1 > value_2)
 
     elif operation[0] == '>=':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
-        return
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
+        return 
+      
       cuadruplos[cuadruplo] = (value_1 >= value_2)
 
     elif operation[0] == '<':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
         return
       cuadruplos[cuadruplo] = (value_1 < value_2)
 
     elif operation[0] == '<=':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
         return
       cuadruplos[cuadruplo] = (value_1 <= value_2)
 
     elif operation[0] == '==':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
         return
       cuadruplos[cuadruplo] = (value_1 == value_2)
 
     elif operation[0].lower() == 'and':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
         return
       cuadruplos[cuadruplo] = (value_1 and value_2)
 
     elif operation[0].lower() == 'or':
       value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      if value_1 == None:
-        print('Error: Value of ' , operation[1], ' can\'t be None')
-        return 
       value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
-      if value_2 == None:
-        print('Error: Value of ' , operation[2], ' can\'t be None')
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
         return
       cuadruplos[cuadruplo] = (value_1 or value_2)
 
@@ -977,6 +924,14 @@ def execute_code():
     elif operation[0] == 'goto':
       cuadruplo = int(operation[1][1:])
       continue
+
+    else:
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      
+      if invalidOperator(value_1) or invalidOperator(value_2):
+        return
+      cuadruplos[cuadruplo] = ops[operation[0]](value_1, value_2)
 
     cuadruplo += 1
 

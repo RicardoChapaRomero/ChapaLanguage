@@ -14,7 +14,7 @@ PROGRAM
 
 		LET v_1 = v_1 + v_2 + v_3 * (v_4 + v_5 * (v_5 + v_6 + v_7) + v_2) + v_1 * v_2 * v_3
 
-		IF (v_1 > v_2) AND (v_2 > v_3) or (v_4 > v_5) and (v_5 <= v_6) THEN
+		IF (v_1 > v_2) AND (v_2 > v_3) or (v_4 < v_5) and (v_5 <= v_6) THEN
 			LET v_4 = 7 + 3
 		ELSE
 			LET v_2 = 4 + 8

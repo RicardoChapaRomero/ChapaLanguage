@@ -34,7 +34,7 @@ variable_type = None # tipo de variables a guardar
 token_state = '' # variable to symbolize the token state (Dim, let, ...)
 symbol_table = {}
 
-avails = {} # dictionary for available temporary variables {temp var, cuadruplo}
+cuadruplos = [] # dictionary for available temporary variables {temp var, cuadruplo}
 operands = [] # list of operands to perform an operation
 statement_jump_list = []
 no_else = True
@@ -413,14 +413,13 @@ def p_E(p):
     | INPUT ES COMA IDEx
     | PRINT Ex
   '''
-  global variable_type, avails, operands
+  global variable_type, operands, cuadruplos
   if (p[1].upper() == 'DIM'):
     variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
 
   if (p[1].upper() == 'LET'):
-    availIndex = str(len(avails))
-    avails['T' + availIndex] = ' = ' + str(p[5]) + ' ' + str(p[3])
+    cuadruplos.append('= ' + str(p[5]) + ' ' + str(p[3]))
 
   operands = []
 
@@ -428,32 +427,32 @@ def p_for_assignation(p):
   '''
   for_assignation :
   '''
-  global avails
-  availIndex = str(len(avails))
-  avails['T' + availIndex] = '= ' + str(p[-1]) + ' ' + str(p[-3])
+  global cuadruplos
+  cuadruplos.append('= ' + str(p[-1]) + ' ' + str(p[-3]))
+
   p[0] = str(p[-3])
 
 def p_for_conditional(p):
   '''
   for_conditional :
   '''
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
 
-  availIndex = str(len(avails))
+  availIndex = len(cuadruplos)
   statement_jump_list.append(availIndex)
+  cuadruplos.append('<= ' + p[-3] + ' ' + str(p[-1]) + ' T' + str(len(cuadruplos)))
 
-  avails['T' + availIndex] = '<= ' + p[-3] + ' ' + str(p[-1])
 
 def p_for_save_conditional(p):
   '''
   for_save_conditional :
   '''
 
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
 
-  availIndex = str(len(avails))
-  conditional_status = 'T' + str(len(avails) - 1)
-  avails['T' + availIndex] = str('gotoF ' + conditional_status + ' ' + str('_'))
+  availIndex = len(cuadruplos)
+  conditional_status = 'T' + str(len(cuadruplos) - 1)
+  cuadruplos.append(str('gotoF ' + conditional_status + ' ' + str('_ ')) + ' T' + str(len(cuadruplos)))
   statement_jump_list.append(availIndex)
 
 def p_for_conditional_end(p):
@@ -461,40 +460,32 @@ def p_for_conditional_end(p):
   for_conditional_end :
   '''
     
-  global statement_jump_list, avails
-
-  availIndex = str(len(avails))
-
-  avails['T' + availIndex] = '+ ' + p[-1] + ' 1'
+  global statement_jump_list, cuadruplos
+  cuadruplos.append('+ ' + p[-1] + ' 1 T' + str(len(cuadruplos)))
 
   last_dir = statement_jump_list.pop()
   return_ = statement_jump_list.pop()
 
-  availIndex = str(len(avails))
-
-  avails['T' + availIndex] = str('goto T' + return_)
-  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + 'T' + str(len(avails))
-
-
+  cuadruplos.append(str('goto T' + str(return_)))
+  cuadruplos[last_dir] = cuadruplos[last_dir].split('_')[0] + 'T' + str(len(cuadruplos))
 
 def p_repeat_conditional(p):
   '''
   repeat_conditional :
   '''
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
 
   last_dir = statement_jump_list.pop()
-  availIndex = str(len(avails))
-  avails['T' + availIndex] = str('gotoF T' + str(len(avails) - 1) + ' T' + str(last_dir))
+  cuadruplos.append(str('gotoF T' + str(len(cuadruplos) - 1) + ' T' + str(last_dir)))
   
 
 def p_while_first_conditional(p):
   '''
   while_first_conditional :
   '''
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
 
-  availIndex = str(len(avails))
+  availIndex = len(cuadruplos)
   statement_jump_list.append(availIndex)
 
 def p_while_second_conditional(p):
@@ -502,11 +493,11 @@ def p_while_second_conditional(p):
   while_second_conditional :
   '''
 
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
 
-  availIndex = str(len(avails))
-  conditional_status = 'T' + str(len(avails) - 1)
-  avails['T' + availIndex] = str('gotoF ' + conditional_status + ' ' + str('_'))
+  availIndex = len(cuadruplos)
+  conditional_status = 'T' + str(len(cuadruplos) - 1)
+  cuadruplos.append(str('gotoF ' + conditional_status + ' ' + str('_ ')) + ' T' + str(len(cuadruplos)))
   statement_jump_list.append(availIndex)
 
 def p_while_final_conditional(p):
@@ -514,45 +505,44 @@ def p_while_final_conditional(p):
   while_final_conditional :
   '''
   
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
 
   last_dir = statement_jump_list.pop()
   return_ = statement_jump_list.pop()
 
-  availIndex = str(len(avails))
-  avails['T' + availIndex] = str('goto T' + return_)
-  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + 'T' + str(len(avails))
+  cuadruplos.append('goto T' + str(return_))
+  cuadruplos[last_dir] = cuadruplos[last_dir].split('_')[0] + 'T' + str(len(cuadruplos))
 
 def p_first_conditional(p):
   '''
   first_conditional :
   '''
-  global statement_jump_list, avails, operands
+  global statement_jump_list, operands, cuadruplos
 
-  availIndex = str(len(avails))
-  boolean_statement = str('T' + str(len(avails) - 1))
-  avails['T' + availIndex] = str('gotoF ' + boolean_statement + ' ' + str('_'))
+  availIndex = len(cuadruplos)
+  boolean_statement = str('T' + str(len(cuadruplos) - 1))
+  cuadruplos.append(str('gotoF ' + boolean_statement + ' ' + str('_')) + ' T' + str(len(cuadruplos)))
   statement_jump_list.append(availIndex)
 
 def p_second_conditional(p):
   '''
   second_conditional :
   '''
-  global no_else, avails, statement_jump_list
+  global no_else, statement_jump_list, cuadruplos
   last_dir = statement_jump_list.pop()
 
-  availIndex = str(len(avails))
-  avails['T' + availIndex] = 'goto _'
+  availIndex = len(cuadruplos)
+  cuadruplos.append('goto _' + ' T' + str(len(cuadruplos)))
   statement_jump_list.append(availIndex)
-  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + 'T' + str(len(avails))
+  cuadruplos[last_dir] = cuadruplos[last_dir].split('_')[0] + 'T' + str(len(cuadruplos))
 
 def p_final_conditional(p):
   '''
   final_conditional :
   '''
-  global statement_jump_list, avails
+  global statement_jump_list, cuadruplos
   last_dir = statement_jump_list.pop()
-  avails['T' + str(last_dir)] = avails['T' + str(last_dir)][:-1:] + ' T' + str(len(avails))
+  cuadruplos[last_dir] = cuadruplos[last_dir].split('_')[0] + 'T' + str(len(cuadruplos))
 
 def p_Esf(p):
   '''
@@ -607,20 +597,20 @@ def p_EA(p):
      | EA MINUS P
      | P
   '''
-  global operands, avails
+  global operands, cuadruplos
   if (len(p) > 3):
-    availIndex = str(len(avails))
+    availIndex = len(cuadruplos)
     operand_1 = operands.pop()
     operand_2 = operands.pop()
 
     if (p[2] == '+'):
-      avails['T' + availIndex] = str('+ ' + str(operand_2) + ' ' + str(operand_1))
+      cuadruplos.append('+ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + str(len(cuadruplos)))
 
     elif (p[2] == '-'):
-      avails['T' + availIndex] = str('- ' + str(operand_2) + ' ' + str(operand_1))
+      cuadruplos.append('- ' + str(operand_2) + ' ' + str(operand_1) + ' T' + str(len(cuadruplos)))
 
-    operands.append(str('T' + availIndex))
-    p[0] = str('T' + availIndex)
+    operands.append(str('T' + str(availIndex)))
+    p[0] = str('T' + str(availIndex))
 
   else:
     p[0] = p[1]
@@ -632,18 +622,18 @@ def p_P(p):
     | P DIVIDE N
     | N
   '''
-  global operands, avails
+  global operands, cuadruplos
   # skip if value is an assignation
   if (len(p) > 3):
     operand_1 = operands.pop()
     operand_2 = operands.pop()
-    availIndex = str(len(avails))
+    availIndex = str(len(cuadruplos))
 
     if (p[2] == '*'):
-      avails['T' + availIndex] = str('* ' + str(operand_2) + ' ' + str(operand_1))
+      cuadruplos.append('* ' + str(operand_2) + ' ' + str(operand_1) + ' T' + str(len(cuadruplos)))
 
     elif (p[2] == '/'):
-      avails['T' + availIndex] = str('/ ' + str(operand_2) + ' ' + str(operand_1))
+      cuadruplos.append('/ ' + str(operand_2) + ' ' + str(operand_1) + ' T' + str(len(cuadruplos)))
 
     operands.append(str('T' + availIndex))
     p[0] = str('T' + availIndex)
@@ -687,14 +677,14 @@ def p_EL(p):
      | OPENPAR O CLOSINGPAR
      | OPENPAR O CLOSINGPAR OL EL
   '''
-  global operands, avails
+  global operands, cuadruplos
   if (p[1] == 'TRUE' or p[1] == 'FALSE'):
     p[0] = p[1]
   else:
-    availIndex = str(len(avails))
+    availIndex = str(len(cuadruplos))
 
     if (len(p) > 4):
-      avails['T' + availIndex] = str(str(p[4]) + ' ' + str(p[2]) + ' ' + str(p[5]))
+      cuadruplos.append(str(p[4]) + ' ' + str(p[2]) + ' ' + str(p[5]) + ' T' + str(len(cuadruplos)))
       operands.append(str('T' + availIndex))
       p[0] = str('T' + availIndex)
     else:
@@ -720,7 +710,7 @@ def p_O(p):
     | Ex NOTEQUAL Ex
     | Ex EQUALTO Ex
   '''
-  global operands, avails, equal_error
+  global operands, equal_error, cuadruplos
   
   operand_1 = p[1]
   operand_2 = p[3]
@@ -737,8 +727,8 @@ def p_O(p):
   elif (len(operands) == 1):
     operand_1 = operands.pop()
 
-  availIndex = str(len(avails))
-  avails['T' + availIndex] = str(operation + ' ' + str(operand_1) + ' ' + str(operand_2))
+  availIndex = str(len(cuadruplos))
+  cuadruplos.append(operation + ' ' + str(operand_1) + ' ' + str(operand_2) + ' T' + str(len(cuadruplos)))
   operands.append(str('T' + availIndex))
 
   p[0] = str('T' + availIndex)
@@ -803,20 +793,18 @@ def print_symbol_table(symbol_table):
     print('| ', i, ' | ', key, ' | ', variable_int_to_type[symbol_table[key][0]],' | ', symbol_table[key][1], '|\n')
     i+=1
 
-
-def print_avails_table(avails):
-  print('| Avail | Cuadruplo |\n')
-  for avail in avails:
-    print('| ', avail, ' | ', avails[avail], ' |\n')
+def print_cuadruplos(cuadruplos):
+  for i in range(len(cuadruplos)):
+    print(i, cuadruplos[i])
 
 def print_syntax_info_tables():
-  global symbol_table, avails
+  global symbol_table, cuadruplos
 
   print('\nSymbol table')
   print_symbol_table(symbol_table)
 
   print('\nAvail/Cuadruplos table')
-  print_avails_table(avails)
+  print_cuadruplos(cuadruplos)
 
 
 try:

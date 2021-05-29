@@ -778,7 +778,7 @@ def add_variables_to_symbol_table(p, variable_type):
 
   for variable in variables:
     if (symbol_table.get(variable, -1) == -1):
-      symbol_table[variable] = [variable_type_to_int[variable_type], p.lineno(1), None]
+      symbol_table[variable] = [variable_type_to_int[variable_type], p.lineno(1), 0]
     else:
       print('ERROR: The variable \'' + variable + '\' is already defined in line: ' + str(symbol_table[variable][1]))
       print('Variable redefined at line: ' + str(p.lineno(1)) + '\n')
@@ -833,6 +833,12 @@ def execute_code():
   program_counter = 0
   cuadruplo = 0
   len_cuadruplos = len(cuadruplos)
+  
+  cuadruplo_results = []
+
+  for i in range(len(cuadruplos)):
+    cuadruplo_results.append(cuadruplos[i])
+
   ops = {
     '+': operator.add, 
     '-': operator.sub, 
@@ -849,7 +855,9 @@ def execute_code():
     if operation[0] == '=' and operation[1] != '=':
       if operation[1][0] == 'T':
         cuadruploIndex = int(operation[1][1:])
-        symbol_table[operation[2]][2] = cuadruplos[cuadruploIndex]
+        symbol_table[operation[2]][2] = cuadruplo_results[cuadruploIndex]
+      elif (symbol_table.get(operation[1], -1) != -1):
+        symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
       else:
         if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
           symbol_table[operation[2]][2] = int(operation[1])
@@ -859,65 +867,65 @@ def execute_code():
           symbol_table[operation[2]][2] = str(operation[1])
 
     elif operation[0] == '>':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return 
       
-      cuadruplos[cuadruplo] = (value_1 > value_2)
+      cuadruplo_results[cuadruplo] = (value_1 > value_2)
 
     elif operation[0] == '>=':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return 
       
-      cuadruplos[cuadruplo] = (value_1 >= value_2)
+      cuadruplo_results[cuadruplo] = (value_1 >= value_2)
 
     elif operation[0] == '<':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return
-      cuadruplos[cuadruplo] = (value_1 < value_2)
+      cuadruplo_results[cuadruplo] = (value_1 < value_2)
 
     elif operation[0] == '<=':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return
-      cuadruplos[cuadruplo] = (value_1 <= value_2)
+      cuadruplo_results[cuadruplo] = (value_1 <= value_2)
 
     elif operation[0] == '==':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return
-      cuadruplos[cuadruplo] = (value_1 == value_2)
+      cuadruplo_results[cuadruplo] = (value_1 == value_2)
 
     elif operation[0].lower() == 'and':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return
-      cuadruplos[cuadruplo] = (value_1 and value_2)
+      cuadruplo_results[cuadruplo] = (value_1 and value_2)
 
     elif operation[0].lower() == 'or':
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return
-      cuadruplos[cuadruplo] = (value_1 or value_2)
+      cuadruplo_results[cuadruplo] = (value_1 or value_2)
 
     elif operation[0] == 'gotoF':
-      if (cuadruplos[int(operation[1][1:])] == False):
+      if (cuadruplo_results[int(operation[1][1:])] == False):
         cuadruplo = int(operation[2][1:])
         continue
 
@@ -926,12 +934,12 @@ def execute_code():
       continue
 
     else:
-      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
       
       if invalidOperator(value_1) or invalidOperator(value_2):
         return
-      cuadruplos[cuadruplo] = ops[operation[0]](value_1, value_2)
+      cuadruplo_results[cuadruplo] = ops[operation[0]](value_1, value_2)
 
     cuadruplo += 1
 

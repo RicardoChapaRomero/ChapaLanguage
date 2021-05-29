@@ -8,14 +8,14 @@ PROGRAM
 		let b = 1
 		let c = 2
 		let d = 3
-		let e = 4
+		let e = 28
 		let f = 5
 		let x = 6
 		let y = 7
 		let z = 8
 
 		IF (a > b) THEN
-			IF (b < c) THEN LET a = b
+			IF (b < c) THEN LET c = b
 			ELSE LET b = c + d
 			EIF
 		ELSE
@@ -30,12 +30,14 @@ PROGRAM
 					INPUT "write", x
 					LET y = 3
 					LET z = 4
+					LET x = x + 1
 				UNTIL (x > a)
 			ELSE
 				WHILE (y < b) DO
 					LET y = y + 1
 				WEND
 			EIF
+			LEt x = x + 1
 		WEND
 
 		RETURN

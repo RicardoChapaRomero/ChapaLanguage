@@ -1,13 +1,14 @@
 PROGRAM
 	DIM i, b, j ,suma AS INT
+	LET b = 4
 
 	GOSUB operaciones
 
 	SUBPROCEDURE operaciones:
 
 		FOR i = 0 TO 5 DO
-				FOR j = 0 TO b DO
-					LET suma = 1 + 2
+				FOR j = 0 TO 0 DO
+					LET suma = 1 + suma
 				NEXT j
 			NEXT i
 

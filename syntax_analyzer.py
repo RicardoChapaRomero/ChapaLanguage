@@ -6,12 +6,12 @@ conda activate proyecto_lenguajes
 
 --------------ARCHIVOS DE PRUEBA---------------
 
-./test_files/multiplicacionDeMatrices.txt
-./test_files/operaciones.txt
-./test_files/error.txt
-./test_files/error_with_variables.txt
-./test_files/operaciones_codigo_intermedio.txt
-./test_files/operaciones_CI_estatuos_y_ciclos.txt
+test_files/multiplicacionDeMatrices.txt
+test_files/operaciones.txt
+test_files/error.txt
+test_files/error_with_variables.txt
+test_files/operaciones_codigo_intermedio.txt
+test_files/operaciones_CI_estatuos_y_ciclos.txt
 test_files/operaciones_CI_estatuos_y_ciclos_WHILE.txt
 test_files/operaciones_CI_estatuos_y_ciclos_FOR.txt
 
@@ -31,7 +31,7 @@ from queue import Queue, LifoQueue
 variables = [] # arreglo dinamico de variables generadas
 variable_type = None # tipo de variables a guardar
 token_state = '' # variable to symbolize the token state (Dim, let, ...)
-symbol_table = {}
+symbol_table = {} # name, type, value
 
 cuadruplos = [] # dictionary for available temporary variables {temp var, cuadruplo}
 operands = [] # list of operands to perform an operation
@@ -356,6 +356,8 @@ def p_PROGRAMA(p):
   '''
   PROGRAMA : PROGRAM V M S END
   '''
+  global cuadruplos
+  cuadruplos.append('endprogram')
 
 def p_V(p):
   '''
@@ -461,6 +463,7 @@ def p_for_conditional_end(p):
     
   global statement_jump_list, cuadruplos
   cuadruplos.append('+ ' + p[-1] + ' 1 T' + str(len(cuadruplos)))
+  cuadruplos.append('= T' + str(len(cuadruplos) - 1) + ' ' + p[-1])
 
   last_dir = statement_jump_list.pop()
   return_ = statement_jump_list.pop()
@@ -775,7 +778,7 @@ def add_variables_to_symbol_table(p, variable_type):
 
   for variable in variables:
     if (symbol_table.get(variable, -1) == -1):
-      symbol_table[variable] = (variable_type_to_int[variable_type], p.lineno(1))
+      symbol_table[variable] = [variable_type_to_int[variable_type], p.lineno(1), None]
     else:
       print('ERROR: The variable \'' + variable + '\' is already defined in line: ' + str(symbol_table[variable][1]))
       print('Variable redefined at line: ' + str(p.lineno(1)) + '\n')
@@ -787,9 +790,9 @@ parser = yacc.yacc() # creamos el parser para analisis de gramatica
 def print_symbol_table(symbol_table):
   variable_int_to_type = ['INT','FLOAT','WORD']
   i = 0
-  print('| Index | Variable | Variable Type | Line |\n')
+  print('| Index | Variable | Variable Type | Line | Value |\n')
   for key in symbol_table:
-    print('| ', i, ' | ', key, ' | ', variable_int_to_type[symbol_table[key][0]],' | ', symbol_table[key][1], '|\n')
+    print('| ', i, ' | ', key, ' | ', variable_int_to_type[symbol_table[key][0]],' | ', symbol_table[key][1], ' | ', symbol_table[key][2], '|\n')
     i+=1
 
 def print_cuadruplos(cuadruplos):
@@ -805,6 +808,178 @@ def print_syntax_info_tables():
   print('\nAvail/Cuadruplos table')
   print_cuadruplos(cuadruplos)
 
+def get_variable_value(symbol_table, cuadruplos, operation):
+  if operation[0] == 'T':
+    cuadruploIndex = int(operation[1:])
+    return cuadruplos[cuadruploIndex]
+  elif (symbol_table.get(operation, -1) != -1):
+    return symbol_table[operation][2]
+  else:
+    toFloat = operation.split('.')
+    if len(toFloat) > 1:
+      return float(operation)
+    else:
+      return int(operation)
+          
+
+
+def execute_code():
+  global cuadruplos, symbol_table
+  variable_int_to_type = ['INT','FLOAT','WORD']
+  program_counter = 0
+  cuadruplo = 0
+  len_cuadruplos = len(cuadruplos)
+
+  while cuadruplo < len_cuadruplos:
+    operation = cuadruplos[cuadruplo].split(' ')
+    
+    if operation[0] == 'endprogram':
+      return
+
+    if operation[0] == '=' and operation[1] != '=':
+      if operation[1][0] == 'T':
+        cuadruploIndex = int(operation[1][1:])
+        symbol_table[operation[2]][2] = cuadruplos[cuadruploIndex]
+      else:
+        if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
+          symbol_table[operation[2]][2] = int(operation[1])
+        elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT':
+          symbol_table[operation[2]][2] = float(operation[1])
+        else:
+          symbol_table[operation[2]][2] = str(operation[1])
+    
+    elif operation[0] == '+':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = value_1 + value_2
+
+    elif operation[0] == '-':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = value_1 - value_2
+
+    elif operation[0] == '*':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = value_1 * value_2
+
+    elif operation[0] == '/':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = value_1 / value_2
+
+    elif operation[0] == '>':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 > value_2)
+
+    elif operation[0] == '>=':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 >= value_2)
+
+    elif operation[0] == '<':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 < value_2)
+
+    elif operation[0] == '<=':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 <= value_2)
+
+    elif operation[0] == '==':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 == value_2)
+
+    elif operation[0].lower() == 'and':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 and value_2)
+
+    elif operation[0].lower() == 'or':
+      value_1 = get_variable_value(symbol_table, cuadruplos, operation[1])
+      if value_1 == None:
+        print('Error: Value of ' , operation[1], ' can\'t be None')
+        return 
+      value_2 = get_variable_value(symbol_table, cuadruplos, operation[2])
+      if value_2 == None:
+        print('Error: Value of ' , operation[2], ' can\'t be None')
+        return
+      cuadruplos[cuadruplo] = (value_1 or value_2)
+
+    elif operation[0] == 'gotoF':
+      if (cuadruplos[int(operation[1][1:])] == False):
+        cuadruplo = int(operation[2][1:])
+        continue
+
+    elif operation[0] == 'goto':
+      cuadruplo = int(operation[1][1:])
+      continue
+
+    cuadruplo += 1
+
 
 try:
   fileDirectory = input('Directorio al archivo de prueba: ')
@@ -813,6 +988,10 @@ try:
   testFile = f.read()
   parser.parse(testFile, tracking=True)
 
+  #print_syntax_info_tables()
+  print('Executing Code...')
+  print_syntax_info_tables()
+  execute_code()
   print_syntax_info_tables()
 except EOFError:
   print('Error at reading the file')

@@ -4,10 +4,18 @@ PROGRAM
 	GOSUB operaciones
 
 	SUBPROCEDURE operaciones:
+		LET v_1 = 1
+		LET v_2 = 2
+		LET v_3 = 3
+		LET v_4 = 4
+		LET v_5 = 5
+		LET v_6 = 6
+		LET v_7 = 7
+
 		LET v_1 = v_1 + v_2 + v_3 * (v_4 + v_5 * (v_5 + v_6 + v_7) + v_2) + v_1 * v_2 * v_3
 
-		IF (v_1 > v_2) AND (v_2 < v_3) or (v_4 == v_5) and (v5 <= v6) THEN
-			LET v_1 = 7 + 3
+		IF (v_1 > v_2) AND (v_2 > v_3) or (v_4 > v_5) and (v_5 <= v_6) THEN
+			LET v_4 = 7 + 3
 		ELSE
 			LET v_2 = 4 + 8
 		EIF

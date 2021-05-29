@@ -1,5 +1,5 @@
 PROGRAM
-	DIM i, b, suma AS INT
+	DIM i, b, j ,suma AS INT
 
 	GOSUB operaciones
 

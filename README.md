@@ -12,7 +12,7 @@ This repository contains the Languages and Translators 2021 Project Chapa Langua
 - [Conda](https://docs.conda.io/en/latest/)
 - [PLY](https://www.dabeaz.com/ply/)
 
-## Run The Project
+## Run The Project on Ubuntu
 Create a python virtual environment with Conda
 ```bin
 conda create -n chapa_language_env
@@ -34,3 +34,18 @@ Run the syntax analyzer
 python syntax_analyzer.py 
 ```
 
+## Run The Project on Windows
+Create a python virtual environment with env
+```bin
+python -m venv proyecto_lenguajes
+```
+
+Source the shell to activate the virtual environment
+```bin
+source proyecto_lenguajes/Scripts/activate
+```
+
+Run the syntax analyzer
+```bin
+python syntax_analyzer.py 
+```

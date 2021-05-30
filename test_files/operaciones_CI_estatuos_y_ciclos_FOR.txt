@@ -2,7 +2,9 @@ PROGRAM
 	DIM i, b, j ,suma AS INT
 	LET b = 4
 
-	GOSUB operaciones
+	gosub operaciones
+	GOSUB case
+	gosub operaciones
 
 	SUBPROCEDURE operaciones:
 

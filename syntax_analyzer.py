@@ -37,11 +37,8 @@ cuadruplos = [] # dictionary for available temporary variables {temp var, cuadru
 operands = [] # list of operands to perform an operation
 statement_jump_list = []
 no_else = True
-'''
-TODO:
-  Fix the '<=' and '>=' symbol errors in token list
-'''
 equal_error = False # error handling variable for '<=' and '>=' errors
+subprocedure_jump_list = {}
 
 # Lista de tokens a utilizar
 tokens = [
@@ -354,7 +351,18 @@ lexer = lex.lex()
 
 def p_PROGRAMA(p):
   '''
-  PROGRAMA : PROGRAM V M S END
+  PROGRAMA : PROGRAM V M endProgram S END
+  '''
+  global cuadruplos, subprocedure_jump_list
+  
+  for non_called_procedure in subprocedure_jump_list:
+    print('Procedure ', non_called_procedure, ' doesn\'t exist. Program has ignored it.')
+    returnIndexes = subprocedure_jump_list[non_called_procedure]
+    cuadruplos[returnIndexes[0]] = str(cuadruplos[returnIndexes[0]][:-1]) + 'T' + str(returnIndexes[1])
+
+def p_endProgram(p):
+  '''
+  endProgram :
   '''
   global cuadruplos
   cuadruplos.append('endprogram')
@@ -386,9 +394,35 @@ def p_T(p):
 
 def p_S(p):
   '''
-  S : SUBPROCEDURE ID TWOPOINTS M RETURN S
+  S : SUBPROCEDURE ID fillSub TWOPOINTS M RETURN endProcedure S
     | empty
   '''
+
+  '''
+  TODO:
+  FIX THE SUBPRECEDURE CALL
+  '''
+
+def p_fillSub(p):
+  '''
+  fillSub :
+  '''
+  global cuadruplos, subprocedure_jump_list
+  if (subprocedure_jump_list.get(p[-1], -1) != -1):
+    fillIndex = subprocedure_jump_list[p[-1]][0]
+    cuadruplos[fillIndex] = cuadruplos[fillIndex][:-1] + 'T' + str(len(cuadruplos))
+
+def p_endProcedure(p):
+  '''
+  endProcedure :
+  '''
+  global cuadruplos, subprocedure_jump_list
+
+  if (subprocedure_jump_list.get(p[-5], -1) != -1):
+    returnIndex = subprocedure_jump_list[p[-5]][0]
+    cuadruplos.append('return T' + str(returnIndex + 1))
+
+    subprocedure_jump_list.pop(p[-5])
 
 def p_M(p):
   '''
@@ -414,13 +448,19 @@ def p_E(p):
     | INPUT ES COMA IDEx
     | PRINT Ex
   '''
-  global variable_type, operands, cuadruplos
+  global variable_type, operands, cuadruplos, statement_jump_list, subprocedure_jump_list
   if (p[1].upper() == 'DIM'):
     variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
 
   if (p[1].upper() == 'LET'):
     cuadruplos.append('= ' + str(p[5]) + ' ' + str(p[3]))
+
+  if (p[1].upper() == 'GOSUB'):
+    subprocedure_jump_list[p[2]] = [len(cuadruplos), len(cuadruplos) + 1] # fill value, return value
+    cuadruplos.append('gosub ' + p[2] + ' _')
+
+    symbol_table[p[2]] = [3, p.lineno(1), 1]
 
   operands = []
 
@@ -772,7 +812,7 @@ def add_variables_to_symbol_table(p, variable_type):
     FLOAT = 1
     WORD  = 2
   '''
-  variable_type_to_int = {'INT': 0, 'FLOAT': 1, 'WORD': 2}
+  variable_type_to_int = {'INT': 0, 'FLOAT': 1, 'WORD': 2, 'FUNC': 3}
   
   global variables, symbol_table
 
@@ -788,7 +828,7 @@ def add_variables_to_symbol_table(p, variable_type):
 parser = yacc.yacc() # creamos el parser para analisis de gramatica
 
 def print_symbol_table(symbol_table):
-  variable_int_to_type = ['INT','FLOAT','WORD']
+  variable_int_to_type = ['INT','FLOAT','WORD', 'FUNC']
   i = 0
   print('| Index | Variable | Variable Type | Line | Value |\n')
   for key in symbol_table:
@@ -929,8 +969,13 @@ def execute_code():
         cuadruplo = int(operation[2][1:])
         continue
 
-    elif operation[0] == 'goto':
+    elif operation[0] == 'goto' or operation[0] == 'return':
       cuadruplo = int(operation[1][1:])
+      continue
+
+    elif operation[0] == 'gosub': 
+      print(operation)
+      cuadruplo = int(operation[2][1:])
       continue
 
     else:
@@ -953,7 +998,6 @@ try:
 
   #print_syntax_info_tables()
   print('Executing Code...')
-  print_syntax_info_tables()
   execute_code()
   print_syntax_info_tables()
 except EOFError:

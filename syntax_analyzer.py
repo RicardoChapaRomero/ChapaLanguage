@@ -40,6 +40,15 @@ no_else = True
 equal_error = False # error handling variable for '<=' and '>=' errors
 subprocedure_jump_list = {}
 
+variable_int_to_type = ['INT','FLOAT','WORD', 'FUNC']
+
+ops = {
+  '+': operator.add, 
+  '-': operator.sub, 
+  '*': operator.mul,
+  '/': operator.truediv
+}
+
 # Lista de tokens a utilizar
 tokens = [
 	'PROGRAM', # tokens del programa
@@ -358,7 +367,7 @@ def p_PROGRAMA(p):
   for non_called_procedure in subprocedure_jump_list:
     print('Procedure ', non_called_procedure, ' doesn\'t exist. Program has ignored it.')
     returnIndexes = subprocedure_jump_list[non_called_procedure]
-    cuadruplos[returnIndexes[0]] = str(cuadruplos[returnIndexes[0]][:-1]) + 'T' + str(returnIndexes[1])
+    cuadruplos[returnIndexes[0]] = 'skip'
 
 def p_endProgram(p):
   '''
@@ -407,10 +416,8 @@ def p_fillSub(p):
   '''
   fillSub :
   '''
-  global cuadruplos, subprocedure_jump_list
-  if (subprocedure_jump_list.get(p[-1], -1) != -1):
-    fillIndex = subprocedure_jump_list[p[-1]][0]
-    cuadruplos[fillIndex] = cuadruplos[fillIndex][:-1] + 'T' + str(len(cuadruplos))
+  global cuadruplos, subprocedure_jump_list, symbol_table
+  symbol_table[p[-1]] = [3, p.lineno(0), [len(cuadruplos), -1]]
 
 def p_endProcedure(p):
   '''
@@ -418,11 +425,8 @@ def p_endProcedure(p):
   '''
   global cuadruplos, subprocedure_jump_list
 
-  if (subprocedure_jump_list.get(p[-5], -1) != -1):
-    returnIndex = subprocedure_jump_list[p[-5]][0]
-    cuadruplos.append('return T' + str(returnIndex + 1))
-
-    subprocedure_jump_list.pop(p[-5])
+  symbol_table[p[-5]][2][1] = len(cuadruplos)
+  subprocedure_jump_list.pop(p[-5])
 
 def p_M(p):
   '''
@@ -458,9 +462,7 @@ def p_E(p):
 
   if (p[1].upper() == 'GOSUB'):
     subprocedure_jump_list[p[2]] = [len(cuadruplos), len(cuadruplos) + 1] # fill value, return value
-    cuadruplos.append('gosub ' + p[2] + ' _')
-
-    symbol_table[p[2]] = [3, p.lineno(1), 1]
+    cuadruplos.append('gosub ' + p[2])
 
   operands = []
 
@@ -828,7 +830,7 @@ def add_variables_to_symbol_table(p, variable_type):
 parser = yacc.yacc() # creamos el parser para analisis de gramatica
 
 def print_symbol_table(symbol_table):
-  variable_int_to_type = ['INT','FLOAT','WORD', 'FUNC']
+  global variable_type_to_int
   i = 0
   print('| Index | Variable | Variable Type | Line | Value |\n')
   for key in symbol_table:
@@ -866,125 +868,144 @@ def invalidOperator(operator):
     print('Error: Value of ' , operation[1], ' can\'t be None')
     return True
   return False
+
+cuadruplo_results = []
+cuadruplo = 0
+def execute_subprocedure(id):
+  global cuadruplos, cuadruplo, symbol_table, ops
+
+  subprocedure_indexes = symbol_table[id][2]
+  cuadruplo = subprocedure_indexes[0]
+
+  while cuadruplo < subprocedure_indexes[1]:
+    operation = cuadruplos[cuadruplo].split(' ')
+
+    if switch_operations(operation, ops):
+      return
+
+    cuadruplo += 1
+
+  return 
+
+def switch_operations(operation, ops):
+  global cuadruplos, symbol_table, variable_int_to_type, cuadruplo_results, cuadruplo
+
+  if operation[0] == 'endprogram':
+    return True
+
+  if operation[0] == '=' and operation[1] != '=':
+    if operation[1][0] == 'T':
+      cuadruploIndex = int(operation[1][1:])
+      symbol_table[operation[2]][2] = cuadruplo_results[cuadruploIndex]
+    elif (symbol_table.get(operation[1], -1) != -1):
+      symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
+    else:
+      if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
+        symbol_table[operation[2]][2] = int(operation[1])
+      elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT':
+        symbol_table[operation[2]][2] = float(operation[1])
+      else:
+        symbol_table[operation[2]][2] = str(operation[1])
+
+  elif operation[0] == '>':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return 
+    
+    cuadruplo_results[cuadruplo] = (value_1 > value_2)
+
+  elif operation[0] == '>=':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return 
+    
+    cuadruplo_results[cuadruplo] = (value_1 >= value_2)
+
+  elif operation[0] == '<':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return
+    cuadruplo_results[cuadruplo] = (value_1 < value_2)
+
+  elif operation[0] == '<=':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return
+    cuadruplo_results[cuadruplo] = (value_1 <= value_2)
+
+  elif operation[0] == '==':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return
+    cuadruplo_results[cuadruplo] = (value_1 == value_2)
+
+  elif operation[0].lower() == 'and':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return
+    cuadruplo_results[cuadruplo] = (value_1 and value_2)
+
+  elif operation[0].lower() == 'or':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return
+    cuadruplo_results[cuadruplo] = (value_1 or value_2)
+
+  elif operation[0] == 'gotoF':
+    if (cuadruplo_results[int(operation[1][1:])] == False):
+      cuadruplo = int(operation[2][1:]) - 1
+      return False
+
+  elif operation[0] == 'goto' or operation[0] == 'return':
+    cuadruplo = int(operation[1][1:]) - 1
+    return False
+
+  elif operation[0] == 'gosub': 
+    cuadruplo_state = cuadruplo
+    execute_subprocedure(operation[1])
+    cuadruplo = cuadruplo_state
+    return False
+  
+  elif operation[0] == 'skip':
+    return False
+
+  else:
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return True
+    cuadruplo_results[cuadruplo] = ops[operation[0]](value_1, value_2)
+
+  return False
+
           
 def execute_code():
-  global cuadruplos, symbol_table
-  variable_int_to_type = ['INT','FLOAT','WORD']
-  program_counter = 0
-  cuadruplo = 0
+  global cuadruplos, symbol_table, cuadruplo_results, variable_int_to_type, cuadruplo, ops
   len_cuadruplos = len(cuadruplos)
-  
-  cuadruplo_results = []
 
   for i in range(len(cuadruplos)):
     cuadruplo_results.append(cuadruplos[i])
 
-  ops = {
-    '+': operator.add, 
-    '-': operator.sub, 
-    '*': operator.mul,
-    '/': operator.truediv
-  }
-
   while cuadruplo < len_cuadruplos:
     operation = cuadruplos[cuadruplo].split(' ')
-    
-    if operation[0] == 'endprogram':
+
+    if switch_operations(operation, ops):
       return
-
-    if operation[0] == '=' and operation[1] != '=':
-      if operation[1][0] == 'T':
-        cuadruploIndex = int(operation[1][1:])
-        symbol_table[operation[2]][2] = cuadruplo_results[cuadruploIndex]
-      elif (symbol_table.get(operation[1], -1) != -1):
-        symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
-      else:
-        if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
-          symbol_table[operation[2]][2] = int(operation[1])
-        elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT':
-          symbol_table[operation[2]][2] = float(operation[1])
-        else:
-          symbol_table[operation[2]][2] = str(operation[1])
-
-    elif operation[0] == '>':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return 
-      
-      cuadruplo_results[cuadruplo] = (value_1 > value_2)
-
-    elif operation[0] == '>=':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return 
-      
-      cuadruplo_results[cuadruplo] = (value_1 >= value_2)
-
-    elif operation[0] == '<':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return
-      cuadruplo_results[cuadruplo] = (value_1 < value_2)
-
-    elif operation[0] == '<=':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return
-      cuadruplo_results[cuadruplo] = (value_1 <= value_2)
-
-    elif operation[0] == '==':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return
-      cuadruplo_results[cuadruplo] = (value_1 == value_2)
-
-    elif operation[0].lower() == 'and':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return
-      cuadruplo_results[cuadruplo] = (value_1 and value_2)
-
-    elif operation[0].lower() == 'or':
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return
-      cuadruplo_results[cuadruplo] = (value_1 or value_2)
-
-    elif operation[0] == 'gotoF':
-      if (cuadruplo_results[int(operation[1][1:])] == False):
-        cuadruplo = int(operation[2][1:])
-        continue
-
-    elif operation[0] == 'goto' or operation[0] == 'return':
-      cuadruplo = int(operation[1][1:])
-      continue
-
-    elif operation[0] == 'gosub': 
-      print(operation)
-      cuadruplo = int(operation[2][1:])
-      continue
-
-    else:
-      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-      value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-      
-      if invalidOperator(value_1) or invalidOperator(value_2):
-        return
-      cuadruplo_results[cuadruplo] = ops[operation[0]](value_1, value_2)
 
     cuadruplo += 1
 

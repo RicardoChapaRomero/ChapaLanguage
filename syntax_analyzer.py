@@ -277,7 +277,7 @@ def t_WORD(t):
   return t
 
 def t_WORDVAL(t):
-  r'\".*\"'
+  r'\".+\"'
   t.type = 'WORDVAL'
   return t
 
@@ -449,7 +449,7 @@ def p_E(p):
     | WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional
     | REPEAT while_first_conditional F UNTIL EL repeat_conditional
     | GOSUB ID
-    | INPUT ES COMA IDEx
+    | INPUT IDEx
     | PRINT Ex
   '''
   global variable_type, operands, cuadruplos, statement_jump_list, subprocedure_jump_list
@@ -463,6 +463,9 @@ def p_E(p):
   if (p[1].upper() == 'GOSUB'):
     subprocedure_jump_list[p[2]] = [len(cuadruplos), len(cuadruplos) + 1] # fill value, return value
     cuadruplos.append('gosub ' + p[2])
+
+  if (p[1].upper() == 'INPUT'):
+    cuadruplos.append('input ' + p[2])
 
   operands = []
 
@@ -614,12 +617,12 @@ def p_setType(p):
   global token_state
   token_state = p[-1].upper()
     
-
 def p_IDEx(p):
   '''
   IDEx : ID
        | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
+  p[0] = p[1]
 
 def p_Ex(p):
   '''
@@ -705,7 +708,15 @@ def p_saveID(p):
   '''
   # append id to operands list
   global operands
-  operands.append(str(p[-1]))
+  try:
+   # converting to integer
+    int(p[-1])
+    if (p[-2] == '='):
+      operands.append(str(p[-3]))
+    else:
+      operands.append(str(p[-1]))
+  except ValueError:
+    operands.append(str(p[-1]))
 
 def p_cte(p):
   '''
@@ -782,7 +793,6 @@ def p_O_error(p):
   O : Ex error Ex
   '''
   print('Error in boolean operand')
-  #print(p)
 
 def p_empty(p):
   '''
@@ -912,7 +922,7 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return 
+      return False
     
     cuadruplo_results[cuadruplo] = (value_1 > value_2)
 
@@ -921,7 +931,7 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return 
+      return False
     
     cuadruplo_results[cuadruplo] = (value_1 >= value_2)
 
@@ -930,7 +940,7 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return
+      return False
     cuadruplo_results[cuadruplo] = (value_1 < value_2)
 
   elif operation[0] == '<=':
@@ -938,7 +948,7 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return
+      return False
     cuadruplo_results[cuadruplo] = (value_1 <= value_2)
 
   elif operation[0] == '==':
@@ -946,7 +956,7 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return
+      return False
     cuadruplo_results[cuadruplo] = (value_1 == value_2)
 
   elif operation[0].lower() == 'and':
@@ -954,7 +964,7 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return
+      return False
     cuadruplo_results[cuadruplo] = (value_1 and value_2)
 
   elif operation[0].lower() == 'or':
@@ -962,8 +972,13 @@ def switch_operations(operation, ops):
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
     
     if invalidOperator(value_1) or invalidOperator(value_2):
-      return
+      return False
     cuadruplo_results[cuadruplo] = (value_1 or value_2)
+
+  elif operation[0] == 'input':
+    user_input = input('Input variable ', operation[2], ': ')
+    symbol_table[operation[2]][2] = user_input
+    return False
 
   elif operation[0] == 'gotoF':
     if (cuadruplo_results[int(operation[1][1:])] == False):

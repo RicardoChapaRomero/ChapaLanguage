@@ -42,3 +42,8 @@ PROGRAM
 
 		RETURN
 END
+
+
+		WHILE (cycle > 0) DO 
+            INPUT "Tamaño del lado", lado
+        WEND

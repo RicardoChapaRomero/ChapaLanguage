@@ -1,0 +1,19 @@
+PROGRAM
+	DIM lado, perimetro, cycle AS INT
+    DIM area AS FLOAT
+    
+    LET lado = 0
+    LET perimetro = 0
+    LET area = 0
+    LET cycle = 3
+
+	gosub calcularArea
+
+	SUBPROCEDURE calcularArea:
+
+		while (cycle > 0) do 
+            LET cycle = cycle - 1
+        wend
+
+	RETURN
+END

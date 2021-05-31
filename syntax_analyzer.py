@@ -457,15 +457,18 @@ def p_E(p):
     variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
 
-  if (p[1].upper() == 'LET'):
+  elif (p[1].upper() == 'LET'):
     cuadruplos.append('= ' + str(p[5]) + ' ' + str(p[3]))
 
-  if (p[1].upper() == 'GOSUB'):
+  elif (p[1].upper() == 'GOSUB'):
     subprocedure_jump_list[p[2]] = [len(cuadruplos), len(cuadruplos) + 1] # fill value, return value
     cuadruplos.append('gosub ' + p[2])
 
-  if (p[1].upper() == 'INPUT'):
+  elif (p[1].upper() == 'INPUT'):
     cuadruplos.append('input ' + p[2])
+
+  elif p[1].upper() == 'PRINT':
+    cuadruplos.append('print ' + p[2])
 
   operands = []
 
@@ -627,7 +630,6 @@ def p_IDEx(p):
 def p_Ex(p):
   '''
   Ex : EA
-     | ES
      | EL
      | ID
   '''
@@ -708,13 +710,17 @@ def p_saveID(p):
   '''
   # append id to operands list
   global operands
+
+  operators_list = ['-', '+', '*', '/']
+
   try:
    # converting to integer
     int(p[-1])
-    if (p[-2] == '='):
-      operands.append(str(p[-3]))
-    else:
+
+    if p[-2] in operators_list: 
       operands.append(str(p[-1]))
+    else:
+      operands.append(str(p[-3]))
   except ValueError:
     operands.append(str(p[-1]))
 
@@ -976,8 +982,13 @@ def switch_operations(operation, ops):
     cuadruplo_results[cuadruplo] = (value_1 or value_2)
 
   elif operation[0] == 'input':
-    user_input = input('Input variable ', operation[2], ': ')
-    symbol_table[operation[2]][2] = user_input
+    user_input = input('Input variable ' + str(operation[1]) + ': ')
+
+    if symbol_table[operation[1]][0] == 0:
+      symbol_table[operation[1]][2] = int(user_input)
+    elif symbol_table[operation[1]][0] == 1:
+      symbol_table[operation[1]][2] = float(user_input)
+
     return False
 
   elif operation[0] == 'gotoF':

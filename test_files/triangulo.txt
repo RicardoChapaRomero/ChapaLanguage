@@ -1,5 +1,5 @@
 PROGRAM
-	DIM lado, perimetro, cycle AS INT
+	DIM lado, perimetro, cycle, altura AS INT
     DIM area AS FLOAT
     
     LET lado = 0
@@ -12,7 +12,12 @@ PROGRAM
 	SUBPROCEDURE calcularArea:
 
 		while (cycle > 0) do 
-            LET cycle = cycle - 1
+            input lado
+            input altura
+
+            let perimetro = lado * 3
+            let area = lado * altura / 2
+            input cycle
         wend
 
 	RETURN

@@ -1,0 +1,4 @@
+PROGRAM
+	DIM number as INT [1, 2, 3]
+    let number[0,1,2] = 45
+END

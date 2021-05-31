@@ -42,7 +42,7 @@ no_else = True
 equal_error = False # error handling variable for '<=' and '>=' errors
 subprocedure_jump_list = {}
 
-variable_int_to_type = ['INT','FLOAT','WORD', 'FUNC']
+variable_int_to_type = ['INT','FLOAT','WORD', 'FUNC', 'INT_ARR', 'FLOAT_ARR']
 
 ops = {
   '+': operator.add, 
@@ -385,15 +385,33 @@ def p_V(p):
   '''
   global variable_type
   if (len(p) > 2):
-    variable_type = p[5].upper()
+    if (p[1].upper() == 'DIM'):
+      if len(p) > 6 and not p[6] == None:
+        variable_type = p[5].upper() + '_ARR'
+      else:
+        variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
 
 def p_Arr(p):
   '''
-  Arr : OPENBRACKET EA CLOSINGBRACKET Arr
-      | OPENBRACKET ID CLOSINGBRACKET Arr
+  Arr : OPENBRACKET arr_space CLOSINGBRACKET
       | empty
   '''
+  if (len(p) > 2):
+    array_size = p[2].split(',')
+    p[0] = array_size
+
+def p_arr_space(p):
+  '''
+  arr_space : EA COMA arr_space
+            | ID COMA arr_space
+            | EA
+            | ID
+  '''
+  if len(p) > 2:
+    p[0] = str(p[1]) + ',' + p[3]
+  else:
+    p[0] = str(p[1])
 
 def p_T(p):
   '''
@@ -455,8 +473,12 @@ def p_E(p):
     | PRINT Ex
   '''
   global variable_type, operands, cuadruplos, statement_jump_list, subprocedure_jump_list
+  
   if (p[1].upper() == 'DIM'):
-    variable_type = p[5].upper()
+    if len(p) > 6 and not p[6] == None:
+      variable_type = p[5].upper() + '_ARR'
+    else:
+      variable_type = p[5].upper()
     add_variables_to_symbol_table(p, variable_type)
 
   elif (p[1].upper() == 'LET'):
@@ -606,6 +628,7 @@ def p_Idv(p):
   '''
   Idv : ID COMA Idv
       | ID
+      | ID Arr
   '''
   global variables
   if (token_state == 'DIM'):
@@ -613,7 +636,13 @@ def p_Idv(p):
     variables.append(p[1])
   
   elif (token_state == 'LET'):
-    p[0] = p[1]
+    if len(p) > 2:
+      if (type(p[2]) == list):
+        p[0] = str(p[1]) + ' ' + str(p[2]) 
+      else:
+        p[0] = p[1]
+    else:
+      p[0] = p[1]
 
 def p_setType(p):
   '''
@@ -698,11 +727,12 @@ def p_N(p):
   N : cte saveID
     | ID saveID
     | OPENPAR EA CLOSINGPAR
-    | ID OPENBRACKET INTVAL CLOSINGBRACKET
-    | ID OPENBRACKET setType Idv CLOSINGBRACKET
+    | ID Arr
   '''
   if (p[1] == '('):
     p[0] = p[2]
+  elif p[1] == '[':
+    indexes = p[2]
   else:
     p[0] = p[1]
 
@@ -818,6 +848,16 @@ def p_error(p):
     print('\tSintaxis Incorrecto\n')
     print('Error: ' + str(p))
 
+def fillArray(variable_array, sizes, counter):
+  variable_array = [0] * int(sizes[counter])
+
+  if counter < len(sizes) - 1:
+    for i in range(len(variable_array)):
+      variable_array[i] = fillArray(i, sizes, counter + 1)
+
+  return variable_array
+
+
 def add_variables_to_symbol_table(p, variable_type):
   '''
   Function to add variables id and type to the 
@@ -832,13 +872,21 @@ def add_variables_to_symbol_table(p, variable_type):
     FLOAT = 1
     WORD  = 2
   '''
-  variable_type_to_int = {'INT': 0, 'FLOAT': 1, 'WORD': 2, 'FUNC': 3}
+  variable_type_to_int = {'INT': 0, 'FLOAT': 1, 'WORD': 2, 'FUNC': 3, 'INT_ARR': 4, 'FLOAT_ARR':5}
   
   global variables, symbol_table
 
   for variable in variables:
     if (symbol_table.get(variable, -1) == -1):
-      symbol_table[variable] = [variable_type_to_int[variable_type], p.lineno(1), 0]
+      variable_int = variable_type_to_int[variable_type]
+      if variable_int > 3:
+        variable_array = []
+        sizes = p[6]
+        variable_array = fillArray(variable_array, sizes, 0)
+
+        symbol_table[variable] = [variable_int, p.lineno(1), variable_array]
+      else:
+        symbol_table[variable] = [variable_int, p.lineno(1), 0]
     else:
       print('ERROR: The variable \'' + variable + '\' is already defined in line: ' + str(symbol_table[variable][1]))
       print('Variable redefined at line: ' + str(p.lineno(1)) + '\n')
@@ -887,6 +935,22 @@ def invalidOperator(operator):
     return True
   return False
 
+def fillArray_value(currentArray, indexes, value, counter):
+  global symbol_table
+  if type(currentArray) == list and counter < len(indexes) - 1:
+    if indexes[counter] < len(currentArray):
+      currentArray = currentArray[indexes[counter]]
+      fillArray_value(currentArray, indexes, value, counter + 1)
+    else:
+        print('Index is out of range')
+        return
+  else:
+    if indexes[counter] >= len(currentArray):
+        print('Index is out of range')
+        return
+    else:
+      currentArray[indexes[counter]] = int(value)
+
 cuadruplo_results = []
 cuadruplo = 0
 def execute_subprocedure(id):
@@ -918,7 +982,22 @@ def switch_operations(operation, ops):
     elif (symbol_table.get(operation[1], -1) != -1):
       symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
     else:
-      if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
+      if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
+        indexes = ' '.join(operation[3:])
+        idx_to_int = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int.append(int(i))
+          except ValueError:
+            pass
+
+        currentArray = symbol_table[operation[2]][2]
+        counter = 0
+        fillArray_value(currentArray, idx_to_int, operation[1], counter)
+
+      elif variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
         symbol_table[operation[2]][2] = int(operation[1])
       elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT':
         symbol_table[operation[2]][2] = float(operation[1])
@@ -1051,7 +1130,6 @@ try:
   testFile = f.read()
   parser.parse(testFile, tracking=True)
 
-  #print_syntax_info_tables()
   print('Executing Code...')
   execute_code()
   print_syntax_info_tables()

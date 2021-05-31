@@ -17,6 +17,9 @@ PROGRAM
 
             let perimetro = lado * 3
             let area = lado * altura / 2
+
+            print area
+
             input cycle
         wend
 

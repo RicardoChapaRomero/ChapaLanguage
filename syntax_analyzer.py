@@ -14,6 +14,8 @@ test_files/operaciones_codigo_intermedio.txt
 test_files/operaciones_CI_estatuos_y_ciclos.txt
 test_files/operaciones_CI_estatuos_y_ciclos_WHILE.txt
 test_files/operaciones_CI_estatuos_y_ciclos_FOR.txt
+test_files/triangulo.txt
+test_files/factorial.txt
 
 -----------------------------------------------
 
@@ -468,7 +470,7 @@ def p_E(p):
     cuadruplos.append('input ' + p[2])
 
   elif p[1].upper() == 'PRINT':
-    cuadruplos.append('print ' + p[2])
+    cuadruplos.append('print ' + str(p[2]))
 
   operands = []
 
@@ -988,6 +990,12 @@ def switch_operations(operation, ops):
       symbol_table[operation[1]][2] = int(user_input)
     elif symbol_table[operation[1]][0] == 1:
       symbol_table[operation[1]][2] = float(user_input)
+
+    return False
+
+  elif operation[0] == 'print':
+    value = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    print(value)
 
     return False
 

@@ -1,0 +1,25 @@
+PROGRAM
+	DIM number, factorial, limit, i AS INT
+    
+    let factorial = 1
+
+	gosub getFact
+
+	SUBPROCEDURE getFact:
+        input number
+        let factorial = factorial * number
+        let limit = number - 2
+
+        if (number == 0) then
+            let factorial = 1
+        else
+            for i = 0 to limit do
+                let number = number - 1
+                let factorial = factorial * number
+            next i
+        eif
+
+        print factorial
+
+	RETURN
+END

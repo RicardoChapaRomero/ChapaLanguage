@@ -943,12 +943,12 @@ def invalidOperator(operator):
     return True
   return False
 
-def fillArray_value(currentArray, indexes, value, counter):
+def fillArray_value(currentArray, indexes, value, counter, typeVar):
   global symbol_table
   if type(currentArray) == list and counter < len(indexes) - 1:
     if indexes[counter] < len(currentArray):
       currentArray = currentArray[indexes[counter]]
-      fillArray_value(currentArray, indexes, value, counter + 1)
+      fillArray_value(currentArray, indexes, value, counter + 1, typeVar)
     else:
         print('Index is out of range')
         return
@@ -959,9 +959,14 @@ def fillArray_value(currentArray, indexes, value, counter):
     else:
       try:
         int(value)
-        currentArray[indexes[counter]] = int(value)
+        tempValue = int(value)
       except ValueError:
-        currentArray[indexes[counter]] = float(value)
+        tempValue = float(value)
+
+      if typeVar == 'int':
+        currentArray[indexes[counter]] = int(tempValue)
+      else:
+        currentArray[indexes[counter]] = float(tempValue)
 
 cuadruplo_results = []
 cuadruplo = 0
@@ -1013,7 +1018,22 @@ def switch_operations(operation, ops):
 
         currentArray = symbol_table[operation[2]][2]
         counter = 0
-        fillArray_value(currentArray, idx_to_int, operation[1], counter)
+        fillArray_value(currentArray, idx_to_int, operation[1], counter, 'int')
+
+      elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR':
+        indexes = ' '.join(operation[3:])
+        idx_to_int = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int.append(int(i))
+          except ValueError:
+            pass
+
+        currentArray = symbol_table[operation[2]][2]
+        counter = 0
+        fillArray_value(currentArray, idx_to_int, operation[1], counter, 'float')
 
       elif variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
         symbol_table[operation[2]][2] = int(operation[1])

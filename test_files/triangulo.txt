@@ -1,27 +1,58 @@
 PROGRAM
-	DIM lado, perimetro, cycle, altura AS INT
-    DIM area AS FLOAT
+	DIM margen, estimacion, numero, cociente, promedio as FLOAT
+    DIM raiz, perimetro, temporal, suma, base, altura as FLOAT
+    DIM cycle as INT
     
-    LET lado = 0
-    LET perimetro = 0
-    LET area = 0.001
-    LET cycle = 3
+    let raiz = 0.0
+    let cociente = 0.0
+    let promedio = 0.0
+
+    let base = 0
+    let altura = 0
+    let cycle = 1
+
+    let base = 0.0
+    let altura = 0.0
 
 	gosub calcularArea
 
 	SUBPROCEDURE calcularArea:
 
 		while (cycle > 0) do 
-            input lado
+            input base
             input altura
 
-            let perimetro = lado * 3
-            let area = lado * altura / 2
+            let suma = (altura * altura) + (base * base)
+            gosub getraiz
 
-            print area
+            print estimacion
 
             input cycle
         wend
+	RETURN
+
+    SUBPROCEDURE getraiz:
+        let estimacion = 1.0
+        let margen = 0.000001
+
+        gosub getValorAbsoluto
+
+        while (temporal >= margen) do
+            let cociente = suma / estimacion
+            let promedio = (cociente + estimacion) / 2.0
+            let estimacion = promedio
+
+            gosub getValorAbsoluto
+        wend
 
 	RETURN
+
+    SUBPROCEDURE getValorAbsoluto:
+        let temporal = (estimacion * estimacion) - suma
+        
+        if (temporal < 0) then
+           let temporal = temporal * -1
+        eif
+    RETURN
+
 END

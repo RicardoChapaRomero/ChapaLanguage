@@ -446,7 +446,8 @@ def p_endProcedure(p):
   global cuadruplos, subprocedure_jump_list
 
   symbol_table[p[-5]][2][1] = len(cuadruplos)
-  subprocedure_jump_list.pop(p[-5])
+  if p[-5] in subprocedure_jump_list:
+    subprocedure_jump_list.pop(p[-5])
 
 def p_M(p):
   '''
@@ -1178,6 +1179,7 @@ try:
   parser.parse(testFile, tracking=True)
 
   print('Executing Code...')
+  
   execute_code()
   print_syntax_info_tables()
 except EOFError:

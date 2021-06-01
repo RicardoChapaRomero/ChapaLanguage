@@ -71,30 +71,32 @@ Rule 61    N -> ID saveID
 Rule 62    N -> OPENPAR EA CLOSINGPAR
 Rule 63    N -> ID Arr
 Rule 64    saveID -> <empty>
-Rule 65    cte -> INTVAL
-Rule 66    cte -> FLOATVAL
-Rule 67    EL -> TRUE
-Rule 68    EL -> FALSE
-Rule 69    EL -> OPENPAR O CLOSINGPAR
-Rule 70    EL -> OPENPAR O CLOSINGPAR OL EL
-Rule 71    OL -> AND
-Rule 72    OL -> OR
-Rule 73    OL -> NOT
-Rule 74    O -> Ex GREATHER Ex
-Rule 75    O -> Ex GREATHEREQUAL Ex
-Rule 76    O -> Ex SMALLER Ex
-Rule 77    O -> Ex SMALLEREQUAL Ex
-Rule 78    O -> Ex NOTEQUAL Ex
-Rule 79    O -> Ex EQUALTO Ex
-Rule 80    O -> Ex error Ex
-Rule 81    empty -> <empty>
+Rule 65    cte -> FLOATVAL
+Rule 66    cte -> INTVAL
+Rule 67    cte -> MINUS INTVAL
+Rule 68    cte -> MINUS FLOATVAL
+Rule 69    EL -> TRUE
+Rule 70    EL -> FALSE
+Rule 71    EL -> OPENPAR O CLOSINGPAR
+Rule 72    EL -> OPENPAR O CLOSINGPAR OL EL
+Rule 73    OL -> AND
+Rule 74    OL -> OR
+Rule 75    OL -> NOT
+Rule 76    O -> Ex GREATHER Ex
+Rule 77    O -> Ex GREATHEREQUAL Ex
+Rule 78    O -> Ex SMALLER Ex
+Rule 79    O -> Ex SMALLEREQUAL Ex
+Rule 80    O -> Ex NOTEQUAL Ex
+Rule 81    O -> Ex EQUALTO Ex
+Rule 82    O -> Ex error Ex
+Rule 83    empty -> <empty>
 
 Terminals, with rules where they appear
 
-AND                  : 71
+AND                  : 73
 AS                   : 3 23
 CLOSINGBRACKET       : 5 49
-CLOSINGPAR           : 62 69 70
+CLOSINGPAR           : 62 71 72
 COMA                 : 7 8 44
 COMMENT              : 
 DIM                  : 3 23
@@ -104,63 +106,63 @@ EIF                  : 24
 ELSE                 : 42
 END                  : 1
 EQUALS               : 22 25
-EQUALTO              : 79
-FALSE                : 68
+EQUALTO              : 81
+FALSE                : 70
 FLOAT                : 12
-FLOATVAL             : 66
+FLOATVAL             : 65 68
 FOR                  : 25
 GOSUB                : 28
-GREATHER             : 74
-GREATHEREQUAL        : 75
+GREATHER             : 76
+GREATHEREQUAL        : 77
 ID                   : 8 10 14 25 25 28 44 45 46 48 49 52 61 63
 IF                   : 24
 INPUT                : 29
 INT                  : 11
-INTVAL               : 65
+INTVAL               : 66 67
 LET                  : 22
-MINUS                : 55
+MINUS                : 55 67 68
 MULTIPLY             : 57
 NEXT                 : 25
-NOT                  : 73
-NOTEQUAL             : 78
+NOT                  : 75
+NOTEQUAL             : 80
 OPENBRACKET          : 5 49
-OPENPAR              : 62 69 70
-OR                   : 72
+OPENPAR              : 62 71 72
+OR                   : 74
 PLUS                 : 54
 PRINT                : 30
 PROGRAM              : 1
 REPEAT               : 27
 RETURN               : 14
-SMALLER              : 76
-SMALLEREQUAL         : 77
+SMALLER              : 78
+SMALLEREQUAL         : 79
 SUBPROCEDURE         : 14
 THEN                 : 24
 TO                   : 25
-TRUE                 : 67
+TRUE                 : 69
 TWOPOINTS            : 14
 UNTIL                : 27
 WEND                 : 26
 WHILE                : 26
 WORD                 : 13
 WORDVAL              : 53
-error                : 80
+error                : 82
 
 Nonterminals, with rules where they appear
 
 Arr                  : 3 23 46 63
 E                    : 20
 EA                   : 7 9 25 50 54 55 62
-EL                   : 24 26 27 51 70
+EL                   : 24 26 27 51 72
 ES                   : 
 Esf                  : 24
-Ex                   : 22 25 30 74 74 75 75 76 76 77 77 78 78 79 79 80 80
+Ex                   : 22 25 30 76 76 77 77 78 78 79 79 80 80 81 81 82 82
 F                    : 18 20 24 25 26 27 42
 IDEx                 : 29
 Idv                  : 3 22 23 44 49
 M                    : 1 14 18
 N                    : 57 58 59
-O                    : 69 70
-OL                   : 70
+O                    : 71 72
+OL                   : 72
 P                    : 54 55 56 57 58
 PROGRAMA             : 0
 S                    : 1 14
@@ -208,22 +210,22 @@ state 2
     (1) PROGRAMA -> PROGRAM . V M endProgram S END
     (3) V -> . DIM setType Idv AS T Arr
     (4) V -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
   ! shift/reduce conflict for DIM resolved as shift
     DIM             shift and go to state 4
-    LET             reduce using rule 81 (empty -> .)
-    IF              reduce using rule 81 (empty -> .)
-    FOR             reduce using rule 81 (empty -> .)
-    WHILE           reduce using rule 81 (empty -> .)
-    REPEAT          reduce using rule 81 (empty -> .)
-    GOSUB           reduce using rule 81 (empty -> .)
-    INPUT           reduce using rule 81 (empty -> .)
-    PRINT           reduce using rule 81 (empty -> .)
-    SUBPROCEDURE    reduce using rule 81 (empty -> .)
-    END             reduce using rule 81 (empty -> .)
+    LET             reduce using rule 83 (empty -> .)
+    IF              reduce using rule 83 (empty -> .)
+    FOR             reduce using rule 83 (empty -> .)
+    WHILE           reduce using rule 83 (empty -> .)
+    REPEAT          reduce using rule 83 (empty -> .)
+    GOSUB           reduce using rule 83 (empty -> .)
+    INPUT           reduce using rule 83 (empty -> .)
+    PRINT           reduce using rule 83 (empty -> .)
+    SUBPROCEDURE    reduce using rule 83 (empty -> .)
+    END             reduce using rule 83 (empty -> .)
 
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
 
     V                              shift and go to state 3
     empty                          shift and go to state 5
@@ -235,7 +237,7 @@ state 3
     (19) M -> . empty
     (20) F -> . E F
     (21) F -> . empty
-    (81) empty -> .
+    (83) empty -> .
     (22) E -> . LET setType Idv EQUALS Ex
     (23) E -> . DIM setType Idv AS T Arr
     (24) E -> . IF EL THEN first_conditional F Esf EIF final_conditional
@@ -255,8 +257,8 @@ state 3
   ! shift/reduce conflict for GOSUB resolved as shift
   ! shift/reduce conflict for INPUT resolved as shift
   ! shift/reduce conflict for PRINT resolved as shift
-    SUBPROCEDURE    reduce using rule 81 (empty -> .)
-    END             reduce using rule 81 (empty -> .)
+    SUBPROCEDURE    reduce using rule 83 (empty -> .)
+    END             reduce using rule 83 (empty -> .)
     LET             shift and go to state 10
     DIM             shift and go to state 11
     IF              shift and go to state 12
@@ -267,15 +269,15 @@ state 3
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
 
-  ! LET             [ reduce using rule 81 (empty -> .) ]
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
-  ! IF              [ reduce using rule 81 (empty -> .) ]
-  ! FOR             [ reduce using rule 81 (empty -> .) ]
-  ! WHILE           [ reduce using rule 81 (empty -> .) ]
-  ! REPEAT          [ reduce using rule 81 (empty -> .) ]
-  ! GOSUB           [ reduce using rule 81 (empty -> .) ]
-  ! INPUT           [ reduce using rule 81 (empty -> .) ]
-  ! PRINT           [ reduce using rule 81 (empty -> .) ]
+  ! LET             [ reduce using rule 83 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
+  ! IF              [ reduce using rule 83 (empty -> .) ]
+  ! FOR             [ reduce using rule 83 (empty -> .) ]
+  ! WHILE           [ reduce using rule 83 (empty -> .) ]
+  ! REPEAT          [ reduce using rule 83 (empty -> .) ]
+  ! GOSUB           [ reduce using rule 83 (empty -> .) ]
+  ! INPUT           [ reduce using rule 83 (empty -> .) ]
+  ! PRINT           [ reduce using rule 83 (empty -> .) ]
 
     M                              shift and go to state 6
     F                              shift and go to state 7
@@ -325,7 +327,7 @@ state 7
     (19) M -> . empty
     (20) F -> . E F
     (21) F -> . empty
-    (81) empty -> .
+    (83) empty -> .
     (22) E -> . LET setType Idv EQUALS Ex
     (23) E -> . DIM setType Idv AS T Arr
     (24) E -> . IF EL THEN first_conditional F Esf EIF final_conditional
@@ -345,9 +347,9 @@ state 7
   ! shift/reduce conflict for GOSUB resolved as shift
   ! shift/reduce conflict for INPUT resolved as shift
   ! shift/reduce conflict for PRINT resolved as shift
-    SUBPROCEDURE    reduce using rule 81 (empty -> .)
-    END             reduce using rule 81 (empty -> .)
-    RETURN          reduce using rule 81 (empty -> .)
+    SUBPROCEDURE    reduce using rule 83 (empty -> .)
+    END             reduce using rule 83 (empty -> .)
+    RETURN          reduce using rule 83 (empty -> .)
     LET             shift and go to state 10
     DIM             shift and go to state 11
     IF              shift and go to state 12
@@ -358,15 +360,15 @@ state 7
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
 
-  ! LET             [ reduce using rule 81 (empty -> .) ]
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
-  ! IF              [ reduce using rule 81 (empty -> .) ]
-  ! FOR             [ reduce using rule 81 (empty -> .) ]
-  ! WHILE           [ reduce using rule 81 (empty -> .) ]
-  ! REPEAT          [ reduce using rule 81 (empty -> .) ]
-  ! GOSUB           [ reduce using rule 81 (empty -> .) ]
-  ! INPUT           [ reduce using rule 81 (empty -> .) ]
-  ! PRINT           [ reduce using rule 81 (empty -> .) ]
+  ! LET             [ reduce using rule 83 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
+  ! IF              [ reduce using rule 83 (empty -> .) ]
+  ! FOR             [ reduce using rule 83 (empty -> .) ]
+  ! WHILE           [ reduce using rule 83 (empty -> .) ]
+  ! REPEAT          [ reduce using rule 83 (empty -> .) ]
+  ! GOSUB           [ reduce using rule 83 (empty -> .) ]
+  ! INPUT           [ reduce using rule 83 (empty -> .) ]
+  ! PRINT           [ reduce using rule 83 (empty -> .) ]
 
     F                              shift and go to state 7
     M                              shift and go to state 21
@@ -413,7 +415,7 @@ state 9
     (28) E -> . GOSUB ID
     (29) E -> . INPUT IDEx
     (30) E -> . PRINT Ex
-    (81) empty -> .
+    (83) empty -> .
 
   ! shift/reduce conflict for LET resolved as shift
   ! shift/reduce conflict for DIM resolved as shift
@@ -433,24 +435,24 @@ state 9
     GOSUB           shift and go to state 16
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
-    SUBPROCEDURE    reduce using rule 81 (empty -> .)
-    END             reduce using rule 81 (empty -> .)
-    RETURN          reduce using rule 81 (empty -> .)
-    UNTIL           reduce using rule 81 (empty -> .)
-    ELSE            reduce using rule 81 (empty -> .)
-    EIF             reduce using rule 81 (empty -> .)
-    WEND            reduce using rule 81 (empty -> .)
-    NEXT            reduce using rule 81 (empty -> .)
+    SUBPROCEDURE    reduce using rule 83 (empty -> .)
+    END             reduce using rule 83 (empty -> .)
+    RETURN          reduce using rule 83 (empty -> .)
+    UNTIL           reduce using rule 83 (empty -> .)
+    ELSE            reduce using rule 83 (empty -> .)
+    EIF             reduce using rule 83 (empty -> .)
+    WEND            reduce using rule 83 (empty -> .)
+    NEXT            reduce using rule 83 (empty -> .)
 
-  ! LET             [ reduce using rule 81 (empty -> .) ]
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
-  ! IF              [ reduce using rule 81 (empty -> .) ]
-  ! FOR             [ reduce using rule 81 (empty -> .) ]
-  ! WHILE           [ reduce using rule 81 (empty -> .) ]
-  ! REPEAT          [ reduce using rule 81 (empty -> .) ]
-  ! GOSUB           [ reduce using rule 81 (empty -> .) ]
-  ! INPUT           [ reduce using rule 81 (empty -> .) ]
-  ! PRINT           [ reduce using rule 81 (empty -> .) ]
+  ! LET             [ reduce using rule 83 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
+  ! IF              [ reduce using rule 83 (empty -> .) ]
+  ! FOR             [ reduce using rule 83 (empty -> .) ]
+  ! WHILE           [ reduce using rule 83 (empty -> .) ]
+  ! REPEAT          [ reduce using rule 83 (empty -> .) ]
+  ! GOSUB           [ reduce using rule 83 (empty -> .) ]
+  ! INPUT           [ reduce using rule 83 (empty -> .) ]
+  ! PRINT           [ reduce using rule 83 (empty -> .) ]
 
     E                              shift and go to state 9
     F                              shift and go to state 22
@@ -477,10 +479,10 @@ state 11
 state 12
 
     (24) E -> IF . EL THEN first_conditional F Esf EIF final_conditional
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
 
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
@@ -550,10 +552,10 @@ state 18
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -561,22 +563,25 @@ state 18
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
     Ex                             shift and go to state 36
     EA                             shift and go to state 37
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 19
 
@@ -585,22 +590,22 @@ state 19
     (45) Idv -> . ID
     (46) Idv -> . ID Arr
 
-    ID              shift and go to state 47
+    ID              shift and go to state 48
 
-    Idv                            shift and go to state 46
+    Idv                            shift and go to state 47
 
 state 20
 
     (1) PROGRAMA -> PROGRAM V M endProgram . S END
     (14) S -> . SUBPROCEDURE ID fillSub TWOPOINTS M RETURN endProcedure S
     (15) S -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
-    SUBPROCEDURE    shift and go to state 49
-    END             reduce using rule 81 (empty -> .)
+    SUBPROCEDURE    shift and go to state 50
+    END             reduce using rule 83 (empty -> .)
 
-    S                              shift and go to state 48
-    empty                          shift and go to state 50
+    S                              shift and go to state 49
+    empty                          shift and go to state 51
 
 state 21
 
@@ -664,9 +669,9 @@ state 24
     (45) Idv -> . ID
     (46) Idv -> . ID Arr
 
-    ID              shift and go to state 47
+    ID              shift and go to state 48
 
-    Idv                            shift and go to state 51
+    Idv                            shift and go to state 52
 
 state 25
 
@@ -675,104 +680,104 @@ state 25
     (45) Idv -> . ID
     (46) Idv -> . ID Arr
 
-    ID              shift and go to state 47
+    ID              shift and go to state 48
 
-    Idv                            shift and go to state 52
+    Idv                            shift and go to state 53
 
 state 26
 
     (24) E -> IF EL . THEN first_conditional F Esf EIF final_conditional
 
-    THEN            shift and go to state 53
+    THEN            shift and go to state 54
 
 
 state 27
 
-    (67) EL -> TRUE .
+    (69) EL -> TRUE .
 
-    THEN            reduce using rule 67 (EL -> TRUE .)
-    LET             reduce using rule 67 (EL -> TRUE .)
-    DIM             reduce using rule 67 (EL -> TRUE .)
-    IF              reduce using rule 67 (EL -> TRUE .)
-    FOR             reduce using rule 67 (EL -> TRUE .)
-    WHILE           reduce using rule 67 (EL -> TRUE .)
-    REPEAT          reduce using rule 67 (EL -> TRUE .)
-    GOSUB           reduce using rule 67 (EL -> TRUE .)
-    INPUT           reduce using rule 67 (EL -> TRUE .)
-    PRINT           reduce using rule 67 (EL -> TRUE .)
-    SUBPROCEDURE    reduce using rule 67 (EL -> TRUE .)
-    END             reduce using rule 67 (EL -> TRUE .)
-    RETURN          reduce using rule 67 (EL -> TRUE .)
-    UNTIL           reduce using rule 67 (EL -> TRUE .)
-    ELSE            reduce using rule 67 (EL -> TRUE .)
-    EIF             reduce using rule 67 (EL -> TRUE .)
-    WEND            reduce using rule 67 (EL -> TRUE .)
-    NEXT            reduce using rule 67 (EL -> TRUE .)
-    GREATHER        reduce using rule 67 (EL -> TRUE .)
-    GREATHEREQUAL   reduce using rule 67 (EL -> TRUE .)
-    SMALLER         reduce using rule 67 (EL -> TRUE .)
-    SMALLEREQUAL    reduce using rule 67 (EL -> TRUE .)
-    NOTEQUAL        reduce using rule 67 (EL -> TRUE .)
-    EQUALTO         reduce using rule 67 (EL -> TRUE .)
-    error           reduce using rule 67 (EL -> TRUE .)
-    DO              reduce using rule 67 (EL -> TRUE .)
-    CLOSINGPAR      reduce using rule 67 (EL -> TRUE .)
+    THEN            reduce using rule 69 (EL -> TRUE .)
+    LET             reduce using rule 69 (EL -> TRUE .)
+    DIM             reduce using rule 69 (EL -> TRUE .)
+    IF              reduce using rule 69 (EL -> TRUE .)
+    FOR             reduce using rule 69 (EL -> TRUE .)
+    WHILE           reduce using rule 69 (EL -> TRUE .)
+    REPEAT          reduce using rule 69 (EL -> TRUE .)
+    GOSUB           reduce using rule 69 (EL -> TRUE .)
+    INPUT           reduce using rule 69 (EL -> TRUE .)
+    PRINT           reduce using rule 69 (EL -> TRUE .)
+    SUBPROCEDURE    reduce using rule 69 (EL -> TRUE .)
+    END             reduce using rule 69 (EL -> TRUE .)
+    RETURN          reduce using rule 69 (EL -> TRUE .)
+    UNTIL           reduce using rule 69 (EL -> TRUE .)
+    ELSE            reduce using rule 69 (EL -> TRUE .)
+    EIF             reduce using rule 69 (EL -> TRUE .)
+    WEND            reduce using rule 69 (EL -> TRUE .)
+    NEXT            reduce using rule 69 (EL -> TRUE .)
+    GREATHER        reduce using rule 69 (EL -> TRUE .)
+    GREATHEREQUAL   reduce using rule 69 (EL -> TRUE .)
+    SMALLER         reduce using rule 69 (EL -> TRUE .)
+    SMALLEREQUAL    reduce using rule 69 (EL -> TRUE .)
+    NOTEQUAL        reduce using rule 69 (EL -> TRUE .)
+    EQUALTO         reduce using rule 69 (EL -> TRUE .)
+    error           reduce using rule 69 (EL -> TRUE .)
+    DO              reduce using rule 69 (EL -> TRUE .)
+    CLOSINGPAR      reduce using rule 69 (EL -> TRUE .)
 
 
 state 28
 
-    (68) EL -> FALSE .
+    (70) EL -> FALSE .
 
-    THEN            reduce using rule 68 (EL -> FALSE .)
-    LET             reduce using rule 68 (EL -> FALSE .)
-    DIM             reduce using rule 68 (EL -> FALSE .)
-    IF              reduce using rule 68 (EL -> FALSE .)
-    FOR             reduce using rule 68 (EL -> FALSE .)
-    WHILE           reduce using rule 68 (EL -> FALSE .)
-    REPEAT          reduce using rule 68 (EL -> FALSE .)
-    GOSUB           reduce using rule 68 (EL -> FALSE .)
-    INPUT           reduce using rule 68 (EL -> FALSE .)
-    PRINT           reduce using rule 68 (EL -> FALSE .)
-    SUBPROCEDURE    reduce using rule 68 (EL -> FALSE .)
-    END             reduce using rule 68 (EL -> FALSE .)
-    RETURN          reduce using rule 68 (EL -> FALSE .)
-    UNTIL           reduce using rule 68 (EL -> FALSE .)
-    ELSE            reduce using rule 68 (EL -> FALSE .)
-    EIF             reduce using rule 68 (EL -> FALSE .)
-    WEND            reduce using rule 68 (EL -> FALSE .)
-    NEXT            reduce using rule 68 (EL -> FALSE .)
-    GREATHER        reduce using rule 68 (EL -> FALSE .)
-    GREATHEREQUAL   reduce using rule 68 (EL -> FALSE .)
-    SMALLER         reduce using rule 68 (EL -> FALSE .)
-    SMALLEREQUAL    reduce using rule 68 (EL -> FALSE .)
-    NOTEQUAL        reduce using rule 68 (EL -> FALSE .)
-    EQUALTO         reduce using rule 68 (EL -> FALSE .)
-    error           reduce using rule 68 (EL -> FALSE .)
-    DO              reduce using rule 68 (EL -> FALSE .)
-    CLOSINGPAR      reduce using rule 68 (EL -> FALSE .)
+    THEN            reduce using rule 70 (EL -> FALSE .)
+    LET             reduce using rule 70 (EL -> FALSE .)
+    DIM             reduce using rule 70 (EL -> FALSE .)
+    IF              reduce using rule 70 (EL -> FALSE .)
+    FOR             reduce using rule 70 (EL -> FALSE .)
+    WHILE           reduce using rule 70 (EL -> FALSE .)
+    REPEAT          reduce using rule 70 (EL -> FALSE .)
+    GOSUB           reduce using rule 70 (EL -> FALSE .)
+    INPUT           reduce using rule 70 (EL -> FALSE .)
+    PRINT           reduce using rule 70 (EL -> FALSE .)
+    SUBPROCEDURE    reduce using rule 70 (EL -> FALSE .)
+    END             reduce using rule 70 (EL -> FALSE .)
+    RETURN          reduce using rule 70 (EL -> FALSE .)
+    UNTIL           reduce using rule 70 (EL -> FALSE .)
+    ELSE            reduce using rule 70 (EL -> FALSE .)
+    EIF             reduce using rule 70 (EL -> FALSE .)
+    WEND            reduce using rule 70 (EL -> FALSE .)
+    NEXT            reduce using rule 70 (EL -> FALSE .)
+    GREATHER        reduce using rule 70 (EL -> FALSE .)
+    GREATHEREQUAL   reduce using rule 70 (EL -> FALSE .)
+    SMALLER         reduce using rule 70 (EL -> FALSE .)
+    SMALLEREQUAL    reduce using rule 70 (EL -> FALSE .)
+    NOTEQUAL        reduce using rule 70 (EL -> FALSE .)
+    EQUALTO         reduce using rule 70 (EL -> FALSE .)
+    error           reduce using rule 70 (EL -> FALSE .)
+    DO              reduce using rule 70 (EL -> FALSE .)
+    CLOSINGPAR      reduce using rule 70 (EL -> FALSE .)
 
 
 state 29
 
-    (69) EL -> OPENPAR . O CLOSINGPAR
-    (70) EL -> OPENPAR . O CLOSINGPAR OL EL
-    (74) O -> . Ex GREATHER Ex
-    (75) O -> . Ex GREATHEREQUAL Ex
-    (76) O -> . Ex SMALLER Ex
-    (77) O -> . Ex SMALLEREQUAL Ex
-    (78) O -> . Ex NOTEQUAL Ex
-    (79) O -> . Ex EQUALTO Ex
-    (80) O -> . Ex error Ex
+    (71) EL -> OPENPAR . O CLOSINGPAR
+    (72) EL -> OPENPAR . O CLOSINGPAR OL EL
+    (76) O -> . Ex GREATHER Ex
+    (77) O -> . Ex GREATHEREQUAL Ex
+    (78) O -> . Ex SMALLER Ex
+    (79) O -> . Ex SMALLEREQUAL Ex
+    (80) O -> . Ex NOTEQUAL Ex
+    (81) O -> . Ex EQUALTO Ex
+    (82) O -> . Ex error Ex
     (50) Ex -> . EA
     (51) Ex -> . EL
     (52) Ex -> . ID
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -780,44 +785,47 @@ state 29
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    O                              shift and go to state 54
+    O                              shift and go to state 55
     EL                             shift and go to state 38
-    Ex                             shift and go to state 55
+    Ex                             shift and go to state 56
     EA                             shift and go to state 37
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 30
 
     (25) E -> FOR ID . EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
 
-    EQUALS          shift and go to state 56
+    EQUALS          shift and go to state 57
 
 
 state 31
 
     (26) E -> WHILE while_first_conditional . EL DO while_second_conditional F WEND while_final_conditional
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
 
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
     OPENPAR         shift and go to state 29
 
-    EL                             shift and go to state 57
+    EL                             shift and go to state 58
 
 state 32
 
@@ -833,7 +841,7 @@ state 32
     (28) E -> . GOSUB ID
     (29) E -> . INPUT IDEx
     (30) E -> . PRINT Ex
-    (81) empty -> .
+    (83) empty -> .
 
     LET             shift and go to state 10
     DIM             shift and go to state 11
@@ -844,9 +852,9 @@ state 32
     GOSUB           shift and go to state 16
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
-    UNTIL           reduce using rule 81 (empty -> .)
+    UNTIL           reduce using rule 83 (empty -> .)
 
-    F                              shift and go to state 58
+    F                              shift and go to state 59
     E                              shift and go to state 9
     empty                          shift and go to state 23
 
@@ -918,7 +926,7 @@ state 35
     EIF             reduce using rule 48 (IDEx -> ID .)
     WEND            reduce using rule 48 (IDEx -> ID .)
     NEXT            reduce using rule 48 (IDEx -> ID .)
-    OPENBRACKET     shift and go to state 59
+    OPENBRACKET     shift and go to state 60
 
 
 state 36
@@ -976,8 +984,8 @@ state 37
     error           reduce using rule 50 (Ex -> EA .)
     CLOSINGPAR      reduce using rule 50 (Ex -> EA .)
     DO              reduce using rule 50 (Ex -> EA .)
-    PLUS            shift and go to state 60
-    MINUS           shift and go to state 61
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
 
 
 state 38
@@ -1020,7 +1028,7 @@ state 39
     (64) saveID -> .
     (5) Arr -> . OPENBRACKET arr_space CLOSINGBRACKET
     (6) Arr -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
   ! reduce/reduce conflict for LET resolved using rule 52 (Ex -> ID .)
   ! reduce/reduce conflict for DIM resolved using rule 52 (Ex -> ID .)
@@ -1108,7 +1116,7 @@ state 39
     DIVIDE          reduce using rule 64 (saveID -> .)
     PLUS            reduce using rule 64 (saveID -> .)
     MINUS           reduce using rule 64 (saveID -> .)
-    OPENBRACKET     shift and go to state 64
+    OPENBRACKET     shift and go to state 65
 
   ! LET             [ reduce using rule 64 (saveID -> .) ]
   ! DIM             [ reduce using rule 64 (saveID -> .) ]
@@ -1136,40 +1144,40 @@ state 39
   ! error           [ reduce using rule 64 (saveID -> .) ]
   ! CLOSINGPAR      [ reduce using rule 64 (saveID -> .) ]
   ! DO              [ reduce using rule 64 (saveID -> .) ]
-  ! MULTIPLY        [ reduce using rule 81 (empty -> .) ]
-  ! DIVIDE          [ reduce using rule 81 (empty -> .) ]
-  ! PLUS            [ reduce using rule 81 (empty -> .) ]
-  ! MINUS           [ reduce using rule 81 (empty -> .) ]
-  ! LET             [ reduce using rule 81 (empty -> .) ]
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
-  ! IF              [ reduce using rule 81 (empty -> .) ]
-  ! FOR             [ reduce using rule 81 (empty -> .) ]
-  ! WHILE           [ reduce using rule 81 (empty -> .) ]
-  ! REPEAT          [ reduce using rule 81 (empty -> .) ]
-  ! GOSUB           [ reduce using rule 81 (empty -> .) ]
-  ! INPUT           [ reduce using rule 81 (empty -> .) ]
-  ! PRINT           [ reduce using rule 81 (empty -> .) ]
-  ! SUBPROCEDURE    [ reduce using rule 81 (empty -> .) ]
-  ! END             [ reduce using rule 81 (empty -> .) ]
-  ! RETURN          [ reduce using rule 81 (empty -> .) ]
-  ! UNTIL           [ reduce using rule 81 (empty -> .) ]
-  ! ELSE            [ reduce using rule 81 (empty -> .) ]
-  ! EIF             [ reduce using rule 81 (empty -> .) ]
-  ! WEND            [ reduce using rule 81 (empty -> .) ]
-  ! NEXT            [ reduce using rule 81 (empty -> .) ]
-  ! GREATHER        [ reduce using rule 81 (empty -> .) ]
-  ! GREATHEREQUAL   [ reduce using rule 81 (empty -> .) ]
-  ! SMALLER         [ reduce using rule 81 (empty -> .) ]
-  ! SMALLEREQUAL    [ reduce using rule 81 (empty -> .) ]
-  ! NOTEQUAL        [ reduce using rule 81 (empty -> .) ]
-  ! EQUALTO         [ reduce using rule 81 (empty -> .) ]
-  ! error           [ reduce using rule 81 (empty -> .) ]
-  ! CLOSINGPAR      [ reduce using rule 81 (empty -> .) ]
-  ! DO              [ reduce using rule 81 (empty -> .) ]
+  ! MULTIPLY        [ reduce using rule 83 (empty -> .) ]
+  ! DIVIDE          [ reduce using rule 83 (empty -> .) ]
+  ! PLUS            [ reduce using rule 83 (empty -> .) ]
+  ! MINUS           [ reduce using rule 83 (empty -> .) ]
+  ! LET             [ reduce using rule 83 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
+  ! IF              [ reduce using rule 83 (empty -> .) ]
+  ! FOR             [ reduce using rule 83 (empty -> .) ]
+  ! WHILE           [ reduce using rule 83 (empty -> .) ]
+  ! REPEAT          [ reduce using rule 83 (empty -> .) ]
+  ! GOSUB           [ reduce using rule 83 (empty -> .) ]
+  ! INPUT           [ reduce using rule 83 (empty -> .) ]
+  ! PRINT           [ reduce using rule 83 (empty -> .) ]
+  ! SUBPROCEDURE    [ reduce using rule 83 (empty -> .) ]
+  ! END             [ reduce using rule 83 (empty -> .) ]
+  ! RETURN          [ reduce using rule 83 (empty -> .) ]
+  ! UNTIL           [ reduce using rule 83 (empty -> .) ]
+  ! ELSE            [ reduce using rule 83 (empty -> .) ]
+  ! EIF             [ reduce using rule 83 (empty -> .) ]
+  ! WEND            [ reduce using rule 83 (empty -> .) ]
+  ! NEXT            [ reduce using rule 83 (empty -> .) ]
+  ! GREATHER        [ reduce using rule 83 (empty -> .) ]
+  ! GREATHEREQUAL   [ reduce using rule 83 (empty -> .) ]
+  ! SMALLER         [ reduce using rule 83 (empty -> .) ]
+  ! SMALLEREQUAL    [ reduce using rule 83 (empty -> .) ]
+  ! NOTEQUAL        [ reduce using rule 83 (empty -> .) ]
+  ! EQUALTO         [ reduce using rule 83 (empty -> .) ]
+  ! error           [ reduce using rule 83 (empty -> .) ]
+  ! CLOSINGPAR      [ reduce using rule 83 (empty -> .) ]
+  ! DO              [ reduce using rule 83 (empty -> .) ]
 
-    saveID                         shift and go to state 62
-    Arr                            shift and go to state 63
-    empty                          shift and go to state 65
+    saveID                         shift and go to state 63
+    Arr                            shift and go to state 64
+    empty                          shift and go to state 66
 
 state 40
 
@@ -1208,22 +1216,31 @@ state 40
     COMA            reduce using rule 56 (EA -> P .)
     CLOSINGBRACKET  reduce using rule 56 (EA -> P .)
     DO              reduce using rule 56 (EA -> P .)
-    MULTIPLY        shift and go to state 66
-    DIVIDE          shift and go to state 67
+    MULTIPLY        shift and go to state 67
+    DIVIDE          shift and go to state 68
 
 
 state 41
 
-    (69) EL -> OPENPAR . O CLOSINGPAR
-    (70) EL -> OPENPAR . O CLOSINGPAR OL EL
+    (67) cte -> MINUS . INTVAL
+    (68) cte -> MINUS . FLOATVAL
+
+    INTVAL          shift and go to state 69
+    FLOATVAL        shift and go to state 70
+
+
+state 42
+
+    (71) EL -> OPENPAR . O CLOSINGPAR
+    (72) EL -> OPENPAR . O CLOSINGPAR OL EL
     (62) N -> OPENPAR . EA CLOSINGPAR
-    (74) O -> . Ex GREATHER Ex
-    (75) O -> . Ex GREATHEREQUAL Ex
-    (76) O -> . Ex SMALLER Ex
-    (77) O -> . Ex SMALLEREQUAL Ex
-    (78) O -> . Ex NOTEQUAL Ex
-    (79) O -> . Ex EQUALTO Ex
-    (80) O -> . Ex error Ex
+    (76) O -> . Ex GREATHER Ex
+    (77) O -> . Ex GREATHEREQUAL Ex
+    (78) O -> . Ex SMALLER Ex
+    (79) O -> . Ex SMALLEREQUAL Ex
+    (80) O -> . Ex NOTEQUAL Ex
+    (81) O -> . Ex EQUALTO Ex
+    (82) O -> . Ex error Ex
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
@@ -1233,33 +1250,36 @@ state 41
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (60) N -> . cte saveID
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    O                              shift and go to state 54
+    O                              shift and go to state 55
     EL                             shift and go to state 38
-    EA                             shift and go to state 68
-    Ex                             shift and go to state 55
+    EA                             shift and go to state 71
+    Ex                             shift and go to state 56
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 42
+state 43
 
     (59) P -> N .
 
@@ -1298,7 +1318,7 @@ state 42
     DO              reduce using rule 59 (P -> N .)
 
 
-state 43
+state 44
 
     (60) N -> cte . saveID
     (64) saveID -> .
@@ -1337,154 +1357,154 @@ state 43
     CLOSINGBRACKET  reduce using rule 64 (saveID -> .)
     DO              reduce using rule 64 (saveID -> .)
 
-    saveID                         shift and go to state 69
-
-state 44
-
-    (65) cte -> INTVAL .
-
-    MULTIPLY        reduce using rule 65 (cte -> INTVAL .)
-    DIVIDE          reduce using rule 65 (cte -> INTVAL .)
-    PLUS            reduce using rule 65 (cte -> INTVAL .)
-    MINUS           reduce using rule 65 (cte -> INTVAL .)
-    LET             reduce using rule 65 (cte -> INTVAL .)
-    DIM             reduce using rule 65 (cte -> INTVAL .)
-    IF              reduce using rule 65 (cte -> INTVAL .)
-    FOR             reduce using rule 65 (cte -> INTVAL .)
-    WHILE           reduce using rule 65 (cte -> INTVAL .)
-    REPEAT          reduce using rule 65 (cte -> INTVAL .)
-    GOSUB           reduce using rule 65 (cte -> INTVAL .)
-    INPUT           reduce using rule 65 (cte -> INTVAL .)
-    PRINT           reduce using rule 65 (cte -> INTVAL .)
-    SUBPROCEDURE    reduce using rule 65 (cte -> INTVAL .)
-    END             reduce using rule 65 (cte -> INTVAL .)
-    RETURN          reduce using rule 65 (cte -> INTVAL .)
-    UNTIL           reduce using rule 65 (cte -> INTVAL .)
-    ELSE            reduce using rule 65 (cte -> INTVAL .)
-    EIF             reduce using rule 65 (cte -> INTVAL .)
-    WEND            reduce using rule 65 (cte -> INTVAL .)
-    NEXT            reduce using rule 65 (cte -> INTVAL .)
-    GREATHER        reduce using rule 65 (cte -> INTVAL .)
-    GREATHEREQUAL   reduce using rule 65 (cte -> INTVAL .)
-    SMALLER         reduce using rule 65 (cte -> INTVAL .)
-    SMALLEREQUAL    reduce using rule 65 (cte -> INTVAL .)
-    NOTEQUAL        reduce using rule 65 (cte -> INTVAL .)
-    EQUALTO         reduce using rule 65 (cte -> INTVAL .)
-    error           reduce using rule 65 (cte -> INTVAL .)
-    CLOSINGPAR      reduce using rule 65 (cte -> INTVAL .)
-    TO              reduce using rule 65 (cte -> INTVAL .)
-    COMA            reduce using rule 65 (cte -> INTVAL .)
-    CLOSINGBRACKET  reduce using rule 65 (cte -> INTVAL .)
-    DO              reduce using rule 65 (cte -> INTVAL .)
-
+    saveID                         shift and go to state 72
 
 state 45
 
-    (66) cte -> FLOATVAL .
+    (65) cte -> FLOATVAL .
 
-    MULTIPLY        reduce using rule 66 (cte -> FLOATVAL .)
-    DIVIDE          reduce using rule 66 (cte -> FLOATVAL .)
-    PLUS            reduce using rule 66 (cte -> FLOATVAL .)
-    MINUS           reduce using rule 66 (cte -> FLOATVAL .)
-    LET             reduce using rule 66 (cte -> FLOATVAL .)
-    DIM             reduce using rule 66 (cte -> FLOATVAL .)
-    IF              reduce using rule 66 (cte -> FLOATVAL .)
-    FOR             reduce using rule 66 (cte -> FLOATVAL .)
-    WHILE           reduce using rule 66 (cte -> FLOATVAL .)
-    REPEAT          reduce using rule 66 (cte -> FLOATVAL .)
-    GOSUB           reduce using rule 66 (cte -> FLOATVAL .)
-    INPUT           reduce using rule 66 (cte -> FLOATVAL .)
-    PRINT           reduce using rule 66 (cte -> FLOATVAL .)
-    SUBPROCEDURE    reduce using rule 66 (cte -> FLOATVAL .)
-    END             reduce using rule 66 (cte -> FLOATVAL .)
-    RETURN          reduce using rule 66 (cte -> FLOATVAL .)
-    UNTIL           reduce using rule 66 (cte -> FLOATVAL .)
-    ELSE            reduce using rule 66 (cte -> FLOATVAL .)
-    EIF             reduce using rule 66 (cte -> FLOATVAL .)
-    WEND            reduce using rule 66 (cte -> FLOATVAL .)
-    NEXT            reduce using rule 66 (cte -> FLOATVAL .)
-    GREATHER        reduce using rule 66 (cte -> FLOATVAL .)
-    GREATHEREQUAL   reduce using rule 66 (cte -> FLOATVAL .)
-    SMALLER         reduce using rule 66 (cte -> FLOATVAL .)
-    SMALLEREQUAL    reduce using rule 66 (cte -> FLOATVAL .)
-    NOTEQUAL        reduce using rule 66 (cte -> FLOATVAL .)
-    EQUALTO         reduce using rule 66 (cte -> FLOATVAL .)
-    error           reduce using rule 66 (cte -> FLOATVAL .)
-    CLOSINGPAR      reduce using rule 66 (cte -> FLOATVAL .)
-    TO              reduce using rule 66 (cte -> FLOATVAL .)
-    COMA            reduce using rule 66 (cte -> FLOATVAL .)
-    CLOSINGBRACKET  reduce using rule 66 (cte -> FLOATVAL .)
-    DO              reduce using rule 66 (cte -> FLOATVAL .)
+    MULTIPLY        reduce using rule 65 (cte -> FLOATVAL .)
+    DIVIDE          reduce using rule 65 (cte -> FLOATVAL .)
+    PLUS            reduce using rule 65 (cte -> FLOATVAL .)
+    MINUS           reduce using rule 65 (cte -> FLOATVAL .)
+    LET             reduce using rule 65 (cte -> FLOATVAL .)
+    DIM             reduce using rule 65 (cte -> FLOATVAL .)
+    IF              reduce using rule 65 (cte -> FLOATVAL .)
+    FOR             reduce using rule 65 (cte -> FLOATVAL .)
+    WHILE           reduce using rule 65 (cte -> FLOATVAL .)
+    REPEAT          reduce using rule 65 (cte -> FLOATVAL .)
+    GOSUB           reduce using rule 65 (cte -> FLOATVAL .)
+    INPUT           reduce using rule 65 (cte -> FLOATVAL .)
+    PRINT           reduce using rule 65 (cte -> FLOATVAL .)
+    SUBPROCEDURE    reduce using rule 65 (cte -> FLOATVAL .)
+    END             reduce using rule 65 (cte -> FLOATVAL .)
+    RETURN          reduce using rule 65 (cte -> FLOATVAL .)
+    UNTIL           reduce using rule 65 (cte -> FLOATVAL .)
+    ELSE            reduce using rule 65 (cte -> FLOATVAL .)
+    EIF             reduce using rule 65 (cte -> FLOATVAL .)
+    WEND            reduce using rule 65 (cte -> FLOATVAL .)
+    NEXT            reduce using rule 65 (cte -> FLOATVAL .)
+    GREATHER        reduce using rule 65 (cte -> FLOATVAL .)
+    GREATHEREQUAL   reduce using rule 65 (cte -> FLOATVAL .)
+    SMALLER         reduce using rule 65 (cte -> FLOATVAL .)
+    SMALLEREQUAL    reduce using rule 65 (cte -> FLOATVAL .)
+    NOTEQUAL        reduce using rule 65 (cte -> FLOATVAL .)
+    EQUALTO         reduce using rule 65 (cte -> FLOATVAL .)
+    error           reduce using rule 65 (cte -> FLOATVAL .)
+    CLOSINGPAR      reduce using rule 65 (cte -> FLOATVAL .)
+    TO              reduce using rule 65 (cte -> FLOATVAL .)
+    COMA            reduce using rule 65 (cte -> FLOATVAL .)
+    CLOSINGBRACKET  reduce using rule 65 (cte -> FLOATVAL .)
+    DO              reduce using rule 65 (cte -> FLOATVAL .)
 
 
 state 46
 
-    (3) V -> DIM setType Idv . AS T Arr
+    (66) cte -> INTVAL .
 
-    AS              shift and go to state 70
+    MULTIPLY        reduce using rule 66 (cte -> INTVAL .)
+    DIVIDE          reduce using rule 66 (cte -> INTVAL .)
+    PLUS            reduce using rule 66 (cte -> INTVAL .)
+    MINUS           reduce using rule 66 (cte -> INTVAL .)
+    LET             reduce using rule 66 (cte -> INTVAL .)
+    DIM             reduce using rule 66 (cte -> INTVAL .)
+    IF              reduce using rule 66 (cte -> INTVAL .)
+    FOR             reduce using rule 66 (cte -> INTVAL .)
+    WHILE           reduce using rule 66 (cte -> INTVAL .)
+    REPEAT          reduce using rule 66 (cte -> INTVAL .)
+    GOSUB           reduce using rule 66 (cte -> INTVAL .)
+    INPUT           reduce using rule 66 (cte -> INTVAL .)
+    PRINT           reduce using rule 66 (cte -> INTVAL .)
+    SUBPROCEDURE    reduce using rule 66 (cte -> INTVAL .)
+    END             reduce using rule 66 (cte -> INTVAL .)
+    RETURN          reduce using rule 66 (cte -> INTVAL .)
+    UNTIL           reduce using rule 66 (cte -> INTVAL .)
+    ELSE            reduce using rule 66 (cte -> INTVAL .)
+    EIF             reduce using rule 66 (cte -> INTVAL .)
+    WEND            reduce using rule 66 (cte -> INTVAL .)
+    NEXT            reduce using rule 66 (cte -> INTVAL .)
+    GREATHER        reduce using rule 66 (cte -> INTVAL .)
+    GREATHEREQUAL   reduce using rule 66 (cte -> INTVAL .)
+    SMALLER         reduce using rule 66 (cte -> INTVAL .)
+    SMALLEREQUAL    reduce using rule 66 (cte -> INTVAL .)
+    NOTEQUAL        reduce using rule 66 (cte -> INTVAL .)
+    EQUALTO         reduce using rule 66 (cte -> INTVAL .)
+    error           reduce using rule 66 (cte -> INTVAL .)
+    CLOSINGPAR      reduce using rule 66 (cte -> INTVAL .)
+    TO              reduce using rule 66 (cte -> INTVAL .)
+    COMA            reduce using rule 66 (cte -> INTVAL .)
+    CLOSINGBRACKET  reduce using rule 66 (cte -> INTVAL .)
+    DO              reduce using rule 66 (cte -> INTVAL .)
 
 
 state 47
+
+    (3) V -> DIM setType Idv . AS T Arr
+
+    AS              shift and go to state 73
+
+
+state 48
 
     (44) Idv -> ID . COMA Idv
     (45) Idv -> ID .
     (46) Idv -> ID . Arr
     (5) Arr -> . OPENBRACKET arr_space CLOSINGBRACKET
     (6) Arr -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
   ! reduce/reduce conflict for AS resolved using rule 45 (Idv -> ID .)
   ! reduce/reduce conflict for EQUALS resolved using rule 45 (Idv -> ID .)
   ! reduce/reduce conflict for CLOSINGBRACKET resolved using rule 45 (Idv -> ID .)
-    COMA            shift and go to state 71
+    COMA            shift and go to state 74
     AS              reduce using rule 45 (Idv -> ID .)
     EQUALS          reduce using rule 45 (Idv -> ID .)
     CLOSINGBRACKET  reduce using rule 45 (Idv -> ID .)
-    OPENBRACKET     shift and go to state 64
+    OPENBRACKET     shift and go to state 65
 
-  ! AS              [ reduce using rule 81 (empty -> .) ]
-  ! EQUALS          [ reduce using rule 81 (empty -> .) ]
-  ! CLOSINGBRACKET  [ reduce using rule 81 (empty -> .) ]
+  ! AS              [ reduce using rule 83 (empty -> .) ]
+  ! EQUALS          [ reduce using rule 83 (empty -> .) ]
+  ! CLOSINGBRACKET  [ reduce using rule 83 (empty -> .) ]
 
-    Arr                            shift and go to state 72
-    empty                          shift and go to state 65
-
-state 48
-
-    (1) PROGRAMA -> PROGRAM V M endProgram S . END
-
-    END             shift and go to state 73
-
+    Arr                            shift and go to state 75
+    empty                          shift and go to state 66
 
 state 49
 
-    (14) S -> SUBPROCEDURE . ID fillSub TWOPOINTS M RETURN endProcedure S
+    (1) PROGRAMA -> PROGRAM V M endProgram S . END
 
-    ID              shift and go to state 74
+    END             shift and go to state 76
 
 
 state 50
+
+    (14) S -> SUBPROCEDURE . ID fillSub TWOPOINTS M RETURN endProcedure S
+
+    ID              shift and go to state 77
+
+
+state 51
 
     (15) S -> empty .
 
     END             reduce using rule 15 (S -> empty .)
 
 
-state 51
+state 52
 
     (22) E -> LET setType Idv . EQUALS Ex
 
-    EQUALS          shift and go to state 75
-
-
-state 52
-
-    (23) E -> DIM setType Idv . AS T Arr
-
-    AS              shift and go to state 76
+    EQUALS          shift and go to state 78
 
 
 state 53
+
+    (23) E -> DIM setType Idv . AS T Arr
+
+    AS              shift and go to state 79
+
+
+state 54
 
     (24) E -> IF EL THEN . first_conditional F Esf EIF final_conditional
     (39) first_conditional -> .
@@ -1501,36 +1521,36 @@ state 53
     ELSE            reduce using rule 39 (first_conditional -> .)
     EIF             reduce using rule 39 (first_conditional -> .)
 
-    first_conditional              shift and go to state 77
-
-state 54
-
-    (69) EL -> OPENPAR O . CLOSINGPAR
-    (70) EL -> OPENPAR O . CLOSINGPAR OL EL
-
-    CLOSINGPAR      shift and go to state 78
-
+    first_conditional              shift and go to state 80
 
 state 55
 
-    (74) O -> Ex . GREATHER Ex
-    (75) O -> Ex . GREATHEREQUAL Ex
-    (76) O -> Ex . SMALLER Ex
-    (77) O -> Ex . SMALLEREQUAL Ex
-    (78) O -> Ex . NOTEQUAL Ex
-    (79) O -> Ex . EQUALTO Ex
-    (80) O -> Ex . error Ex
+    (71) EL -> OPENPAR O . CLOSINGPAR
+    (72) EL -> OPENPAR O . CLOSINGPAR OL EL
 
-    GREATHER        shift and go to state 79
-    GREATHEREQUAL   shift and go to state 80
-    SMALLER         shift and go to state 81
-    SMALLEREQUAL    shift and go to state 82
-    NOTEQUAL        shift and go to state 83
-    EQUALTO         shift and go to state 84
-    error           shift and go to state 85
+    CLOSINGPAR      shift and go to state 81
 
 
 state 56
+
+    (76) O -> Ex . GREATHER Ex
+    (77) O -> Ex . GREATHEREQUAL Ex
+    (78) O -> Ex . SMALLER Ex
+    (79) O -> Ex . SMALLEREQUAL Ex
+    (80) O -> Ex . NOTEQUAL Ex
+    (81) O -> Ex . EQUALTO Ex
+    (82) O -> Ex . error Ex
+
+    GREATHER        shift and go to state 82
+    GREATHEREQUAL   shift and go to state 83
+    SMALLER         shift and go to state 84
+    SMALLEREQUAL    shift and go to state 85
+    NOTEQUAL        shift and go to state 86
+    EQUALTO         shift and go to state 87
+    error           shift and go to state 88
+
+
+state 57
 
     (25) E -> FOR ID EQUALS . EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
     (54) EA -> . EA PLUS P
@@ -1543,43 +1563,46 @@ state 56
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 86
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 89
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    EA                             shift and go to state 87
+    EA                             shift and go to state 90
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
-
-state 57
-
-    (26) E -> WHILE while_first_conditional EL . DO while_second_conditional F WEND while_final_conditional
-
-    DO              shift and go to state 89
-
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 58
 
-    (27) E -> REPEAT while_first_conditional F . UNTIL EL repeat_conditional
+    (26) E -> WHILE while_first_conditional EL . DO while_second_conditional F WEND while_final_conditional
 
-    UNTIL           shift and go to state 90
+    DO              shift and go to state 92
 
 
 state 59
+
+    (27) E -> REPEAT while_first_conditional F . UNTIL EL repeat_conditional
+
+    UNTIL           shift and go to state 93
+
+
+state 60
 
     (49) IDEx -> ID OPENBRACKET . setType Idv CLOSINGBRACKET
     (47) setType -> .
 
     ID              reduce using rule 47 (setType -> .)
 
-    setType                        shift and go to state 91
+    setType                        shift and go to state 94
 
-state 60
+state 61
 
     (54) EA -> EA PLUS . P
     (57) P -> . P MULTIPLY N
@@ -1589,19 +1612,22 @@ state 60
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 86
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 89
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    P                              shift and go to state 92
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    P                              shift and go to state 95
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 61
+state 62
 
     (55) EA -> EA MINUS . P
     (57) P -> . P MULTIPLY N
@@ -1611,19 +1637,22 @@ state 61
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 86
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 89
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    P                              shift and go to state 93
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    P                              shift and go to state 96
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 62
+state 63
 
     (61) N -> ID saveID .
 
@@ -1662,7 +1691,7 @@ state 62
     DO              reduce using rule 61 (N -> ID saveID .)
 
 
-state 63
+state 64
 
     (63) N -> ID Arr .
 
@@ -1701,7 +1730,7 @@ state 63
     DO              reduce using rule 63 (N -> ID Arr .)
 
 
-state 64
+state 65
 
     (5) Arr -> OPENBRACKET . arr_space CLOSINGBRACKET
     (7) arr_space -> . EA COMA arr_space
@@ -1718,21 +1747,24 @@ state 64
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 96
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 99
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    arr_space                      shift and go to state 94
-    EA                             shift and go to state 95
+    arr_space                      shift and go to state 97
+    EA                             shift and go to state 98
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 65
+state 66
 
     (6) Arr -> empty .
 
@@ -1773,52 +1805,136 @@ state 65
     COMA            reduce using rule 6 (Arr -> empty .)
 
 
-state 66
+state 67
 
     (57) P -> P MULTIPLY . N
     (60) N -> . cte saveID
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 86
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 89
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    N                              shift and go to state 97
-    cte                            shift and go to state 43
+    N                              shift and go to state 100
+    cte                            shift and go to state 44
 
-state 67
+state 68
 
     (58) P -> P DIVIDE . N
     (60) N -> . cte saveID
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 86
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 89
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    N                              shift and go to state 98
-    cte                            shift and go to state 43
+    N                              shift and go to state 101
+    cte                            shift and go to state 44
 
-state 68
+state 69
+
+    (67) cte -> MINUS INTVAL .
+
+    MULTIPLY        reduce using rule 67 (cte -> MINUS INTVAL .)
+    DIVIDE          reduce using rule 67 (cte -> MINUS INTVAL .)
+    PLUS            reduce using rule 67 (cte -> MINUS INTVAL .)
+    MINUS           reduce using rule 67 (cte -> MINUS INTVAL .)
+    LET             reduce using rule 67 (cte -> MINUS INTVAL .)
+    DIM             reduce using rule 67 (cte -> MINUS INTVAL .)
+    IF              reduce using rule 67 (cte -> MINUS INTVAL .)
+    FOR             reduce using rule 67 (cte -> MINUS INTVAL .)
+    WHILE           reduce using rule 67 (cte -> MINUS INTVAL .)
+    REPEAT          reduce using rule 67 (cte -> MINUS INTVAL .)
+    GOSUB           reduce using rule 67 (cte -> MINUS INTVAL .)
+    INPUT           reduce using rule 67 (cte -> MINUS INTVAL .)
+    PRINT           reduce using rule 67 (cte -> MINUS INTVAL .)
+    SUBPROCEDURE    reduce using rule 67 (cte -> MINUS INTVAL .)
+    END             reduce using rule 67 (cte -> MINUS INTVAL .)
+    RETURN          reduce using rule 67 (cte -> MINUS INTVAL .)
+    UNTIL           reduce using rule 67 (cte -> MINUS INTVAL .)
+    ELSE            reduce using rule 67 (cte -> MINUS INTVAL .)
+    EIF             reduce using rule 67 (cte -> MINUS INTVAL .)
+    WEND            reduce using rule 67 (cte -> MINUS INTVAL .)
+    NEXT            reduce using rule 67 (cte -> MINUS INTVAL .)
+    GREATHER        reduce using rule 67 (cte -> MINUS INTVAL .)
+    GREATHEREQUAL   reduce using rule 67 (cte -> MINUS INTVAL .)
+    SMALLER         reduce using rule 67 (cte -> MINUS INTVAL .)
+    SMALLEREQUAL    reduce using rule 67 (cte -> MINUS INTVAL .)
+    NOTEQUAL        reduce using rule 67 (cte -> MINUS INTVAL .)
+    EQUALTO         reduce using rule 67 (cte -> MINUS INTVAL .)
+    error           reduce using rule 67 (cte -> MINUS INTVAL .)
+    CLOSINGPAR      reduce using rule 67 (cte -> MINUS INTVAL .)
+    TO              reduce using rule 67 (cte -> MINUS INTVAL .)
+    COMA            reduce using rule 67 (cte -> MINUS INTVAL .)
+    CLOSINGBRACKET  reduce using rule 67 (cte -> MINUS INTVAL .)
+    DO              reduce using rule 67 (cte -> MINUS INTVAL .)
+
+
+state 70
+
+    (68) cte -> MINUS FLOATVAL .
+
+    MULTIPLY        reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    DIVIDE          reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    PLUS            reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    MINUS           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    LET             reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    DIM             reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    IF              reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    FOR             reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    WHILE           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    REPEAT          reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    GOSUB           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    INPUT           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    PRINT           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    SUBPROCEDURE    reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    END             reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    RETURN          reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    UNTIL           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    ELSE            reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    EIF             reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    WEND            reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    NEXT            reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    GREATHER        reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    GREATHEREQUAL   reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    SMALLER         reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    SMALLEREQUAL    reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    NOTEQUAL        reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    EQUALTO         reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    error           reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    CLOSINGPAR      reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    TO              reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    COMA            reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    CLOSINGBRACKET  reduce using rule 68 (cte -> MINUS FLOATVAL .)
+    DO              reduce using rule 68 (cte -> MINUS FLOATVAL .)
+
+
+state 71
 
     (62) N -> OPENPAR EA . CLOSINGPAR
     (54) EA -> EA . PLUS P
     (55) EA -> EA . MINUS P
     (50) Ex -> EA .
 
-    CLOSINGPAR      shift and go to state 99
-    PLUS            shift and go to state 60
-    MINUS           shift and go to state 61
+    CLOSINGPAR      shift and go to state 102
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
     GREATHER        reduce using rule 50 (Ex -> EA .)
     GREATHEREQUAL   reduce using rule 50 (Ex -> EA .)
     SMALLER         reduce using rule 50 (Ex -> EA .)
@@ -1828,7 +1944,7 @@ state 68
     error           reduce using rule 50 (Ex -> EA .)
 
 
-state 69
+state 72
 
     (60) N -> cte saveID .
 
@@ -1867,31 +1983,31 @@ state 69
     DO              reduce using rule 60 (N -> cte saveID .)
 
 
-state 70
+state 73
 
     (3) V -> DIM setType Idv AS . T Arr
     (11) T -> . INT
     (12) T -> . FLOAT
     (13) T -> . WORD
 
-    INT             shift and go to state 101
-    FLOAT           shift and go to state 102
-    WORD            shift and go to state 103
+    INT             shift and go to state 104
+    FLOAT           shift and go to state 105
+    WORD            shift and go to state 106
 
-    T                              shift and go to state 100
+    T                              shift and go to state 103
 
-state 71
+state 74
 
     (44) Idv -> ID COMA . Idv
     (44) Idv -> . ID COMA Idv
     (45) Idv -> . ID
     (46) Idv -> . ID Arr
 
-    ID              shift and go to state 47
+    ID              shift and go to state 48
 
-    Idv                            shift and go to state 104
+    Idv                            shift and go to state 107
 
-state 72
+state 75
 
     (46) Idv -> ID Arr .
 
@@ -1900,23 +2016,23 @@ state 72
     CLOSINGBRACKET  reduce using rule 46 (Idv -> ID Arr .)
 
 
-state 73
+state 76
 
     (1) PROGRAMA -> PROGRAM V M endProgram S END .
 
     $end            reduce using rule 1 (PROGRAMA -> PROGRAM V M endProgram S END .)
 
 
-state 74
+state 77
 
     (14) S -> SUBPROCEDURE ID . fillSub TWOPOINTS M RETURN endProcedure S
     (16) fillSub -> .
 
     TWOPOINTS       reduce using rule 16 (fillSub -> .)
 
-    fillSub                        shift and go to state 105
+    fillSub                        shift and go to state 108
 
-state 75
+state 78
 
     (22) E -> LET setType Idv EQUALS . Ex
     (50) Ex -> . EA
@@ -1925,10 +2041,10 @@ state 75
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -1936,37 +2052,40 @@ state 75
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    Ex                             shift and go to state 106
+    Ex                             shift and go to state 109
     EA                             shift and go to state 37
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 76
+state 79
 
     (23) E -> DIM setType Idv AS . T Arr
     (11) T -> . INT
     (12) T -> . FLOAT
     (13) T -> . WORD
 
-    INT             shift and go to state 101
-    FLOAT           shift and go to state 102
-    WORD            shift and go to state 103
+    INT             shift and go to state 104
+    FLOAT           shift and go to state 105
+    WORD            shift and go to state 106
 
-    T                              shift and go to state 107
+    T                              shift and go to state 110
 
-state 77
+state 80
 
     (24) E -> IF EL THEN first_conditional . F Esf EIF final_conditional
     (20) F -> . E F
@@ -1980,7 +2099,7 @@ state 77
     (28) E -> . GOSUB ID
     (29) E -> . INPUT IDEx
     (30) E -> . PRINT Ex
-    (81) empty -> .
+    (83) empty -> .
 
     LET             shift and go to state 10
     DIM             shift and go to state 11
@@ -1991,178 +2110,67 @@ state 77
     GOSUB           shift and go to state 16
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
-    ELSE            reduce using rule 81 (empty -> .)
-    EIF             reduce using rule 81 (empty -> .)
+    ELSE            reduce using rule 83 (empty -> .)
+    EIF             reduce using rule 83 (empty -> .)
 
-    F                              shift and go to state 108
+    F                              shift and go to state 111
     E                              shift and go to state 9
     empty                          shift and go to state 23
 
-state 78
-
-    (69) EL -> OPENPAR O CLOSINGPAR .
-    (70) EL -> OPENPAR O CLOSINGPAR . OL EL
-    (71) OL -> . AND
-    (72) OL -> . OR
-    (73) OL -> . NOT
-
-    THEN            reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    LET             reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    DIM             reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    IF              reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    FOR             reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    WHILE           reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    REPEAT          reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    GOSUB           reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    INPUT           reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    PRINT           reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    SUBPROCEDURE    reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    END             reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    RETURN          reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    UNTIL           reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    ELSE            reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    EIF             reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    WEND            reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    NEXT            reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    GREATHER        reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    GREATHEREQUAL   reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    SMALLER         reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    SMALLEREQUAL    reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    NOTEQUAL        reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    EQUALTO         reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    error           reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    DO              reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    CLOSINGPAR      reduce using rule 69 (EL -> OPENPAR O CLOSINGPAR .)
-    AND             shift and go to state 110
-    OR              shift and go to state 111
-    NOT             shift and go to state 112
-
-    OL                             shift and go to state 109
-
-state 79
-
-    (74) O -> Ex GREATHER . Ex
-    (50) Ex -> . EA
-    (51) Ex -> . EL
-    (52) Ex -> . ID
-    (54) EA -> . EA PLUS P
-    (55) EA -> . EA MINUS P
-    (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
-    (57) P -> . P MULTIPLY N
-    (58) P -> . P DIVIDE N
-    (59) P -> . N
-    (60) N -> . cte saveID
-    (61) N -> . ID saveID
-    (62) N -> . OPENPAR EA CLOSINGPAR
-    (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
-
-    ID              shift and go to state 39
-    TRUE            shift and go to state 27
-    FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
-    FLOATVAL        shift and go to state 45
-
-    Ex                             shift and go to state 113
-    EA                             shift and go to state 37
-    EL                             shift and go to state 38
-    P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
-
-state 80
-
-    (75) O -> Ex GREATHEREQUAL . Ex
-    (50) Ex -> . EA
-    (51) Ex -> . EL
-    (52) Ex -> . ID
-    (54) EA -> . EA PLUS P
-    (55) EA -> . EA MINUS P
-    (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
-    (57) P -> . P MULTIPLY N
-    (58) P -> . P DIVIDE N
-    (59) P -> . N
-    (60) N -> . cte saveID
-    (61) N -> . ID saveID
-    (62) N -> . OPENPAR EA CLOSINGPAR
-    (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
-
-    ID              shift and go to state 39
-    TRUE            shift and go to state 27
-    FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
-    FLOATVAL        shift and go to state 45
-
-    Ex                             shift and go to state 114
-    EA                             shift and go to state 37
-    EL                             shift and go to state 38
-    P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
-
 state 81
 
-    (76) O -> Ex SMALLER . Ex
-    (50) Ex -> . EA
-    (51) Ex -> . EL
-    (52) Ex -> . ID
-    (54) EA -> . EA PLUS P
-    (55) EA -> . EA MINUS P
-    (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
-    (57) P -> . P MULTIPLY N
-    (58) P -> . P DIVIDE N
-    (59) P -> . N
-    (60) N -> . cte saveID
-    (61) N -> . ID saveID
-    (62) N -> . OPENPAR EA CLOSINGPAR
-    (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (71) EL -> OPENPAR O CLOSINGPAR .
+    (72) EL -> OPENPAR O CLOSINGPAR . OL EL
+    (73) OL -> . AND
+    (74) OL -> . OR
+    (75) OL -> . NOT
 
-    ID              shift and go to state 39
-    TRUE            shift and go to state 27
-    FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
-    FLOATVAL        shift and go to state 45
+    THEN            reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    LET             reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    DIM             reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    IF              reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    FOR             reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    WHILE           reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    REPEAT          reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    GOSUB           reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    INPUT           reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    PRINT           reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    SUBPROCEDURE    reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    END             reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    RETURN          reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    UNTIL           reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    ELSE            reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    EIF             reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    WEND            reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    NEXT            reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    GREATHER        reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    GREATHEREQUAL   reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    SMALLER         reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    SMALLEREQUAL    reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    NOTEQUAL        reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    EQUALTO         reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    error           reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    DO              reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    CLOSINGPAR      reduce using rule 71 (EL -> OPENPAR O CLOSINGPAR .)
+    AND             shift and go to state 113
+    OR              shift and go to state 114
+    NOT             shift and go to state 115
 
-    Ex                             shift and go to state 115
-    EA                             shift and go to state 37
-    EL                             shift and go to state 38
-    P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    OL                             shift and go to state 112
 
 state 82
 
-    (77) O -> Ex SMALLEREQUAL . Ex
+    (76) O -> Ex GREATHER . Ex
     (50) Ex -> . EA
     (51) Ex -> . EL
     (52) Ex -> . ID
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -2170,36 +2178,39 @@ state 82
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
     Ex                             shift and go to state 116
     EA                             shift and go to state 37
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 83
 
-    (78) O -> Ex NOTEQUAL . Ex
+    (77) O -> Ex GREATHEREQUAL . Ex
     (50) Ex -> . EA
     (51) Ex -> . EL
     (52) Ex -> . ID
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -2207,36 +2218,39 @@ state 83
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
     Ex                             shift and go to state 117
     EA                             shift and go to state 37
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 84
 
-    (79) O -> Ex EQUALTO . Ex
+    (78) O -> Ex SMALLER . Ex
     (50) Ex -> . EA
     (51) Ex -> . EL
     (52) Ex -> . ID
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -2244,36 +2258,39 @@ state 84
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
     Ex                             shift and go to state 118
     EA                             shift and go to state 37
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 85
 
-    (80) O -> Ex error . Ex
+    (79) O -> Ex SMALLEREQUAL . Ex
     (50) Ex -> . EA
     (51) Ex -> . EL
     (52) Ex -> . ID
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -2281,31 +2298,154 @@ state 85
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
     Ex                             shift and go to state 119
     EA                             shift and go to state 37
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
 state 86
+
+    (80) O -> Ex NOTEQUAL . Ex
+    (50) Ex -> . EA
+    (51) Ex -> . EL
+    (52) Ex -> . ID
+    (54) EA -> . EA PLUS P
+    (55) EA -> . EA MINUS P
+    (56) EA -> . P
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (57) P -> . P MULTIPLY N
+    (58) P -> . P DIVIDE N
+    (59) P -> . N
+    (60) N -> . cte saveID
+    (61) N -> . ID saveID
+    (62) N -> . OPENPAR EA CLOSINGPAR
+    (63) N -> . ID Arr
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
+
+    ID              shift and go to state 39
+    TRUE            shift and go to state 27
+    FALSE           shift and go to state 28
+    OPENPAR         shift and go to state 42
+    FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
+
+    Ex                             shift and go to state 120
+    EA                             shift and go to state 37
+    EL                             shift and go to state 38
+    P                              shift and go to state 40
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
+
+state 87
+
+    (81) O -> Ex EQUALTO . Ex
+    (50) Ex -> . EA
+    (51) Ex -> . EL
+    (52) Ex -> . ID
+    (54) EA -> . EA PLUS P
+    (55) EA -> . EA MINUS P
+    (56) EA -> . P
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (57) P -> . P MULTIPLY N
+    (58) P -> . P DIVIDE N
+    (59) P -> . N
+    (60) N -> . cte saveID
+    (61) N -> . ID saveID
+    (62) N -> . OPENPAR EA CLOSINGPAR
+    (63) N -> . ID Arr
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
+
+    ID              shift and go to state 39
+    TRUE            shift and go to state 27
+    FALSE           shift and go to state 28
+    OPENPAR         shift and go to state 42
+    FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
+
+    Ex                             shift and go to state 121
+    EA                             shift and go to state 37
+    EL                             shift and go to state 38
+    P                              shift and go to state 40
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
+
+state 88
+
+    (82) O -> Ex error . Ex
+    (50) Ex -> . EA
+    (51) Ex -> . EL
+    (52) Ex -> . ID
+    (54) EA -> . EA PLUS P
+    (55) EA -> . EA MINUS P
+    (56) EA -> . P
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (57) P -> . P MULTIPLY N
+    (58) P -> . P DIVIDE N
+    (59) P -> . N
+    (60) N -> . cte saveID
+    (61) N -> . ID saveID
+    (62) N -> . OPENPAR EA CLOSINGPAR
+    (63) N -> . ID Arr
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
+
+    ID              shift and go to state 39
+    TRUE            shift and go to state 27
+    FALSE           shift and go to state 28
+    OPENPAR         shift and go to state 42
+    FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
+
+    Ex                             shift and go to state 122
+    EA                             shift and go to state 37
+    EL                             shift and go to state 38
+    P                              shift and go to state 40
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
+
+state 89
 
     (61) N -> ID . saveID
     (63) N -> ID . Arr
     (64) saveID -> .
     (5) Arr -> . OPENBRACKET arr_space CLOSINGBRACKET
     (6) Arr -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
   ! reduce/reduce conflict for MULTIPLY resolved using rule 64 (saveID -> .)
   ! reduce/reduce conflict for DIVIDE resolved using rule 64 (saveID -> .)
@@ -2373,60 +2513,60 @@ state 86
     COMA            reduce using rule 64 (saveID -> .)
     CLOSINGBRACKET  reduce using rule 64 (saveID -> .)
     DO              reduce using rule 64 (saveID -> .)
-    OPENBRACKET     shift and go to state 64
+    OPENBRACKET     shift and go to state 65
 
-  ! MULTIPLY        [ reduce using rule 81 (empty -> .) ]
-  ! DIVIDE          [ reduce using rule 81 (empty -> .) ]
-  ! PLUS            [ reduce using rule 81 (empty -> .) ]
-  ! MINUS           [ reduce using rule 81 (empty -> .) ]
-  ! TO              [ reduce using rule 81 (empty -> .) ]
-  ! LET             [ reduce using rule 81 (empty -> .) ]
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
-  ! IF              [ reduce using rule 81 (empty -> .) ]
-  ! FOR             [ reduce using rule 81 (empty -> .) ]
-  ! WHILE           [ reduce using rule 81 (empty -> .) ]
-  ! REPEAT          [ reduce using rule 81 (empty -> .) ]
-  ! GOSUB           [ reduce using rule 81 (empty -> .) ]
-  ! INPUT           [ reduce using rule 81 (empty -> .) ]
-  ! PRINT           [ reduce using rule 81 (empty -> .) ]
-  ! SUBPROCEDURE    [ reduce using rule 81 (empty -> .) ]
-  ! END             [ reduce using rule 81 (empty -> .) ]
-  ! RETURN          [ reduce using rule 81 (empty -> .) ]
-  ! UNTIL           [ reduce using rule 81 (empty -> .) ]
-  ! ELSE            [ reduce using rule 81 (empty -> .) ]
-  ! EIF             [ reduce using rule 81 (empty -> .) ]
-  ! WEND            [ reduce using rule 81 (empty -> .) ]
-  ! NEXT            [ reduce using rule 81 (empty -> .) ]
-  ! GREATHER        [ reduce using rule 81 (empty -> .) ]
-  ! GREATHEREQUAL   [ reduce using rule 81 (empty -> .) ]
-  ! SMALLER         [ reduce using rule 81 (empty -> .) ]
-  ! SMALLEREQUAL    [ reduce using rule 81 (empty -> .) ]
-  ! NOTEQUAL        [ reduce using rule 81 (empty -> .) ]
-  ! EQUALTO         [ reduce using rule 81 (empty -> .) ]
-  ! error           [ reduce using rule 81 (empty -> .) ]
-  ! CLOSINGPAR      [ reduce using rule 81 (empty -> .) ]
-  ! COMA            [ reduce using rule 81 (empty -> .) ]
-  ! CLOSINGBRACKET  [ reduce using rule 81 (empty -> .) ]
-  ! DO              [ reduce using rule 81 (empty -> .) ]
+  ! MULTIPLY        [ reduce using rule 83 (empty -> .) ]
+  ! DIVIDE          [ reduce using rule 83 (empty -> .) ]
+  ! PLUS            [ reduce using rule 83 (empty -> .) ]
+  ! MINUS           [ reduce using rule 83 (empty -> .) ]
+  ! TO              [ reduce using rule 83 (empty -> .) ]
+  ! LET             [ reduce using rule 83 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
+  ! IF              [ reduce using rule 83 (empty -> .) ]
+  ! FOR             [ reduce using rule 83 (empty -> .) ]
+  ! WHILE           [ reduce using rule 83 (empty -> .) ]
+  ! REPEAT          [ reduce using rule 83 (empty -> .) ]
+  ! GOSUB           [ reduce using rule 83 (empty -> .) ]
+  ! INPUT           [ reduce using rule 83 (empty -> .) ]
+  ! PRINT           [ reduce using rule 83 (empty -> .) ]
+  ! SUBPROCEDURE    [ reduce using rule 83 (empty -> .) ]
+  ! END             [ reduce using rule 83 (empty -> .) ]
+  ! RETURN          [ reduce using rule 83 (empty -> .) ]
+  ! UNTIL           [ reduce using rule 83 (empty -> .) ]
+  ! ELSE            [ reduce using rule 83 (empty -> .) ]
+  ! EIF             [ reduce using rule 83 (empty -> .) ]
+  ! WEND            [ reduce using rule 83 (empty -> .) ]
+  ! NEXT            [ reduce using rule 83 (empty -> .) ]
+  ! GREATHER        [ reduce using rule 83 (empty -> .) ]
+  ! GREATHEREQUAL   [ reduce using rule 83 (empty -> .) ]
+  ! SMALLER         [ reduce using rule 83 (empty -> .) ]
+  ! SMALLEREQUAL    [ reduce using rule 83 (empty -> .) ]
+  ! NOTEQUAL        [ reduce using rule 83 (empty -> .) ]
+  ! EQUALTO         [ reduce using rule 83 (empty -> .) ]
+  ! error           [ reduce using rule 83 (empty -> .) ]
+  ! CLOSINGPAR      [ reduce using rule 83 (empty -> .) ]
+  ! COMA            [ reduce using rule 83 (empty -> .) ]
+  ! CLOSINGBRACKET  [ reduce using rule 83 (empty -> .) ]
+  ! DO              [ reduce using rule 83 (empty -> .) ]
 
-    saveID                         shift and go to state 62
-    Arr                            shift and go to state 63
-    empty                          shift and go to state 65
+    saveID                         shift and go to state 63
+    Arr                            shift and go to state 64
+    empty                          shift and go to state 66
 
-state 87
+state 90
 
     (25) E -> FOR ID EQUALS EA . for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
     (54) EA -> EA . PLUS P
     (55) EA -> EA . MINUS P
     (31) for_assignation -> .
 
-    PLUS            shift and go to state 60
-    MINUS           shift and go to state 61
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
     TO              reduce using rule 31 (for_assignation -> .)
 
-    for_assignation                shift and go to state 120
+    for_assignation                shift and go to state 123
 
-state 88
+state 91
 
     (62) N -> OPENPAR . EA CLOSINGPAR
     (54) EA -> . EA PLUS P
@@ -2439,20 +2579,23 @@ state 88
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 86
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 89
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    EA                             shift and go to state 121
+    EA                             shift and go to state 124
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 89
+state 92
 
     (26) E -> WHILE while_first_conditional EL DO . while_second_conditional F WEND while_final_conditional
     (37) while_second_conditional -> .
@@ -2468,34 +2611,34 @@ state 89
     PRINT           reduce using rule 37 (while_second_conditional -> .)
     WEND            reduce using rule 37 (while_second_conditional -> .)
 
-    while_second_conditional       shift and go to state 122
+    while_second_conditional       shift and go to state 125
 
-state 90
+state 93
 
     (27) E -> REPEAT while_first_conditional F UNTIL . EL repeat_conditional
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
 
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
     OPENPAR         shift and go to state 29
 
-    EL                             shift and go to state 123
+    EL                             shift and go to state 126
 
-state 91
+state 94
 
     (49) IDEx -> ID OPENBRACKET setType . Idv CLOSINGBRACKET
     (44) Idv -> . ID COMA Idv
     (45) Idv -> . ID
     (46) Idv -> . ID Arr
 
-    ID              shift and go to state 47
+    ID              shift and go to state 48
 
-    Idv                            shift and go to state 124
+    Idv                            shift and go to state 127
 
-state 92
+state 95
 
     (54) EA -> EA PLUS P .
     (57) P -> P . MULTIPLY N
@@ -2532,11 +2675,11 @@ state 92
     COMA            reduce using rule 54 (EA -> EA PLUS P .)
     CLOSINGBRACKET  reduce using rule 54 (EA -> EA PLUS P .)
     DO              reduce using rule 54 (EA -> EA PLUS P .)
-    MULTIPLY        shift and go to state 66
-    DIVIDE          shift and go to state 67
+    MULTIPLY        shift and go to state 67
+    DIVIDE          shift and go to state 68
 
 
-state 93
+state 96
 
     (55) EA -> EA MINUS P .
     (57) P -> P . MULTIPLY N
@@ -2573,31 +2716,31 @@ state 93
     COMA            reduce using rule 55 (EA -> EA MINUS P .)
     CLOSINGBRACKET  reduce using rule 55 (EA -> EA MINUS P .)
     DO              reduce using rule 55 (EA -> EA MINUS P .)
-    MULTIPLY        shift and go to state 66
-    DIVIDE          shift and go to state 67
+    MULTIPLY        shift and go to state 67
+    DIVIDE          shift and go to state 68
 
 
-state 94
+state 97
 
     (5) Arr -> OPENBRACKET arr_space . CLOSINGBRACKET
 
-    CLOSINGBRACKET  shift and go to state 125
+    CLOSINGBRACKET  shift and go to state 128
 
 
-state 95
+state 98
 
     (7) arr_space -> EA . COMA arr_space
     (9) arr_space -> EA .
     (54) EA -> EA . PLUS P
     (55) EA -> EA . MINUS P
 
-    COMA            shift and go to state 126
+    COMA            shift and go to state 129
     CLOSINGBRACKET  reduce using rule 9 (arr_space -> EA .)
-    PLUS            shift and go to state 60
-    MINUS           shift and go to state 61
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
 
 
-state 96
+state 99
 
     (8) arr_space -> ID . COMA arr_space
     (10) arr_space -> ID .
@@ -2606,7 +2749,7 @@ state 96
     (64) saveID -> .
     (5) Arr -> . OPENBRACKET arr_space CLOSINGBRACKET
     (6) Arr -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
   ! shift/reduce conflict for COMA resolved as shift
   ! reduce/reduce conflict for CLOSINGBRACKET resolved using rule 10 (arr_space -> ID .)
@@ -2616,28 +2759,28 @@ state 96
   ! reduce/reduce conflict for PLUS resolved using rule 64 (saveID -> .)
   ! reduce/reduce conflict for MINUS resolved using rule 64 (saveID -> .)
   ! reduce/reduce conflict for CLOSINGBRACKET resolved using rule 10 (arr_space -> ID .)
-    COMA            shift and go to state 127
+    COMA            shift and go to state 130
     CLOSINGBRACKET  reduce using rule 10 (arr_space -> ID .)
     MULTIPLY        reduce using rule 64 (saveID -> .)
     DIVIDE          reduce using rule 64 (saveID -> .)
     PLUS            reduce using rule 64 (saveID -> .)
     MINUS           reduce using rule 64 (saveID -> .)
-    OPENBRACKET     shift and go to state 64
+    OPENBRACKET     shift and go to state 65
 
   ! COMA            [ reduce using rule 64 (saveID -> .) ]
   ! CLOSINGBRACKET  [ reduce using rule 64 (saveID -> .) ]
-  ! MULTIPLY        [ reduce using rule 81 (empty -> .) ]
-  ! DIVIDE          [ reduce using rule 81 (empty -> .) ]
-  ! COMA            [ reduce using rule 81 (empty -> .) ]
-  ! PLUS            [ reduce using rule 81 (empty -> .) ]
-  ! MINUS           [ reduce using rule 81 (empty -> .) ]
-  ! CLOSINGBRACKET  [ reduce using rule 81 (empty -> .) ]
+  ! MULTIPLY        [ reduce using rule 83 (empty -> .) ]
+  ! DIVIDE          [ reduce using rule 83 (empty -> .) ]
+  ! COMA            [ reduce using rule 83 (empty -> .) ]
+  ! PLUS            [ reduce using rule 83 (empty -> .) ]
+  ! MINUS           [ reduce using rule 83 (empty -> .) ]
+  ! CLOSINGBRACKET  [ reduce using rule 83 (empty -> .) ]
 
-    saveID                         shift and go to state 62
-    Arr                            shift and go to state 63
-    empty                          shift and go to state 65
+    saveID                         shift and go to state 63
+    Arr                            shift and go to state 64
+    empty                          shift and go to state 66
 
-state 97
+state 100
 
     (57) P -> P MULTIPLY N .
 
@@ -2676,7 +2819,7 @@ state 97
     DO              reduce using rule 57 (P -> P MULTIPLY N .)
 
 
-state 98
+state 101
 
     (58) P -> P DIVIDE N .
 
@@ -2715,7 +2858,7 @@ state 98
     DO              reduce using rule 58 (P -> P DIVIDE N .)
 
 
-state 99
+state 102
 
     (62) N -> OPENPAR EA CLOSINGPAR .
 
@@ -2754,30 +2897,30 @@ state 99
     DO              reduce using rule 62 (N -> OPENPAR EA CLOSINGPAR .)
 
 
-state 100
+state 103
 
     (3) V -> DIM setType Idv AS T . Arr
     (5) Arr -> . OPENBRACKET arr_space CLOSINGBRACKET
     (6) Arr -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
-    OPENBRACKET     shift and go to state 64
-    LET             reduce using rule 81 (empty -> .)
-    DIM             reduce using rule 81 (empty -> .)
-    IF              reduce using rule 81 (empty -> .)
-    FOR             reduce using rule 81 (empty -> .)
-    WHILE           reduce using rule 81 (empty -> .)
-    REPEAT          reduce using rule 81 (empty -> .)
-    GOSUB           reduce using rule 81 (empty -> .)
-    INPUT           reduce using rule 81 (empty -> .)
-    PRINT           reduce using rule 81 (empty -> .)
-    SUBPROCEDURE    reduce using rule 81 (empty -> .)
-    END             reduce using rule 81 (empty -> .)
+    OPENBRACKET     shift and go to state 65
+    LET             reduce using rule 83 (empty -> .)
+    DIM             reduce using rule 83 (empty -> .)
+    IF              reduce using rule 83 (empty -> .)
+    FOR             reduce using rule 83 (empty -> .)
+    WHILE           reduce using rule 83 (empty -> .)
+    REPEAT          reduce using rule 83 (empty -> .)
+    GOSUB           reduce using rule 83 (empty -> .)
+    INPUT           reduce using rule 83 (empty -> .)
+    PRINT           reduce using rule 83 (empty -> .)
+    SUBPROCEDURE    reduce using rule 83 (empty -> .)
+    END             reduce using rule 83 (empty -> .)
 
-    Arr                            shift and go to state 128
-    empty                          shift and go to state 65
+    Arr                            shift and go to state 131
+    empty                          shift and go to state 66
 
-state 101
+state 104
 
     (11) T -> INT .
 
@@ -2801,7 +2944,7 @@ state 101
     NEXT            reduce using rule 11 (T -> INT .)
 
 
-state 102
+state 105
 
     (12) T -> FLOAT .
 
@@ -2825,7 +2968,7 @@ state 102
     NEXT            reduce using rule 12 (T -> FLOAT .)
 
 
-state 103
+state 106
 
     (13) T -> WORD .
 
@@ -2849,7 +2992,7 @@ state 103
     NEXT            reduce using rule 13 (T -> WORD .)
 
 
-state 104
+state 107
 
     (44) Idv -> ID COMA Idv .
 
@@ -2858,14 +3001,14 @@ state 104
     CLOSINGBRACKET  reduce using rule 44 (Idv -> ID COMA Idv .)
 
 
-state 105
+state 108
 
     (14) S -> SUBPROCEDURE ID fillSub . TWOPOINTS M RETURN endProcedure S
 
-    TWOPOINTS       shift and go to state 129
+    TWOPOINTS       shift and go to state 132
 
 
-state 106
+state 109
 
     (22) E -> LET setType Idv EQUALS Ex .
 
@@ -2888,157 +3031,157 @@ state 106
     NEXT            reduce using rule 22 (E -> LET setType Idv EQUALS Ex .)
 
 
-state 107
+state 110
 
     (23) E -> DIM setType Idv AS T . Arr
     (5) Arr -> . OPENBRACKET arr_space CLOSINGBRACKET
     (6) Arr -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
-    OPENBRACKET     shift and go to state 64
-    LET             reduce using rule 81 (empty -> .)
-    DIM             reduce using rule 81 (empty -> .)
-    IF              reduce using rule 81 (empty -> .)
-    FOR             reduce using rule 81 (empty -> .)
-    WHILE           reduce using rule 81 (empty -> .)
-    REPEAT          reduce using rule 81 (empty -> .)
-    GOSUB           reduce using rule 81 (empty -> .)
-    INPUT           reduce using rule 81 (empty -> .)
-    PRINT           reduce using rule 81 (empty -> .)
-    SUBPROCEDURE    reduce using rule 81 (empty -> .)
-    END             reduce using rule 81 (empty -> .)
-    RETURN          reduce using rule 81 (empty -> .)
-    UNTIL           reduce using rule 81 (empty -> .)
-    ELSE            reduce using rule 81 (empty -> .)
-    EIF             reduce using rule 81 (empty -> .)
-    WEND            reduce using rule 81 (empty -> .)
-    NEXT            reduce using rule 81 (empty -> .)
+    OPENBRACKET     shift and go to state 65
+    LET             reduce using rule 83 (empty -> .)
+    DIM             reduce using rule 83 (empty -> .)
+    IF              reduce using rule 83 (empty -> .)
+    FOR             reduce using rule 83 (empty -> .)
+    WHILE           reduce using rule 83 (empty -> .)
+    REPEAT          reduce using rule 83 (empty -> .)
+    GOSUB           reduce using rule 83 (empty -> .)
+    INPUT           reduce using rule 83 (empty -> .)
+    PRINT           reduce using rule 83 (empty -> .)
+    SUBPROCEDURE    reduce using rule 83 (empty -> .)
+    END             reduce using rule 83 (empty -> .)
+    RETURN          reduce using rule 83 (empty -> .)
+    UNTIL           reduce using rule 83 (empty -> .)
+    ELSE            reduce using rule 83 (empty -> .)
+    EIF             reduce using rule 83 (empty -> .)
+    WEND            reduce using rule 83 (empty -> .)
+    NEXT            reduce using rule 83 (empty -> .)
 
-    Arr                            shift and go to state 130
-    empty                          shift and go to state 65
+    Arr                            shift and go to state 133
+    empty                          shift and go to state 66
 
-state 108
+state 111
 
     (24) E -> IF EL THEN first_conditional F . Esf EIF final_conditional
     (42) Esf -> . ELSE second_conditional F
     (43) Esf -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
-    ELSE            shift and go to state 132
-    EIF             reduce using rule 81 (empty -> .)
+    ELSE            shift and go to state 135
+    EIF             reduce using rule 83 (empty -> .)
 
-    Esf                            shift and go to state 131
-    empty                          shift and go to state 133
+    Esf                            shift and go to state 134
+    empty                          shift and go to state 136
 
-state 109
+state 112
 
-    (70) EL -> OPENPAR O CLOSINGPAR OL . EL
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (72) EL -> OPENPAR O CLOSINGPAR OL . EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
 
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
     OPENPAR         shift and go to state 29
 
-    EL                             shift and go to state 134
-
-state 110
-
-    (71) OL -> AND .
-
-    TRUE            reduce using rule 71 (OL -> AND .)
-    FALSE           reduce using rule 71 (OL -> AND .)
-    OPENPAR         reduce using rule 71 (OL -> AND .)
-
-
-state 111
-
-    (72) OL -> OR .
-
-    TRUE            reduce using rule 72 (OL -> OR .)
-    FALSE           reduce using rule 72 (OL -> OR .)
-    OPENPAR         reduce using rule 72 (OL -> OR .)
-
-
-state 112
-
-    (73) OL -> NOT .
-
-    TRUE            reduce using rule 73 (OL -> NOT .)
-    FALSE           reduce using rule 73 (OL -> NOT .)
-    OPENPAR         reduce using rule 73 (OL -> NOT .)
-
+    EL                             shift and go to state 137
 
 state 113
 
-    (74) O -> Ex GREATHER Ex .
+    (73) OL -> AND .
 
-    CLOSINGPAR      reduce using rule 74 (O -> Ex GREATHER Ex .)
+    TRUE            reduce using rule 73 (OL -> AND .)
+    FALSE           reduce using rule 73 (OL -> AND .)
+    OPENPAR         reduce using rule 73 (OL -> AND .)
 
 
 state 114
 
-    (75) O -> Ex GREATHEREQUAL Ex .
+    (74) OL -> OR .
 
-    CLOSINGPAR      reduce using rule 75 (O -> Ex GREATHEREQUAL Ex .)
+    TRUE            reduce using rule 74 (OL -> OR .)
+    FALSE           reduce using rule 74 (OL -> OR .)
+    OPENPAR         reduce using rule 74 (OL -> OR .)
 
 
 state 115
 
-    (76) O -> Ex SMALLER Ex .
+    (75) OL -> NOT .
 
-    CLOSINGPAR      reduce using rule 76 (O -> Ex SMALLER Ex .)
+    TRUE            reduce using rule 75 (OL -> NOT .)
+    FALSE           reduce using rule 75 (OL -> NOT .)
+    OPENPAR         reduce using rule 75 (OL -> NOT .)
 
 
 state 116
 
-    (77) O -> Ex SMALLEREQUAL Ex .
+    (76) O -> Ex GREATHER Ex .
 
-    CLOSINGPAR      reduce using rule 77 (O -> Ex SMALLEREQUAL Ex .)
+    CLOSINGPAR      reduce using rule 76 (O -> Ex GREATHER Ex .)
 
 
 state 117
 
-    (78) O -> Ex NOTEQUAL Ex .
+    (77) O -> Ex GREATHEREQUAL Ex .
 
-    CLOSINGPAR      reduce using rule 78 (O -> Ex NOTEQUAL Ex .)
+    CLOSINGPAR      reduce using rule 77 (O -> Ex GREATHEREQUAL Ex .)
 
 
 state 118
 
-    (79) O -> Ex EQUALTO Ex .
+    (78) O -> Ex SMALLER Ex .
 
-    CLOSINGPAR      reduce using rule 79 (O -> Ex EQUALTO Ex .)
+    CLOSINGPAR      reduce using rule 78 (O -> Ex SMALLER Ex .)
 
 
 state 119
 
-    (80) O -> Ex error Ex .
+    (79) O -> Ex SMALLEREQUAL Ex .
 
-    CLOSINGPAR      reduce using rule 80 (O -> Ex error Ex .)
+    CLOSINGPAR      reduce using rule 79 (O -> Ex SMALLEREQUAL Ex .)
 
 
 state 120
 
-    (25) E -> FOR ID EQUALS EA for_assignation . TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
+    (80) O -> Ex NOTEQUAL Ex .
 
-    TO              shift and go to state 135
+    CLOSINGPAR      reduce using rule 80 (O -> Ex NOTEQUAL Ex .)
 
 
 state 121
+
+    (81) O -> Ex EQUALTO Ex .
+
+    CLOSINGPAR      reduce using rule 81 (O -> Ex EQUALTO Ex .)
+
+
+state 122
+
+    (82) O -> Ex error Ex .
+
+    CLOSINGPAR      reduce using rule 82 (O -> Ex error Ex .)
+
+
+state 123
+
+    (25) E -> FOR ID EQUALS EA for_assignation . TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
+
+    TO              shift and go to state 138
+
+
+state 124
 
     (62) N -> OPENPAR EA . CLOSINGPAR
     (54) EA -> EA . PLUS P
     (55) EA -> EA . MINUS P
 
-    CLOSINGPAR      shift and go to state 99
-    PLUS            shift and go to state 60
-    MINUS           shift and go to state 61
+    CLOSINGPAR      shift and go to state 102
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
 
 
-state 122
+state 125
 
     (26) E -> WHILE while_first_conditional EL DO while_second_conditional . F WEND while_final_conditional
     (20) F -> . E F
@@ -3052,7 +3195,7 @@ state 122
     (28) E -> . GOSUB ID
     (29) E -> . INPUT IDEx
     (30) E -> . PRINT Ex
-    (81) empty -> .
+    (83) empty -> .
 
     LET             shift and go to state 10
     DIM             shift and go to state 11
@@ -3063,13 +3206,13 @@ state 122
     GOSUB           shift and go to state 16
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
-    WEND            reduce using rule 81 (empty -> .)
+    WEND            reduce using rule 83 (empty -> .)
 
-    F                              shift and go to state 136
+    F                              shift and go to state 139
     E                              shift and go to state 9
     empty                          shift and go to state 23
 
-state 123
+state 126
 
     (27) E -> REPEAT while_first_conditional F UNTIL EL . repeat_conditional
     (35) repeat_conditional -> .
@@ -3092,16 +3235,16 @@ state 123
     WEND            reduce using rule 35 (repeat_conditional -> .)
     NEXT            reduce using rule 35 (repeat_conditional -> .)
 
-    repeat_conditional             shift and go to state 137
+    repeat_conditional             shift and go to state 140
 
-state 124
+state 127
 
     (49) IDEx -> ID OPENBRACKET setType Idv . CLOSINGBRACKET
 
-    CLOSINGBRACKET  shift and go to state 138
+    CLOSINGBRACKET  shift and go to state 141
 
 
-state 125
+state 128
 
     (5) Arr -> OPENBRACKET arr_space CLOSINGBRACKET .
 
@@ -3142,7 +3285,7 @@ state 125
     COMA            reduce using rule 5 (Arr -> OPENBRACKET arr_space CLOSINGBRACKET .)
 
 
-state 126
+state 129
 
     (7) arr_space -> EA COMA . arr_space
     (7) arr_space -> . EA COMA arr_space
@@ -3159,21 +3302,24 @@ state 126
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 96
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 99
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    EA                             shift and go to state 95
-    arr_space                      shift and go to state 139
+    EA                             shift and go to state 98
+    arr_space                      shift and go to state 142
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 127
+state 130
 
     (8) arr_space -> ID COMA . arr_space
     (7) arr_space -> . EA COMA arr_space
@@ -3190,21 +3336,24 @@ state 127
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
-    ID              shift and go to state 96
-    OPENPAR         shift and go to state 88
-    INTVAL          shift and go to state 44
+    ID              shift and go to state 99
+    OPENPAR         shift and go to state 91
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
-    arr_space                      shift and go to state 140
-    EA                             shift and go to state 95
+    arr_space                      shift and go to state 143
+    EA                             shift and go to state 98
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 128
+state 131
 
     (3) V -> DIM setType Idv AS T Arr .
 
@@ -3221,14 +3370,14 @@ state 128
     END             reduce using rule 3 (V -> DIM setType Idv AS T Arr .)
 
 
-state 129
+state 132
 
     (14) S -> SUBPROCEDURE ID fillSub TWOPOINTS . M RETURN endProcedure S
     (18) M -> . F M
     (19) M -> . empty
     (20) F -> . E F
     (21) F -> . empty
-    (81) empty -> .
+    (83) empty -> .
     (22) E -> . LET setType Idv EQUALS Ex
     (23) E -> . DIM setType Idv AS T Arr
     (24) E -> . IF EL THEN first_conditional F Esf EIF final_conditional
@@ -3248,7 +3397,7 @@ state 129
   ! shift/reduce conflict for GOSUB resolved as shift
   ! shift/reduce conflict for INPUT resolved as shift
   ! shift/reduce conflict for PRINT resolved as shift
-    RETURN          reduce using rule 81 (empty -> .)
+    RETURN          reduce using rule 83 (empty -> .)
     LET             shift and go to state 10
     DIM             shift and go to state 11
     IF              shift and go to state 12
@@ -3259,22 +3408,22 @@ state 129
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
 
-  ! LET             [ reduce using rule 81 (empty -> .) ]
-  ! DIM             [ reduce using rule 81 (empty -> .) ]
-  ! IF              [ reduce using rule 81 (empty -> .) ]
-  ! FOR             [ reduce using rule 81 (empty -> .) ]
-  ! WHILE           [ reduce using rule 81 (empty -> .) ]
-  ! REPEAT          [ reduce using rule 81 (empty -> .) ]
-  ! GOSUB           [ reduce using rule 81 (empty -> .) ]
-  ! INPUT           [ reduce using rule 81 (empty -> .) ]
-  ! PRINT           [ reduce using rule 81 (empty -> .) ]
+  ! LET             [ reduce using rule 83 (empty -> .) ]
+  ! DIM             [ reduce using rule 83 (empty -> .) ]
+  ! IF              [ reduce using rule 83 (empty -> .) ]
+  ! FOR             [ reduce using rule 83 (empty -> .) ]
+  ! WHILE           [ reduce using rule 83 (empty -> .) ]
+  ! REPEAT          [ reduce using rule 83 (empty -> .) ]
+  ! GOSUB           [ reduce using rule 83 (empty -> .) ]
+  ! INPUT           [ reduce using rule 83 (empty -> .) ]
+  ! PRINT           [ reduce using rule 83 (empty -> .) ]
 
-    M                              shift and go to state 141
+    M                              shift and go to state 144
     F                              shift and go to state 7
     empty                          shift and go to state 8
     E                              shift and go to state 9
 
-state 130
+state 133
 
     (23) E -> DIM setType Idv AS T Arr .
 
@@ -3297,14 +3446,14 @@ state 130
     NEXT            reduce using rule 23 (E -> DIM setType Idv AS T Arr .)
 
 
-state 131
+state 134
 
     (24) E -> IF EL THEN first_conditional F Esf . EIF final_conditional
 
-    EIF             shift and go to state 142
+    EIF             shift and go to state 145
 
 
-state 132
+state 135
 
     (42) Esf -> ELSE . second_conditional F
     (40) second_conditional -> .
@@ -3320,49 +3469,49 @@ state 132
     PRINT           reduce using rule 40 (second_conditional -> .)
     EIF             reduce using rule 40 (second_conditional -> .)
 
-    second_conditional             shift and go to state 143
+    second_conditional             shift and go to state 146
 
-state 133
+state 136
 
     (43) Esf -> empty .
 
     EIF             reduce using rule 43 (Esf -> empty .)
 
 
-state 134
+state 137
 
-    (70) EL -> OPENPAR O CLOSINGPAR OL EL .
+    (72) EL -> OPENPAR O CLOSINGPAR OL EL .
 
-    THEN            reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    LET             reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    DIM             reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    IF              reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    FOR             reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    WHILE           reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    REPEAT          reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    GOSUB           reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    INPUT           reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    PRINT           reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    SUBPROCEDURE    reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    END             reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    RETURN          reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    UNTIL           reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    ELSE            reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    EIF             reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    WEND            reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    NEXT            reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    GREATHER        reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    GREATHEREQUAL   reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    SMALLER         reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    SMALLEREQUAL    reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    NOTEQUAL        reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    EQUALTO         reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    error           reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    DO              reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
-    CLOSINGPAR      reduce using rule 70 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    THEN            reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    LET             reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    DIM             reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    IF              reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    FOR             reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    WHILE           reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    REPEAT          reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    GOSUB           reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    INPUT           reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    PRINT           reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    SUBPROCEDURE    reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    END             reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    RETURN          reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    UNTIL           reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    ELSE            reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    EIF             reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    WEND            reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    NEXT            reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    GREATHER        reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    GREATHEREQUAL   reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    SMALLER         reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    SMALLEREQUAL    reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    NOTEQUAL        reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    EQUALTO         reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    error           reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    DO              reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
+    CLOSINGPAR      reduce using rule 72 (EL -> OPENPAR O CLOSINGPAR OL EL .)
 
 
-state 135
+state 138
 
     (25) E -> FOR ID EQUALS EA for_assignation TO . Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
     (50) Ex -> . EA
@@ -3371,10 +3520,10 @@ state 135
     (54) EA -> . EA PLUS P
     (55) EA -> . EA MINUS P
     (56) EA -> . P
-    (67) EL -> . TRUE
-    (68) EL -> . FALSE
-    (69) EL -> . OPENPAR O CLOSINGPAR
-    (70) EL -> . OPENPAR O CLOSINGPAR OL EL
+    (69) EL -> . TRUE
+    (70) EL -> . FALSE
+    (71) EL -> . OPENPAR O CLOSINGPAR
+    (72) EL -> . OPENPAR O CLOSINGPAR OL EL
     (57) P -> . P MULTIPLY N
     (58) P -> . P DIVIDE N
     (59) P -> . N
@@ -3382,31 +3531,34 @@ state 135
     (61) N -> . ID saveID
     (62) N -> . OPENPAR EA CLOSINGPAR
     (63) N -> . ID Arr
-    (65) cte -> . INTVAL
-    (66) cte -> . FLOATVAL
+    (65) cte -> . FLOATVAL
+    (66) cte -> . INTVAL
+    (67) cte -> . MINUS INTVAL
+    (68) cte -> . MINUS FLOATVAL
 
     ID              shift and go to state 39
     TRUE            shift and go to state 27
     FALSE           shift and go to state 28
-    OPENPAR         shift and go to state 41
-    INTVAL          shift and go to state 44
+    OPENPAR         shift and go to state 42
     FLOATVAL        shift and go to state 45
+    INTVAL          shift and go to state 46
+    MINUS           shift and go to state 41
 
     EA                             shift and go to state 37
-    Ex                             shift and go to state 144
+    Ex                             shift and go to state 147
     EL                             shift and go to state 38
     P                              shift and go to state 40
-    N                              shift and go to state 42
-    cte                            shift and go to state 43
+    N                              shift and go to state 43
+    cte                            shift and go to state 44
 
-state 136
+state 139
 
     (26) E -> WHILE while_first_conditional EL DO while_second_conditional F . WEND while_final_conditional
 
-    WEND            shift and go to state 145
+    WEND            shift and go to state 148
 
 
-state 137
+state 140
 
     (27) E -> REPEAT while_first_conditional F UNTIL EL repeat_conditional .
 
@@ -3429,7 +3581,7 @@ state 137
     NEXT            reduce using rule 27 (E -> REPEAT while_first_conditional F UNTIL EL repeat_conditional .)
 
 
-state 138
+state 141
 
     (49) IDEx -> ID OPENBRACKET setType Idv CLOSINGBRACKET .
 
@@ -3452,28 +3604,28 @@ state 138
     NEXT            reduce using rule 49 (IDEx -> ID OPENBRACKET setType Idv CLOSINGBRACKET .)
 
 
-state 139
+state 142
 
     (7) arr_space -> EA COMA arr_space .
 
     CLOSINGBRACKET  reduce using rule 7 (arr_space -> EA COMA arr_space .)
 
 
-state 140
+state 143
 
     (8) arr_space -> ID COMA arr_space .
 
     CLOSINGBRACKET  reduce using rule 8 (arr_space -> ID COMA arr_space .)
 
 
-state 141
+state 144
 
     (14) S -> SUBPROCEDURE ID fillSub TWOPOINTS M . RETURN endProcedure S
 
-    RETURN          shift and go to state 146
+    RETURN          shift and go to state 149
 
 
-state 142
+state 145
 
     (24) E -> IF EL THEN first_conditional F Esf EIF . final_conditional
     (41) final_conditional -> .
@@ -3496,9 +3648,9 @@ state 142
     WEND            reduce using rule 41 (final_conditional -> .)
     NEXT            reduce using rule 41 (final_conditional -> .)
 
-    final_conditional              shift and go to state 147
+    final_conditional              shift and go to state 150
 
-state 143
+state 146
 
     (42) Esf -> ELSE second_conditional . F
     (20) F -> . E F
@@ -3512,7 +3664,7 @@ state 143
     (28) E -> . GOSUB ID
     (29) E -> . INPUT IDEx
     (30) E -> . PRINT Ex
-    (81) empty -> .
+    (83) empty -> .
 
     LET             shift and go to state 10
     DIM             shift and go to state 11
@@ -3523,22 +3675,22 @@ state 143
     GOSUB           shift and go to state 16
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
-    EIF             reduce using rule 81 (empty -> .)
+    EIF             reduce using rule 83 (empty -> .)
 
-    F                              shift and go to state 148
+    F                              shift and go to state 151
     E                              shift and go to state 9
     empty                          shift and go to state 23
 
-state 144
+state 147
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex . for_conditional DO for_save_conditional F NEXT ID for_conditional_end
     (32) for_conditional -> .
 
     DO              reduce using rule 32 (for_conditional -> .)
 
-    for_conditional                shift and go to state 149
+    for_conditional                shift and go to state 152
 
-state 145
+state 148
 
     (26) E -> WHILE while_first_conditional EL DO while_second_conditional F WEND . while_final_conditional
     (38) while_final_conditional -> .
@@ -3561,9 +3713,9 @@ state 145
     WEND            reduce using rule 38 (while_final_conditional -> .)
     NEXT            reduce using rule 38 (while_final_conditional -> .)
 
-    while_final_conditional        shift and go to state 150
+    while_final_conditional        shift and go to state 153
 
-state 146
+state 149
 
     (14) S -> SUBPROCEDURE ID fillSub TWOPOINTS M RETURN . endProcedure S
     (17) endProcedure -> .
@@ -3571,9 +3723,9 @@ state 146
     SUBPROCEDURE    reduce using rule 17 (endProcedure -> .)
     END             reduce using rule 17 (endProcedure -> .)
 
-    endProcedure                   shift and go to state 151
+    endProcedure                   shift and go to state 154
 
-state 147
+state 150
 
     (24) E -> IF EL THEN first_conditional F Esf EIF final_conditional .
 
@@ -3596,21 +3748,21 @@ state 147
     NEXT            reduce using rule 24 (E -> IF EL THEN first_conditional F Esf EIF final_conditional .)
 
 
-state 148
+state 151
 
     (42) Esf -> ELSE second_conditional F .
 
     EIF             reduce using rule 42 (Esf -> ELSE second_conditional F .)
 
 
-state 149
+state 152
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional . DO for_save_conditional F NEXT ID for_conditional_end
 
-    DO              shift and go to state 152
+    DO              shift and go to state 155
 
 
-state 150
+state 153
 
     (26) E -> WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional .
 
@@ -3633,20 +3785,20 @@ state 150
     NEXT            reduce using rule 26 (E -> WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional .)
 
 
-state 151
+state 154
 
     (14) S -> SUBPROCEDURE ID fillSub TWOPOINTS M RETURN endProcedure . S
     (14) S -> . SUBPROCEDURE ID fillSub TWOPOINTS M RETURN endProcedure S
     (15) S -> . empty
-    (81) empty -> .
+    (83) empty -> .
 
-    SUBPROCEDURE    shift and go to state 49
-    END             reduce using rule 81 (empty -> .)
+    SUBPROCEDURE    shift and go to state 50
+    END             reduce using rule 83 (empty -> .)
 
-    S                              shift and go to state 153
-    empty                          shift and go to state 50
+    S                              shift and go to state 156
+    empty                          shift and go to state 51
 
-state 152
+state 155
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional DO . for_save_conditional F NEXT ID for_conditional_end
     (33) for_save_conditional -> .
@@ -3662,16 +3814,16 @@ state 152
     PRINT           reduce using rule 33 (for_save_conditional -> .)
     NEXT            reduce using rule 33 (for_save_conditional -> .)
 
-    for_save_conditional           shift and go to state 154
+    for_save_conditional           shift and go to state 157
 
-state 153
+state 156
 
     (14) S -> SUBPROCEDURE ID fillSub TWOPOINTS M RETURN endProcedure S .
 
     END             reduce using rule 14 (S -> SUBPROCEDURE ID fillSub TWOPOINTS M RETURN endProcedure S .)
 
 
-state 154
+state 157
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional . F NEXT ID for_conditional_end
     (20) F -> . E F
@@ -3685,7 +3837,7 @@ state 154
     (28) E -> . GOSUB ID
     (29) E -> . INPUT IDEx
     (30) E -> . PRINT Ex
-    (81) empty -> .
+    (83) empty -> .
 
     LET             shift and go to state 10
     DIM             shift and go to state 11
@@ -3696,27 +3848,27 @@ state 154
     GOSUB           shift and go to state 16
     INPUT           shift and go to state 17
     PRINT           shift and go to state 18
-    NEXT            reduce using rule 81 (empty -> .)
+    NEXT            reduce using rule 83 (empty -> .)
 
-    F                              shift and go to state 155
+    F                              shift and go to state 158
     E                              shift and go to state 9
     empty                          shift and go to state 23
 
-state 155
+state 158
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F . NEXT ID for_conditional_end
 
-    NEXT            shift and go to state 156
+    NEXT            shift and go to state 159
 
 
-state 156
+state 159
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT . ID for_conditional_end
 
-    ID              shift and go to state 157
+    ID              shift and go to state 160
 
 
-state 157
+state 160
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID . for_conditional_end
     (34) for_conditional_end -> .
@@ -3739,9 +3891,9 @@ state 157
     WEND            reduce using rule 34 (for_conditional_end -> .)
     NEXT            reduce using rule 34 (for_conditional_end -> .)
 
-    for_conditional_end            shift and go to state 158
+    for_conditional_end            shift and go to state 161
 
-state 158
+state 161
 
     (25) E -> FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end .
 
@@ -3794,17 +3946,17 @@ WARNING: shift/reduce conflict for REPEAT in state 9 resolved as shift
 WARNING: shift/reduce conflict for GOSUB in state 9 resolved as shift
 WARNING: shift/reduce conflict for INPUT in state 9 resolved as shift
 WARNING: shift/reduce conflict for PRINT in state 9 resolved as shift
-WARNING: shift/reduce conflict for COMA in state 96 resolved as shift
-WARNING: shift/reduce conflict for COMA in state 96 resolved as shift
-WARNING: shift/reduce conflict for LET in state 129 resolved as shift
-WARNING: shift/reduce conflict for DIM in state 129 resolved as shift
-WARNING: shift/reduce conflict for IF in state 129 resolved as shift
-WARNING: shift/reduce conflict for FOR in state 129 resolved as shift
-WARNING: shift/reduce conflict for WHILE in state 129 resolved as shift
-WARNING: shift/reduce conflict for REPEAT in state 129 resolved as shift
-WARNING: shift/reduce conflict for GOSUB in state 129 resolved as shift
-WARNING: shift/reduce conflict for INPUT in state 129 resolved as shift
-WARNING: shift/reduce conflict for PRINT in state 129 resolved as shift
+WARNING: shift/reduce conflict for COMA in state 99 resolved as shift
+WARNING: shift/reduce conflict for COMA in state 99 resolved as shift
+WARNING: shift/reduce conflict for LET in state 132 resolved as shift
+WARNING: shift/reduce conflict for DIM in state 132 resolved as shift
+WARNING: shift/reduce conflict for IF in state 132 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 132 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 132 resolved as shift
+WARNING: shift/reduce conflict for REPEAT in state 132 resolved as shift
+WARNING: shift/reduce conflict for GOSUB in state 132 resolved as shift
+WARNING: shift/reduce conflict for INPUT in state 132 resolved as shift
+WARNING: shift/reduce conflict for PRINT in state 132 resolved as shift
 WARNING: reduce/reduce conflict in state 8 resolved using rule (M -> empty)
 WARNING: rejected rule (F -> empty) in state 8
 WARNING: reduce/reduce conflict in state 39 resolved using rule (Ex -> ID)
@@ -3813,13 +3965,13 @@ WARNING: reduce/reduce conflict in state 39 resolved using rule (saveID -> <empt
 WARNING: rejected rule (empty -> <empty>) in state 39
 WARNING: reduce/reduce conflict in state 39 resolved using rule (Ex -> ID)
 WARNING: rejected rule (empty -> <empty>) in state 39
-WARNING: reduce/reduce conflict in state 47 resolved using rule (Idv -> ID)
-WARNING: rejected rule (empty -> <empty>) in state 47
-WARNING: reduce/reduce conflict in state 86 resolved using rule (saveID -> <empty>)
-WARNING: rejected rule (empty -> <empty>) in state 86
-WARNING: reduce/reduce conflict in state 96 resolved using rule (arr_space -> ID)
-WARNING: rejected rule (saveID -> <empty>) in state 96
-WARNING: reduce/reduce conflict in state 96 resolved using rule (saveID -> <empty>)
-WARNING: rejected rule (empty -> <empty>) in state 96
-WARNING: reduce/reduce conflict in state 96 resolved using rule (arr_space -> ID)
-WARNING: rejected rule (empty -> <empty>) in state 96
+WARNING: reduce/reduce conflict in state 48 resolved using rule (Idv -> ID)
+WARNING: rejected rule (empty -> <empty>) in state 48
+WARNING: reduce/reduce conflict in state 89 resolved using rule (saveID -> <empty>)
+WARNING: rejected rule (empty -> <empty>) in state 89
+WARNING: reduce/reduce conflict in state 99 resolved using rule (arr_space -> ID)
+WARNING: rejected rule (saveID -> <empty>) in state 99
+WARNING: reduce/reduce conflict in state 99 resolved using rule (saveID -> <empty>)
+WARNING: rejected rule (empty -> <empty>) in state 99
+WARNING: reduce/reduce conflict in state 99 resolved using rule (arr_space -> ID)
+WARNING: rejected rule (empty -> <empty>) in state 99

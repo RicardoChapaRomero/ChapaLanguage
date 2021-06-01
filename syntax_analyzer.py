@@ -253,16 +253,6 @@ def t_LET(t):
   t.type = 'LET'
   return t
 
-def t_INT(t):
-  r'(?i)INT'
-  t.type = 'INT'
-  return t
-
-def t_INTVAL(t):
-  r'\d+'
-  t.value = int(t.value)
-  return t
-
 def t_FLOAT(t):
   r'(?i)FLOAT'
   t.type = 'FLOAT'
@@ -271,6 +261,16 @@ def t_FLOAT(t):
 def t_FLOATVAL(t):
   r'\d+\.\d+'
   t.value = float(t.value)
+  return t
+
+def t_INT(t):
+  r'(?i)INT'
+  t.type = 'INT'
+  return t
+
+def t_INTVAL(t):
+  r'\d+'
+  t.value = int(t.value)
   return t
 
 def t_WORD(t):
@@ -758,10 +758,18 @@ def p_saveID(p):
 
 def p_cte(p):
   '''
-  cte : INTVAL
-      | FLOATVAL
+  cte : FLOATVAL
+      | INTVAL
+      | MINUS INTVAL
+      | MINUS FLOATVAL
   '''
-  p[0] = p[1]
+  if len(p) > 2:
+    if (type(p[2]) == int):
+      p[0] = p[2] * -1
+    else:
+      p[0] = p[2] * -1.0
+  else:
+    p[0] = p[1]
 
 def p_EL(p):
   '''

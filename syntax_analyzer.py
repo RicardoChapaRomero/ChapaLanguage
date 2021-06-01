@@ -404,9 +404,7 @@ def p_Arr(p):
 def p_arr_space(p):
   '''
   arr_space : EA COMA arr_space
-            | ID COMA arr_space
             | EA
-            | ID
   '''
   if len(p) > 2:
     p[0] = str(p[1]) + ',' + p[3]
@@ -463,10 +461,10 @@ def p_F(p):
 
 def p_E(p):
   '''
-  E : LET setType Idv EQUALS Ex
+  E : LET setType Idv EQUALS EA
     | DIM setType Idv AS T Arr
     | IF EL THEN first_conditional F Esf EIF final_conditional
-    | FOR ID EQUALS EA for_assignation TO Ex for_conditional DO for_save_conditional F NEXT ID for_conditional_end
+    | FOR ID EQUALS EA for_assignation TO EA for_conditional DO for_save_conditional F NEXT ID for_conditional_end
     | WHILE while_first_conditional EL DO while_second_conditional F WEND while_final_conditional
     | REPEAT while_first_conditional F UNTIL EL repeat_conditional
     | GOSUB ID
@@ -663,7 +661,6 @@ def p_Ex(p):
   '''
   Ex : EA
      | EL
-     | ID
   '''
   p[0] = p[1]
 
@@ -744,7 +741,7 @@ def p_saveID(p):
   # append id to operands list
   global operands
 
-  operators_list = ['-', '+', '*', '/']
+  operators_list = ['-', '+', '*', '/', '>', '<', '>=', '<=', '==', '!=']
 
   try:
    # converting to integer
@@ -805,12 +802,12 @@ def p_OL(p):
   
 def p_O(p):
   '''
-  O : Ex GREATHER Ex
-    | Ex GREATHEREQUAL Ex
-    | Ex SMALLER Ex
-    | Ex SMALLEREQUAL Ex
-    | Ex NOTEQUAL Ex
-    | Ex EQUALTO Ex
+  O : EA GREATHER EA
+    | EA GREATHEREQUAL EA
+    | EA SMALLER EA
+    | EA SMALLEREQUAL EA
+    | EA NOTEQUAL EA
+    | EA EQUALTO EA
   '''
   global operands, equal_error, cuadruplos
   
@@ -1179,9 +1176,10 @@ try:
   parser.parse(testFile, tracking=True)
 
   print('Executing Code...')
-  
-  execute_code()
+
   print_syntax_info_tables()
+  execute_code()
+  #print_syntax_info_tables()
 except EOFError:
   print('Error at reading the file')
   pass

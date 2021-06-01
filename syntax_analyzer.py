@@ -957,7 +957,11 @@ def fillArray_value(currentArray, indexes, value, counter):
         print('Index is out of range')
         return
     else:
-      currentArray[indexes[counter]] = int(value)
+      try:
+        int(value)
+        currentArray[indexes[counter]] = int(value)
+      except ValueError:
+        currentArray[indexes[counter]] = float(value)
 
 cuadruplo_results = []
 cuadruplo = 0
@@ -986,7 +990,13 @@ def switch_operations(operation, ops):
   if operation[0] == '=' and operation[1] != '=':
     if operation[1][0] == 'T':
       cuadruploIndex = int(operation[1][1:])
-      symbol_table[operation[2]][2] = cuadruplo_results[cuadruploIndex]
+
+      if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
+        symbol_table[operation[2]][2] = int(cuadruplo_results[cuadruploIndex])
+      elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT':
+        symbol_table[operation[2]][2] = float(cuadruplo_results[cuadruploIndex])
+      else:
+        symbol_table[operation[2]][2] = str(cuadruplo_results[cuadruploIndex])
     elif (symbol_table.get(operation[1], -1) != -1):
       symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
     else:
@@ -1110,7 +1120,16 @@ def switch_operations(operation, ops):
     
     if invalidOperator(value_1) or invalidOperator(value_2):
       return True
-    cuadruplo_results[cuadruplo] = ops[operation[0]](value_1, value_2)
+
+    if (operation[0] == '*') and (type(value_1) == float or type(value_2) == float):
+      cuadruplo_results[cuadruplo] = ops[operation[0]](float(value_1), float(value_2))
+    elif (operation[0] == '/'):
+      if type(value_2) == int:
+        cuadruplo_results[cuadruplo] = int(ops[operation[0]](value_1, value_2))
+      else:
+        cuadruplo_results[cuadruplo] = ops[operation[0]](value_1, value_2)
+    else:
+      cuadruplo_results[cuadruplo] = ops[operation[0]](value_1, value_2)
 
   return False
 

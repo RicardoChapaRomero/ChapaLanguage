@@ -4,7 +4,7 @@ PROGRAM
     
     LET lado = 0
     LET perimetro = 0
-    LET area = 0
+    LET area = 0.001
     LET cycle = 3
 
 	gosub calcularArea

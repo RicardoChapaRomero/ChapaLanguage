@@ -1,4 +1,4 @@
 PROGRAM
 	DIM number as INT [1, 2, 3]
-    let number [0,1,2] = -2
+    let number [0,1,2] = 0.0001
 END

@@ -1013,7 +1013,8 @@ def switch_operations(operation, ops):
       cuadruploIndex = int(operation[1][1:])
 
       if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
-        indexes = ' '.join(operation[3:])
+        indexes_str = ' '.join(operation[3:])
+        indexes = indexes_str.split('\'')
         idx_to_int = []
 
         for i in indexes:
@@ -1021,14 +1022,18 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int.append(int(i))
           except ValueError:
-            pass
+            if i in symbol_table:
+              idx_to_int.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[2]][2]
         counter = 0
         fillArray_value(currentArray, idx_to_int, cuadruplo_results[cuadruploIndex], counter, 'int')
 
       elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR':
-        indexes = ' '.join(operation[3:])
+        indexes_str = ' '.join(operation[3:])
+        indexes = indexes_str.split('\'')
         idx_to_int = []
 
         for i in indexes:
@@ -1036,7 +1041,10 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int.append(int(i))
           except ValueError:
-            pass
+            if i in symbol_table:
+              idx_to_int.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[2]][2]
         counter = 0
@@ -1054,7 +1062,8 @@ def switch_operations(operation, ops):
       isArrFloat = (variable_int_to_type[symbol_table[operation[1]][0]] == 'FLOAT_ARR')
 
       if isArrInt or isArrFloat:
-        indexes = ' '.join(operation[2:-1])
+        indexes_str = ' '.join(operation[2:-1])
+        indexes = indexes_str.split('\'')
         idx_to_int = []
 
         for i in indexes:
@@ -1062,8 +1071,10 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int.append(int(i))
           except ValueError:
-            pass
-
+            if i in symbol_table:
+              idx_to_int.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[1]][2]
         counter = 0
@@ -1078,7 +1089,8 @@ def switch_operations(operation, ops):
         symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
     else:
       if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
-        indexes = ' '.join(operation[3:])
+        indexes_str = ' '.join(operation[3:])
+        indexes = indexes_str.split('\'')
         idx_to_int = []
 
         for i in indexes:
@@ -1086,14 +1098,18 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int.append(int(i))
           except ValueError:
-            pass
+            if i in symbol_table:
+              idx_to_int.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[2]][2]
         counter = 0
         fillArray_value(currentArray, idx_to_int, operation[1], counter, 'int')
 
       elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR':
-        indexes = ' '.join(operation[3:])
+        indexes_str = ' '.join(operation[3:])
+        indexes = indexes_str.split('\'')
         idx_to_int = []
 
         for i in indexes:
@@ -1101,7 +1117,10 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int.append(int(i))
           except ValueError:
-            pass
+            if i in symbol_table:
+              idx_to_int.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[2]][2]
         counter = 0
@@ -1211,7 +1230,8 @@ def switch_operations(operation, ops):
 
     if variable_1_isArr:
       array_size_1 = findDimensions(symbol_table[operation[1]][2], 1)
-      indexes = ' '.join(operation[2: 2 + array_size_1])
+      indexes_str = ' '.join(operation[2: 2 + array_size_1])
+      indexes = indexes_str.split('\'')
 
       idx_to_int_1 = []
 
@@ -1220,7 +1240,10 @@ def switch_operations(operation, ops):
           int(i)
           idx_to_int_1.append(int(i))
         except ValueError:
-          pass
+          if i in symbol_table:
+            idx_to_int_1.append(int(symbol_table[i][2]))
+          else:
+            pass
 
       currentArray = symbol_table[operation[1]][2]
       counter = 0
@@ -1232,7 +1255,8 @@ def switch_operations(operation, ops):
 
       if variable_2_isArr:
         array_size_2 = findDimensions(symbol_table[operation[idx_value_2]][2], 1)
-        indexes = ' '.join(operation[idx_value_2 + 1: idx_value_2 + array_size_2 + 1])
+        indexes_str = ' '.join(operation[idx_value_2 + 1: idx_value_2 + array_size_2 + 1])
+        indexes = indexes_str.split('\'')
 
         idx_to_int_2 = []
 
@@ -1241,7 +1265,10 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int_2.append(int(i))
           except ValueError:
-            pass
+            if i in symbol_table:
+              idx_to_int_2.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[idx_value_2]][2]
         counter = 0
@@ -1256,7 +1283,8 @@ def switch_operations(operation, ops):
       variable_2_isArr = (symbol_table.get(operation[2], -1) != -1) and (variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR' or variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR')
       if variable_2_isArr:
         array_size = findDimensions(symbol_table[operation[2]][2], 1)
-        indexes = ' '.join(operation[3: 3 + array_size])
+        indexes_str = ' '.join(operation[3: 3 + array_size])
+        indexes = indexes_str.split('\'')
 
         idx_to_int = []
 
@@ -1265,7 +1293,10 @@ def switch_operations(operation, ops):
             int(i)
             idx_to_int.append(int(i))
           except ValueError:
-            pass
+            if i in symbol_table:
+              idx_to_int.append(int(symbol_table[i][2]))
+            else:
+              pass
 
         currentArray = symbol_table[operation[2]][2]
         counter = 0

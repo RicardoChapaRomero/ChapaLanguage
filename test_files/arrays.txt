@@ -3,7 +3,7 @@ PROGRAM
     DIM tempValue, index as INT
 
     let tempValue = 0
-    let index = 0
+    let index = 1
     let number[0,0,1] = 2
     let number[0,1,1] = 45
 
@@ -11,8 +11,8 @@ PROGRAM
 
 	SUBPROCEDURE modifyArray:
         let tempValue = number[0,index,1]
-        #let number[0,1,2] = tempValue + number[0,1,1]
-        #let number[0,1,2] = number[0,1,1] + tempValue + 1
+        let number[0,index,2] = tempValue + number[0,1,index]
+        let number[0,1,2] = number[0,index,index] + tempValue + 1
         
         print tempValue
 	RETURN

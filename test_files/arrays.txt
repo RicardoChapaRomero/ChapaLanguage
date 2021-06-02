@@ -1,14 +1,19 @@
 PROGRAM
 	DIM number as INT [1, 2, 3]
-    DIM tempValue as INT
+    DIM tempValue, index as INT
 
     let tempValue = 0
+    let index = 0
     let number[0,0,1] = 2
+    let number[0,1,1] = 45
 
     gosub modifyArray
 
 	SUBPROCEDURE modifyArray:
-        let tempValue = number[0,0,1]
+        let tempValue = number[0,index,1]
+        #let number[0,1,2] = tempValue + number[0,1,1]
+        #let number[0,1,2] = number[0,1,1] + tempValue + 1
+        
         print tempValue
 	RETURN
 

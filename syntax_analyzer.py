@@ -703,7 +703,7 @@ def p_P(p):
   '''
   global operands, cuadruplos
   # skip if value is an assignation
-  
+
   if (len(p) > 3):
     operand_1 = operands.pop()
     operand_2 = operands.pop()
@@ -732,8 +732,10 @@ def p_N(p):
 
   if (p[1] == '('):
     p[0] = p[2]
-  elif p[1] == '[':
-    indexes = p[2]
+  elif type(p[2]) == list:
+    p[0] = p[1] + ' ' + str(p[2])
+    operands.pop()
+    operands.append(p[0])
   else:
     p[0] = p[1]
 
@@ -962,17 +964,25 @@ def fillArray_value(currentArray, indexes, value, counter, typeVar):
       else:
         currentArray[indexes[counter]] = float(tempValue)
 
-def findValue(currentArray, indexes, value, counter, typeVar):
+def findValue(currentArray, indexes, counter):
   global symbol_table
   if type(currentArray) == list and counter < len(indexes) - 1:
     if indexes[counter] < len(currentArray):
       currentArray = currentArray[indexes[counter]]
-      return fillArray_value(currentArray, indexes, value, counter + 1, typeVar)
+      return findValue(currentArray, indexes, counter + 1)
     else:
         print('Index is out of range')
         return None
   else:
     return currentArray[indexes[counter]]
+
+def findDimensions(array, counter):
+  while True:
+    if (type(array[0]) == list):
+      counter += 1
+      array = array[0]
+    else:
+      return counter
 
 cuadruplo_results = []
 cuadruplo = 0
@@ -1038,9 +1048,34 @@ def switch_operations(operation, ops):
         symbol_table[operation[2]][2] = float(cuadruplo_results[cuadruploIndex])
       else:
         symbol_table[operation[2]][2] = str(cuadruplo_results[cuadruploIndex])
+
     elif (symbol_table.get(operation[1], -1) != -1):
-      print('here', operation)
-      symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
+      isArrInt = (variable_int_to_type[symbol_table[operation[1]][0]] == 'INT_ARR')
+      isArrFloat = (variable_int_to_type[symbol_table[operation[1]][0]] == 'FLOAT_ARR')
+
+      if isArrInt or isArrFloat:
+        indexes = ' '.join(operation[2:-1])
+        idx_to_int = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int.append(int(i))
+          except ValueError:
+            pass
+
+
+        currentArray = symbol_table[operation[1]][2]
+        counter = 0
+        valueInArray = findValue(currentArray, idx_to_int, counter)
+
+        if (valueInArray == None):
+          return True
+        else:
+          symbol_table[operation[len(operation) - 1]][2] = valueInArray
+
+      else:
+        symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
     else:
       if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
         indexes = ' '.join(operation[3:])
@@ -1172,9 +1207,73 @@ def switch_operations(operation, ops):
     return False
 
   else:
-    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
-    
+    variable_1_isArr = (symbol_table.get(operation[1], -1) != -1) and (variable_int_to_type[symbol_table[operation[1]][0]] == 'INT_ARR' or variable_int_to_type[symbol_table[operation[1]][0]] == 'FLOAT_ARR')
+
+    if variable_1_isArr:
+      array_size_1 = findDimensions(symbol_table[operation[1]][2], 1)
+      indexes = ' '.join(operation[2: 2 + array_size_1])
+
+      idx_to_int_1 = []
+
+      for i in indexes:
+        try:
+          int(i)
+          idx_to_int_1.append(int(i))
+        except ValueError:
+          pass
+
+      currentArray = symbol_table[operation[1]][2]
+      counter = 0
+      value_1 = findValue(currentArray, idx_to_int_1, counter)
+
+      idx_value_2 = 2 + array_size_1
+
+      variable_2_isArr = variable_int_to_type[symbol_table[operation[idx_value_2]][0]] == 'INT_ARR' or variable_int_to_type[symbol_table[operation[idx_value_2]][0]] == 'FLOAT_ARR'
+
+      if variable_2_isArr:
+        array_size_2 = findDimensions(symbol_table[operation[idx_value_2]][2], 1)
+        indexes = ' '.join(operation[idx_value_2 + 1: idx_value_2 + array_size_2 + 1])
+
+        idx_to_int_2 = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int_2.append(int(i))
+          except ValueError:
+            pass
+
+        currentArray = symbol_table[operation[idx_value_2]][2]
+        counter = 0
+        value_2 = findValue(currentArray, idx_to_int_2, counter)
+
+      else:
+        value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[idx_value_2])
+
+    else:
+      value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+
+      variable_2_isArr = (symbol_table.get(operation[2], -1) != -1) and (variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR' or variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR')
+      if variable_2_isArr:
+        array_size = findDimensions(symbol_table[operation[2]][2], 1)
+        indexes = ' '.join(operation[3: 3 + array_size])
+
+        idx_to_int = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int.append(int(i))
+          except ValueError:
+            pass
+
+        currentArray = symbol_table[operation[2]][2]
+        counter = 0
+        value_2 = findValue(currentArray, idx_to_int, counter)
+
+      else:
+        value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+
     if invalidOperator(value_1) or invalidOperator(value_2):
       return True
 

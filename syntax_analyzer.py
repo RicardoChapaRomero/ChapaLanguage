@@ -1197,6 +1197,14 @@ def switch_operations(operation, ops):
       return False
     cuadruplo_results[cuadruplo] = (value_1 == value_2)
 
+  elif operation[0] == '!=':
+    value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
+    
+    if invalidOperator(value_1) or invalidOperator(value_2):
+      return False
+    cuadruplo_results[cuadruplo] = (value_1 != value_2)
+
   elif operation[0].lower() == 'and':
     value_1 = get_variable_value(symbol_table, cuadruplo_results, operation[1])
     value_2 = get_variable_value(symbol_table, cuadruplo_results, operation[2])
@@ -1227,7 +1235,7 @@ def switch_operations(operation, ops):
     is_ArrInt = variable_int_to_type[symbol_table[operation[1]][0]] == 'INT_ARR'
     is_ArrFloat = variable_int_to_type[symbol_table[operation[1]][0]] == 'FLOAT_ARR'
 
-    if is_ArrInt or is_ArrFloat and len(operation) > 2:
+    if (is_ArrInt or is_ArrFloat) and len(operation) > 2:
       array_size_1 = findDimensions(symbol_table[operation[1]][2], 1)
       indexes_str = ' '.join(operation[2: 2 + array_size_1])
       indexes = indexes_str.split('\'')
@@ -1247,7 +1255,9 @@ def switch_operations(operation, ops):
       currentArray = symbol_table[operation[1]][2]
       counter = 0
       value = findValue(currentArray, idx_to_int, counter)
-      
+
+    elif (is_ArrInt or is_ArrFloat) and len(operation) == 2:
+      value = symbol_table[operation[1]][2]
     else:
       value = get_variable_value(symbol_table, cuadruplo_results, operation[1])
     print('Value of ' + str(operation[1]) ,value)

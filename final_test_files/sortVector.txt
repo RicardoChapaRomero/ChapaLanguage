@@ -1,0 +1,52 @@
+PROGRAM
+	DIM vector as INT [10]
+    DIM i, j, limit, tempValue, currValue, valIndex, prevIndex as INT
+    DIM newVector as int
+
+    let i = 0
+    let j = 0
+    let limit = 0
+    let newVector = 1
+
+    gosub menu
+
+    SUBPROCEDURE menu:
+        while (newVector > 0) do
+            gosub fillVector
+            gosub sortVector
+            gosub prVector
+
+            input newVector
+        wend
+	RETURN
+
+	SUBPROCEDURE fillVector:
+        for i = 0 to 9 do 
+            input tempValue
+            let vector[i] = tempValue
+        next i
+	RETURN
+
+    SUBPROCEDURE prVector:
+        for i = 0 to 9 do 
+            let tempValue = vector[i]
+            print tempValue
+        next i
+    return
+
+    SUBPROCEDURE sortVector:
+        for j = 0 to 9 do
+            let limit = 9 - j
+            for i = 1 to limit do 
+                let prevIndex = i - 1
+                let tempValue = vector[prevIndex]
+                let currValue = vector[i]
+                
+                if (currValue < tempValue) then
+                    let vector[i] = tempValue
+                    let vector[prevIndex] = currValue
+                eif
+            next i
+        next j
+	RETURN
+END

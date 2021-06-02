@@ -1,0 +1,128 @@
+PROGRAM
+    DIM m_1 as INT [3, 3]
+    DIM m_2 as INT [3, 3]
+    DIM m_3_suma as INT [3, 3]
+    DIM m_3_multiplicacion as INT [3, 3]
+    DIM m_1r, m_1c, m_2r, m_2c as INT
+    DIM i, j, k, menuCycle, operation, tempValue, limit_i, limit_j, possible, suma, nuevasMatrices as INT
+
+    let operation = 0
+    let menuCycle = 1
+    let nuevasMatrices = 1
+
+    let m_1r = 3
+    let m_1c = 3
+    let m_2r = 3
+    let m_2c = 3
+
+    gosub menu
+
+    SUBPROCEDURE menu:
+        while (menuCycle > 0) do
+            if (nuevasMatrices == 1) then
+                gosub leeMatrices
+            eif
+
+            gosub imprimeMatrices
+
+            input operation
+
+            if (operation == 1) then
+                if (m_1r != m_2r) or (m_1c != m_2c) then
+                    let possible = 0
+                    print possible
+                else
+                    let possible = 1
+                    gosub sumaDeMatrices
+                    print m_3_suma
+                eif
+            else
+                if (operation == 2) then
+                    if (m_1c != m_2r) or (m_1r != m_2c) then
+                        let possible = 0
+                        print possible
+                    else
+                        gosub multiplicacionDeMatrices
+                        print m_3_multiplicacion
+                    eif
+                eif
+            eif
+
+
+            input nuevasMatrices
+            input menuCycle
+        wend
+	RETURN
+
+    SUBPROCEDURE sumaDeMatrices:
+        let limit_i = m_1r - 1
+        let limit_j = m_1c - 1
+
+        for i = 0 to limit_i do
+            for j = 0 to limit_j do
+                let m_3_suma[i, j] = m_1[i, j] + m_2[i, j]
+            next j
+        next i
+    return
+
+    SUBPROCEDURE multiplicacionDeMatrices:
+        let suma = 0
+        for i = 0 to m_1r - 1 do
+            for j = 0 to m_1c - 1 do
+                for k = 0 to m_1c - 1 do
+                    let suma = m_1[i, k] * m_2[k, j]
+                    let m_3_multiplicacion[i, j] = m_3_multiplicacion[i, j] + suma
+                next k
+            next j
+        next i
+    return
+
+	SUBPROCEDURE leeMatrices: 
+        let limit_i = m_1r - 1
+        let limit_j = m_1c - 1
+
+        for i = 0 to limit_i do
+            for j = 0 to limit_j do
+                input tempValue
+                let m_1[i, j] = tempValue
+            next j
+        next i
+
+        print m_1
+
+        let limit_i = m_2r - 1
+        let limit_j = m_2c - 1
+        
+        for i = 0 to limit_i do
+            for j = 0 to limit_j do
+                input tempValue
+                let m_2[i, j] = tempValue
+            next j
+        next i
+
+        print m_2
+	RETURN
+
+    SUBPROCEDURE imprimeMatrices:
+        let limit_i = m_1r - 1
+        let limit_j = m_1c - 1
+
+        for i = 0 to limit_i do
+            for j = 0 to limit_j do
+                let tempValue = m_1[i, j]
+                print tempValue
+            next j
+        next i
+
+        let limit_i = m_2r - 1
+        let limit_j = m_2c - 1
+        
+        for i = 0 to limit_i do
+            for j = 0 to limit_j do
+                let tempValue = m_2[i, j]
+                print tempValue
+            next j
+        next i
+    return
+
+END

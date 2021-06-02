@@ -1,0 +1,32 @@
+PROGRAM
+	DIM cube as INT [1, 2, 3]
+    DIM i, j, k, tempValue as INT
+
+    let i = 0
+    let j = 0
+    let k = 0
+    let tempValue = 0
+
+    gosub multiplyArray
+
+	SUBPROCEDURE multiplyArray:
+        for i = 0 to 0 do
+            for j = 0 to 1 do
+                for k = 0 to 2 do
+                    input tempValue
+                    let cube[i,j,k] = tempValue * 2
+                next k
+            next j
+        next i
+
+        for i = 0 to 0 do
+            for j = 0 to 1 do
+                for k = 0 to 2 do
+                   print cube[i, j, k]
+                next k
+            next j
+        next i
+       
+	RETURN
+
+END

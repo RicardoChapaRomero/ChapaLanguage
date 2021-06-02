@@ -1086,7 +1086,29 @@ def switch_operations(operation, ops):
           symbol_table[operation[len(operation) - 1]][2] = valueInArray
 
       else:
-        symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
+        isArrInt = (variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR')
+        isArrFloat = (variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR')
+      
+        if isArrInt or isArrFloat:
+          indexes_str = ' '.join(operation[3:])
+          indexes = indexes_str.split('\'')
+          idx_to_int = []
+
+          for i in indexes:
+            try:
+              int(i)
+              idx_to_int.append(int(i))
+            except ValueError:
+              if i in symbol_table:
+                idx_to_int.append(int(symbol_table[i][2]))
+              else:
+                pass
+
+          currentArray = symbol_table[operation[2]][2]
+          counter = 0
+          fillArray_value(currentArray, idx_to_int, symbol_table[operation[1]][2], counter, 'int')
+        else:
+          symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
     else:
       if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
         indexes_str = ' '.join(operation[3:])
@@ -1202,8 +1224,33 @@ def switch_operations(operation, ops):
     return False
 
   elif operation[0] == 'print':
-    value = get_variable_value(symbol_table, cuadruplo_results, operation[1])
-    print(value)
+    is_ArrInt = variable_int_to_type[symbol_table[operation[1]][0]] == 'INT_ARR'
+    is_ArrFloat = variable_int_to_type[symbol_table[operation[1]][0]] == 'FLOAT_ARR'
+
+    if is_ArrInt or is_ArrFloat and len(operation) > 2:
+      array_size_1 = findDimensions(symbol_table[operation[1]][2], 1)
+      indexes_str = ' '.join(operation[2: 2 + array_size_1])
+      indexes = indexes_str.split('\'')
+
+      idx_to_int = []
+
+      for i in indexes:
+        try:
+          int(i)
+          idx_to_int.append(int(i))
+        except ValueError:
+          if i in symbol_table:
+            idx_to_int.append(int(symbol_table[i][2]))
+          else:
+            pass
+
+      currentArray = symbol_table[operation[1]][2]
+      counter = 0
+      value = findValue(currentArray, idx_to_int, counter)
+      
+    else:
+      value = get_variable_value(symbol_table, cuadruplo_results, operation[1])
+    print('Value of ' + str(operation[1]) ,value)
 
     return False
 
@@ -1348,7 +1395,7 @@ try:
 
   #print_syntax_info_tables()
   execute_code()
-  print_syntax_info_tables()
+  #print_syntax_info_tables()
 except EOFError:
   print('Error at reading the file')
   pass

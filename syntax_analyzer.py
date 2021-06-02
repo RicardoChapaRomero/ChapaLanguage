@@ -403,13 +403,20 @@ def p_Arr(p):
 
 def p_arr_space(p):
   '''
-  arr_space : EA COMA arr_space
-            | EA
+  arr_space : arr_index COMA arr_space
+            | arr_index
   '''
   if len(p) > 2:
     p[0] = str(p[1]) + ',' + p[3]
   else:
     p[0] = str(p[1])
+
+def p_arr_index(p):
+  '''
+  arr_index : INTVAL
+            | ID
+  '''
+  p[0] = p[1]
 
 def p_T(p):
   '''
@@ -449,8 +456,7 @@ def p_endProcedure(p):
 
 def p_M(p):
   '''
-  M : F M
-    | empty
+  M : F
   '''
 
 def p_F(p):
@@ -461,7 +467,7 @@ def p_F(p):
 
 def p_E(p):
   '''
-  E : LET setType Idv EQUALS EA
+  E : LET setType IdLet EQUALS EA
     | DIM setType Idv AS T Arr
     | IF EL THEN first_conditional F Esf EIF final_conditional
     | FOR ID EQUALS EA for_assignation TO EA for_conditional DO for_save_conditional F NEXT ID for_conditional_end
@@ -469,7 +475,7 @@ def p_E(p):
     | REPEAT while_first_conditional F UNTIL EL repeat_conditional
     | GOSUB ID
     | INPUT IDEx
-    | PRINT Ex
+    | PRINT EA
   '''
   global variable_type, operands, cuadruplos, statement_jump_list, subprocedure_jump_list
   
@@ -623,11 +629,24 @@ def p_Esf(p):
       | empty
   '''
 
+def p_IdLet(p):
+  '''
+  IdLet : ID
+        | ID Arr
+  '''
+  if len(p) > 2:
+    if (type(p[2]) == list):
+      p[0] = str(p[1]) + ' ' + str(p[2]) 
+    else:
+      p[0] = p[1]
+  else:
+    p[0] = p[1]
+
+
 def p_Idv(p):
   '''
   Idv : ID COMA Idv
       | ID
-      | ID Arr
   '''
   global variables
   if (token_state == 'DIM'):
@@ -635,13 +654,7 @@ def p_Idv(p):
     variables.append(p[1])
   
   elif (token_state == 'LET'):
-    if len(p) > 2:
-      if (type(p[2]) == list):
-        p[0] = str(p[1]) + ' ' + str(p[2]) 
-      else:
-        p[0] = p[1]
-    else:
-      p[0] = p[1]
+    p[0] = p[1]
 
 def p_setType(p):
   '''
@@ -656,18 +669,6 @@ def p_IDEx(p):
        | ID OPENBRACKET setType Idv CLOSINGBRACKET
   '''
   p[0] = p[1]
-
-def p_Ex(p):
-  '''
-  Ex : EA
-     | EL
-  '''
-  p[0] = p[1]
-
-def p_ES(p):
-  '''
-  ES : WORDVAL
-  '''
 
 def p_EA(p):
   '''
@@ -702,6 +703,7 @@ def p_P(p):
   '''
   global operands, cuadruplos
   # skip if value is an assignation
+  
   if (len(p) > 3):
     operand_1 = operands.pop()
     operand_2 = operands.pop()
@@ -722,17 +724,20 @@ def p_P(p):
 
 def p_N(p):
   '''
-  N : cte saveID
+  N : ID Arr saveID
+    | cte saveID
     | ID saveID
     | OPENPAR EA CLOSINGPAR
-    | ID Arr
   '''
+
   if (p[1] == '('):
     p[0] = p[2]
   elif p[1] == '[':
     indexes = p[2]
   else:
     p[0] = p[1]
+
+  #print(p[0])
 
 def p_saveID(p):
   '''
@@ -743,16 +748,7 @@ def p_saveID(p):
 
   operators_list = ['-', '+', '*', '/', '>', '<', '>=', '<=', '==', '!=']
 
-  try:
-   # converting to integer
-    int(p[-1])
-
-    if p[-2] in operators_list: 
-      operands.append(str(p[-1]))
-    else:
-      operands.append(str(p[-3]))
-  except ValueError:
-    operands.append(str(p[-1]))
+  operands.append(str(p[-1]))
 
 def p_cte(p):
   '''
@@ -834,7 +830,7 @@ def p_O(p):
 
 def p_O_error(p):
   '''
-  O : Ex error Ex
+  O : EA error EA
   '''
   print('Error in boolean operand')
 
@@ -966,6 +962,18 @@ def fillArray_value(currentArray, indexes, value, counter, typeVar):
       else:
         currentArray[indexes[counter]] = float(tempValue)
 
+def findValue(currentArray, indexes, value, counter, typeVar):
+  global symbol_table
+  if type(currentArray) == list and counter < len(indexes) - 1:
+    if indexes[counter] < len(currentArray):
+      currentArray = currentArray[indexes[counter]]
+      return fillArray_value(currentArray, indexes, value, counter + 1, typeVar)
+    else:
+        print('Index is out of range')
+        return None
+  else:
+    return currentArray[indexes[counter]]
+
 cuadruplo_results = []
 cuadruplo = 0
 def execute_subprocedure(id):
@@ -994,13 +1002,44 @@ def switch_operations(operation, ops):
     if operation[1][0] == 'T':
       cuadruploIndex = int(operation[1][1:])
 
-      if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
+      if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
+        indexes = ' '.join(operation[3:])
+        idx_to_int = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int.append(int(i))
+          except ValueError:
+            pass
+
+        currentArray = symbol_table[operation[2]][2]
+        counter = 0
+        fillArray_value(currentArray, idx_to_int, cuadruplo_results[cuadruploIndex], counter, 'int')
+
+      elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT_ARR':
+        indexes = ' '.join(operation[3:])
+        idx_to_int = []
+
+        for i in indexes:
+          try:
+            int(i)
+            idx_to_int.append(int(i))
+          except ValueError:
+            pass
+
+        currentArray = symbol_table[operation[2]][2]
+        counter = 0
+        fillArray_value(currentArray, idx_to_int, cuadruplo_results[cuadruploIndex], counter, 'float')
+
+      elif variable_int_to_type[symbol_table[operation[2]][0]] == 'INT':
         symbol_table[operation[2]][2] = int(cuadruplo_results[cuadruploIndex])
       elif variable_int_to_type[symbol_table[operation[2]][0]] == 'FLOAT':
         symbol_table[operation[2]][2] = float(cuadruplo_results[cuadruploIndex])
       else:
         symbol_table[operation[2]][2] = str(cuadruplo_results[cuadruploIndex])
     elif (symbol_table.get(operation[1], -1) != -1):
+      print('here', operation)
       symbol_table[operation[2]][2] = symbol_table[operation[1]][2]
     else:
       if variable_int_to_type[symbol_table[operation[2]][0]] == 'INT_ARR':
@@ -1177,9 +1216,9 @@ try:
 
   print('Executing Code...')
 
-  print_syntax_info_tables()
-  execute_code()
   #print_syntax_info_tables()
+  execute_code()
+  print_syntax_info_tables()
 except EOFError:
   print('Error at reading the file')
   pass

@@ -1,4 +1,15 @@
 PROGRAM
 	DIM number as INT [1, 2, 3]
-    let number[0,1,2] = 1 * 2
+    DIM tempValue as INT
+
+    let tempValue = 0
+    let number[0,0,1] = 2
+
+    gosub modifyArray
+
+	SUBPROCEDURE modifyArray:
+        let tempValue = number[0,0,1]
+        print tempValue
+	RETURN
+
 END
